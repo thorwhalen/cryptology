@@ -206,7 +206,7 @@ The full message: `it was a cold and quiet night when the old clock in the tower
 
 ## By hand or by computer
 
-Counting and scoring are chores; deciding what the counts mean is the skill. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g02-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters. In a live competition round, its rules decide: the National Cipher Challenge bans online solvers and AI.
+Counting and scoring are chores; deciding what the counts mean is the skill. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g02-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters.
 
 | Job | By hand | Learn with | Just do it |
 |---|---|---|---|

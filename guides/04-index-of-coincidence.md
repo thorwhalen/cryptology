@@ -208,7 +208,7 @@ The true answer is 5, so Friedman's guess is rough. Look at the bottom of that f
 
 ## By hand or by computer
 
-The IoC is arithmetic on counts: a calculator's job, and a computer's when there are many of them. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g04-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters. In a live competition round, its rules decide: the National Cipher Challenge bans online solvers and AI.
+The IoC is arithmetic on counts: a calculator's job, and a computer's when there are many of them. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g04-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters.
 
 | Job | By hand | Learn with | Just do it |
 |---|---|---|---|

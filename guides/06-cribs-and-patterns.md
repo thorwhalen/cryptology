@@ -282,7 +282,7 @@ In this made-up example, 5 of the 15 positions are ruled out at once. On real me
 
 ## By hand or by computer
 
-A good crib comes from thinking about the message; checking it at every position is mechanical. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g06-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters. In a live competition round, its rules decide: the National Cipher Challenge bans online solvers and AI.
+A good crib comes from thinking about the message; checking it at every position is mechanical. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g06-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters.
 
 | Job | By hand | Learn with | Just do it |
 |---|---|---|---|

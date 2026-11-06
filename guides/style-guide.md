@@ -26,7 +26,7 @@ These guides teach cryptanalysis (breaking ciphers) to very smart 11 to 13 year 
 
 ## The stance on tools
 
-The author's view, which every guide follows: do each mechanical job by hand once, so the reader knows what the machine does; after that, hand it to the machine and spend the time on judgement and the bird's-eye view. Teach the method the classical way, and always say which tool relieves the reader of the low bang-for-the-buck part. Deskilling is a real cost, and so is refusing a tool. The full argument is `book/brain-pencil-or-computer.md`. Keep competition rules visible: in a live round, the competition's rules decide which tools are allowed.
+The author's view, which every guide follows: do each mechanical job by hand once, so the reader knows what the machine does; after that, hand it to the machine and spend the time on judgement and the bird's-eye view. Teach the method the classical way, and always say which tool relieves the reader of the low bang-for-the-buck part. Deskilling is a real cost, and so is refusing a tool. The full argument is `book/brain-pencil-or-computer.md`. The guides are about learning cryptanalysis, not about any one competition: never put a competition's tool rules in a guide (they belong on that competition's page in the app).
 
 Aim for 1,800 to 3,500 words. A video narrator should be able to read any section aloud and have it make sense.
 

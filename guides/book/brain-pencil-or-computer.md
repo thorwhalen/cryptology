@@ -55,10 +55,6 @@ Each guide teaches its method the classical way, with explanations, worked examp
 
 The green boxes in the guides point into the app, and the footnotes point to the other tools. Even the learning tools are a stepping stone. They are for people who want, or need, to know how things work.
 
-## A word about competitions
-
-In a competition, the rules choose your tools for you. In a live round of the UK's National Cipher Challenge, online cipher and code-breaking tools are against the rules, and so is using AI. Spreadsheets, text editors, the organizers' own tools and programs the team wrote itself are allowed [6]. That fits the rule above perfectly: a team that has done each job by hand once, and then written its own program for it, is both within the rules and stronger for it.
-
 ## For the adults
 
 With AI, intelligence is becoming something anyone can switch on, like electricity. We are entering that age very fast; in my opinion, too fast, because it is not clear what we should be teaching our children. How to make the best use of machine intelligence? How to manage swarms of AI agents? More manual skills, leaving the thinking to machines, when robots may take over manual work too? It is hard to tell.
@@ -82,4 +78,3 @@ I am betting that counting how many times each letter appears in a ciphertext is
 3. Turing AM. [On computable numbers, with an application to the Entscheidungsproblem](https://doi.org/10.1112/plms/s2-42.1.230). Proceedings of the London Mathematical Society. 1937;s2-42(1):230-265.
 4. [Bombe](https://en.wikipedia.org/wiki/Bombe), Wikipedia.
 5. [Colossus computer](https://en.wikipedia.org/wiki/Colossus_computer), Wikipedia.
-6. National Cipher Challenge. [Challenge 4](https://www.cipherchallenge.org/challenge/challenge-4/), part B introduction, 5 November 2026; and the [rules](https://www.cipherchallenge.org/information/rules/).

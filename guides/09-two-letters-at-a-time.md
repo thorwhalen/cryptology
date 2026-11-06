@@ -210,7 +210,7 @@ AG. The fourth pair UD, $(20, 3)$, gives $186 \equiv 4$ (E) and $65 \equiv 13$ (
 
 ## By hand or by computer
 
-The tells of a pair cipher take minutes to check; breaking one without a crib is a job for a program. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g09-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters. In a live competition round, its rules decide: the National Cipher Challenge bans online solvers and AI.
+The tells of a pair cipher take minutes to check; breaking one without a crib is a job for a program. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g09-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters.
 
 | Job | By hand | Learn with | Just do it |
 |---|---|---|---|

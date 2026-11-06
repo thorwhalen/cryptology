@@ -196,7 +196,7 @@ Here is the whole routine on one page. Start at the top and answer each question
 
 ## By hand or by computer
 
-Reading the clues is mostly measuring, and measuring is what computers are for. The judgement, which family the measurements point to, is the part worth keeping. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g01-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters. In a live competition round, its rules decide: the National Cipher Challenge bans online solvers and AI.
+Reading the clues is mostly measuring, and measuring is what computers are for. The judgement, which family the measurements point to, is the part worth keeping. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g01-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters.
 
 | Job | By hand | Learn with | Just do it |
 |---|---|---|---|

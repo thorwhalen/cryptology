@@ -51,10 +51,6 @@ The book has a companion website, the cryptology app, at **apps.thorwhalen.com/c
 
 In the PDF, the names in the boxes are links. On paper, type the address above and find the tool by its name. Other tools (spreadsheets that do the arithmetic, and solvers that just give the answer) are in each guide's footnotes.
 
-## A word about competitions
-
-Codebreaking competitions, such as the UK's National Cipher Challenge, have rules about tools. In a live round of the National Cipher Challenge, online cipher and code-breaking tools and AI are against the rules, and the work must be the team's own. This book, its exercises and its app are for learning and for practice. When you enter a competition, read its rules and follow them.
-
 ## For the adult helping
 
 The best way to use this book with a young reader is to let them do the work. Read a guide's big idea together, then hand over the pencil for the worked example and the exercises. Ask questions rather than giving answers: "What did you count?" and "What would English look like here?" are more useful than any hint. Breaks help: forty minutes of real concentration is a lot.

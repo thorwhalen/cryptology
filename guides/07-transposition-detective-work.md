@@ -156,7 +156,7 @@ A **double transposition** does a columnar transposition and then another one on
 
 ## By hand or by computer
 
-With transposition, the counts say what you face in seconds; the rearranging is where the hours go. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g07-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters. In a live competition round, its rules decide: the National Cipher Challenge bans online solvers and AI.
+With transposition, the counts say what you face in seconds; the rearranging is where the hours go. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g07-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters.
 
 | Job | By hand | Learn with | Just do it |
 |---|---|---|---|
