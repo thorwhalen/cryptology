@@ -17,7 +17,7 @@ some kinds of encryption and is destroyed by others. So it tells you
 which kind of cipher you are facing before you have read a single
 word.</p>
 <figure>
-<img src="figures/04-match-grids.png"
+<img width="1547" height="692" src="figures/04-match-grids.png"
 alt="Two grids of 1000 squares. On the left, English text: 66 green squares mark the pairs of letters that matched. On the right, random letters: only 38 orange squares matched." />
 <figcaption aria-hidden="true">Two grids of 1000 squares. On the left,
 English text: 66 green squares mark the pairs of letters that matched.
@@ -139,7 +139,7 @@ and the same for B, and so on. Twenty-six of those add up to exactly
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>26</mn></mfrac><mo>≈</mo></mrow><annotation encoding="application/x-tex">\frac{1}{26} \approx</annotation></semantics></math>
 <strong>0.038</strong>.</p>
 <figure>
-<img src="figures/04-where-matches-come-from.png"
+<img width="1904" height="954" src="figures/04-where-matches-come-from.png"
 alt="Bar chart, letters sorted from E down to Z. Each bar is the chance that both of two random picks are that letter. The E bar is the tallest at 0.016; a dashed orange line shows the much lower 1/26 times 1/26 value for random letters." />
 <figcaption aria-hidden="true">Bar chart, letters sorted from E down to
 Z. Each bar is the chance that both of two random picks are that letter.
@@ -171,7 +171,7 @@ chopped into five smaller peaks spread across the alphabet. The counts
 flatten out, and the IoC drops toward 0.038.</li>
 </ul>
 <figure>
-<img src="figures/04-flattened.png"
+<img width="1613" height="1247" src="figures/04-flattened.png"
 alt="Two bar charts of letter counts for the same message. Top, the plaintext in green: tall peaks at E, T, O, N, A. Bottom, the same message after a Vigenère cipher with key STORM, in orange: the bars are much more even." />
 <figcaption aria-hidden="true">Two bar charts of letter counts for the
 same message. Top, the plaintext in green: tall peaks at E, T, O, N, A.
@@ -308,7 +308,7 @@ of t’s and e’s. If we encrypt the same plaintext with a keyword
 substitution, or shuffle it with a columnar transposition, the IoC stays
 at exactly 0.070.</p>
 <figure>
-<img src="figures/04-ioc-by-cipher.png"
+<img width="1839" height="1069" src="figures/04-ioc-by-cipher.png"
 alt="Horizontal bars showing the index of coincidence of the same 271-letter message: plaintext, substitution and transposition all at 0.070, near the English line at 0.066; two Vigenère versions at 0.046 and 0.042, near the random line at 0.038." />
 <figcaption aria-hidden="true">Horizontal bars showing the index of
 coincidence of the same 271-letter message: plaintext, substitution and
@@ -323,7 +323,7 @@ same amount. Write the ciphertext in rows of 5. Each column is then a
 plain Caesar cipher: one alphabet, shifted. A Caesar cipher keeps the
 lumps of English, so each column should have an IoC near 0.066.</p>
 <figure>
-<img src="figures/04-columns.png"
+<img width="1420" height="962" src="figures/04-columns.png"
 alt="The ciphertext written in rows of five letters, each column painted a different color. Under each column is the key letter that shifted it: S, T, O, R, M." />
 <figcaption aria-hidden="true">The ciphertext written in rows of five
 letters, each column painted a different color. Under each column is the
@@ -428,7 +428,7 @@ That looks like English.</p>
 </tbody>
 </table>
 <figure>
-<img src="figures/04-period-scan.png"
+<img width="1827" height="1008" src="figures/04-period-scan.png"
 alt="Bar chart of the average column IoC for guessed key lengths 1 to 16. Most bars sit near the random line. Bars at 5, 10 and 15 jump up past the English line." />
 <figcaption aria-hidden="true">Bar chart of the average column IoC for
 guessed key lengths 1 to 16. Most bars sit near the random line. Bars at
@@ -536,7 +536,7 @@ Use the IoC to check, not to waste time.</li>
 <section id="traps-and-tips" class="level2">
 <h2>Traps and tips</h2>
 <figure>
-<img src="figures/04-short-texts.png"
+<img width="1500" height="1023" src="figures/04-short-texts.png"
 alt="Two shaded bands showing the IoC of many simulated texts. For English-like text the band is centered near 0.066, and for random letters near 0.038. At 20 letters both bands are wide and overlap; by 500 letters they are thin and far apart." />
 <figcaption aria-hidden="true">Two shaded bands showing the IoC of many
 simulated texts. For English-like text the band is centered near 0.066,
