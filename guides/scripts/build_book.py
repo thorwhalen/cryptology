@@ -10,7 +10,7 @@ matter (every guide's "Words to know", merged A to Z, then where to go next and 
 
 The web edition is one HTML fragment per guide (no <html> or <head>: the cryptology app wraps
 it), with math as MathML, figures as relative `figures/...` paths, and "In the app" boxes as
-<div class="in-app">; html/icon.png, the cover as a square favicon; plus html/index.json listing each guide's sections and words, which the
+<div class="in-app">; html/cover.jpg, the cover with its author; html/icon.png, the cover as a square favicon; plus html/index.json listing each guide's sections and words, which the
 app reads for its contents and search. Both use scripts/app_links.lua.
 
 Needs pandoc and, for the PDF, XeLaTeX with tcolorbox and pdfpages, and Pillow.
@@ -35,6 +35,8 @@ HEADER = BOOK / "latex-header.tex"
 TITLE = "Cryptanalysis guides for young codebreakers"
 SUBTITLE = "How to break classical ciphers with a pencil, squared paper and your own head"
 EDITION = "First edition, November 2026"
+AUTHOR = "Thor Whalen"
+AUTHOR_NOTE = "(...but mostly his sleepless unpaid digital ghostwriters)"
 APP_URL = "https://apps.thorwhalen.com/cryptology/"
 REPO_URL = "https://github.com/thorwhalen/cryptology"
 BOOK_PDF = REPO / "pdf" / "cryptanalysis-guides-for-young-codebreakers.pdf"
@@ -166,7 +168,7 @@ def copyright_page() -> str:
 {SUBTITLE}
 
 \medskip
-\noindent {EDITION}.
+\noindent \copyright\ 2026 {AUTHOR}. {EDITION}.
 
 \medskip
 \noindent Text and figures licensed under Creative Commons Attribution 4.0 (CC BY 4.0): \url{{https://creativecommons.org/licenses/by/4.0/}}. You may copy, share and adapt them, for any purpose, with credit.
@@ -190,6 +192,10 @@ def title_page(cover: Path) -> str:
   {{\fontsize{{34}}{{40}}\selectfont\bfseries {TITLE}\par}}
   \vspace{{1cm}}
   {{\Large {SUBTITLE}\par}}
+  \vspace{{1.4cm}}
+  {{\LARGE\bfseries {AUTHOR}\par}}
+  \vspace{{0.25cm}}
+  {{\large\itshape\color{{black!65}} {AUTHOR_NOTE}\par}}
   \vspace{{1.2cm}}
   {{\color{{appgreen}}\rule{{5cm}}{{4pt}}}}\par
   \vfill
@@ -235,12 +241,40 @@ def dedication_page() -> str:
 """
 
 
+# Where the author goes on book/cover.jpg: the empty band above the title, aligned with its left edge.
+COVER_LEFT, COVER_NAME_TOP, COVER_NOTE_GAP = 66, 118, 22
+COVER_NAME_PX, COVER_NOTE_PX = 84, 38
+COVER_FONTS = ("/System/Library/Fonts/HelveticaNeue.ttc", "/Library/Fonts/Arial Unicode.ttf")
+
+
+def cover_with_author():
+    """book/cover.jpg with the author's name, and the note under it, in the band above the title."""
+    from PIL import Image, ImageDraw, ImageFont
+
+    def font(px: int, index: int):
+        for path in COVER_FONTS:
+            try:
+                return ImageFont.truetype(path, px, index=index if path.endswith(".ttc") else 0)
+            except OSError:
+                continue
+        return ImageFont.load_default(px)
+
+    cover = Image.open(BOOK / "cover.jpg").convert("RGB")
+    draw = ImageDraw.Draw(cover)
+    name = font(COVER_NAME_PX, 1)  # Helvetica Neue Bold
+    note = font(COVER_NOTE_PX, 2)  # Helvetica Neue Italic
+    draw.text((COVER_LEFT, COVER_NAME_TOP), AUTHOR, font=name, fill=(20, 20, 20))
+    name_bottom = draw.textbbox((COVER_LEFT, COVER_NAME_TOP), AUTHOR, font=name)[3]
+    draw.text((COVER_LEFT, name_bottom + COVER_NOTE_GAP), AUTHOR_NOTE, font=note, fill=(80, 80, 80))
+    return cover
+
+
 def cover_pdf(work: Path) -> Path:
     """The cover on an A4 page: fit to the height, the sides padded in the cover's own paper color."""
     from PIL import Image
 
     a4_w, a4_h = 2480, 3508  # 300 dpi
-    cover = Image.open(BOOK / "cover.jpg").convert("RGB")
+    cover = cover_with_author()
     scale = a4_h / cover.height
     cover = cover.resize((round(cover.width * scale), a4_h), Image.LANCZOS)
     paper = cover.getpixel((4, a4_h // 2))
@@ -272,7 +306,7 @@ def build_pdf(all_guides: list[Guide]) -> Path:
             "--top-level-division=chapter", "--toc", "-V", "toc-depth=0",
             "-V", "documentclass=book", "-V", "classoption=oneside,openany",
             "-V", "geometry:margin=2.2cm",
-            "-M", f"title={TITLE}", "-M", f"subtitle={SUBTITLE}", "-M", f"date={EDITION}",
+            "-M", f"title={TITLE}", "-M", f"subtitle={SUBTITLE}", "-M", f"date={EDITION}", "-M", f"author={AUTHOR}",
             "-V", "toc-title=Contents",
         ])
     return BOOK_PDF
@@ -320,6 +354,7 @@ def cover_icon(size: int = 256) -> Path:
 def build_web(all_guides: list[Guide]) -> Path:
     HTML_DIR.mkdir(exist_ok=True)
     cover_icon()
+    cover_with_author().save(HTML_DIR / "cover.jpg", quality=88, optimize=True, progressive=True)
     entries = []
     front = read_guide(BOOK / "before-you-start.md")
     front.path = BOOK / "00-before-you-start.md"
@@ -336,7 +371,7 @@ def build_web(all_guides: list[Guide]) -> Path:
             "sections": sections_of(html),
             "words": [{"term": t, "definition": d} for t, d in g.words],
         })
-    index = {"title": TITLE, "subtitle": SUBTITLE, "edition": EDITION, "book": f"pdf/{BOOK_PDF.name}", "cover": "guides/book/cover.jpg", "icon": "html/icon.png", "dedication": dedication(), "guides": entries}
+    index = {"title": TITLE, "subtitle": SUBTITLE, "edition": EDITION, "book": f"pdf/{BOOK_PDF.name}", "author": AUTHOR, "author_note": AUTHOR_NOTE, "cover": "html/cover.jpg", "icon": "html/icon.png", "dedication": dedication(), "guides": entries}
     (HTML_DIR / "index.json").write_text(json.dumps(index, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return HTML_DIR
 

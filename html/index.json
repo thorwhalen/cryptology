@@ -3,7 +3,9 @@
  "subtitle": "How to break classical ciphers with a pencil, squared paper and your own head",
  "edition": "First edition, November 2026",
  "book": "pdf/cryptanalysis-guides-for-young-codebreakers.pdf",
- "cover": "guides/book/cover.jpg",
+ "author": "Thor Whalen",
+ "author_note": "(...but mostly his sleepless unpaid digital ghostwriters)",
+ "cover": "html/cover.jpg",
  "icon": "html/icon.png",
  "dedication": [
   "To my daughter Cora, and her honorary brothers Luca and Leo:",
