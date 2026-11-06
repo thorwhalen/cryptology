@@ -75,7 +75,7 @@ PREVIEW_CHARS = 64  # characters of each Caesar shift shown
 TEXT_ROWS = 6  # yellow rows a pasted text may spill into
 MAX_KEY_LENGTH = 20  # Vigenere scan: key lengths 1 to 20
 SLICE_PREVIEW = 40  # letters of each slice shown
-SCAN_LETTERS = 1000  # the key-length scan reads this many letters (plenty for the IoC)
+SCAN_LETTERS = 600  # the key-length scan reads this many letters (plenty for the IoC)
 PAST_END = 9999  # letter number given to positions past the end of the text
 SUMMARY_TAB = "Summary"
 SUMMARY_LINES = 2  # output lines repeated on the Summary tab
@@ -88,9 +88,9 @@ NEAR_TOP = 0.9  # a factor this close to the top count is still a candidate key 
 BEST_GUESS_YOURS = "Best guess for the key length (your gaps)"
 BEST_GUESS_FOUND = "Best guess for the key length (found gaps)"
 MAX_WIDTH = 12  # columnar: widths up to 12
-MAX_GRID_ROWS = 100  # columnar: 12 x 100 = 1200 letters
-MAX_PAIRS = 600  # digraph sheet: pairs counted (1200 letters)
-KASISKI_LETTERS = 600  # repeats sheet: letters searched for repeats
+MAX_GRID_ROWS = 60  # columnar: 12 x 60 = 720 letters
+MAX_PAIRS = 400  # digraph sheet: pairs counted (800 letters)
+KASISKI_LETTERS = 400  # repeats sheet: letters searched for repeats
 TOP_PAIRS = 15
 TOP_LETTERS = 6
 PLACEHOLDER = "_"  # an unsolved letter in the substitution helper
@@ -643,7 +643,7 @@ def build_counts(spec: SheetSpec) -> Workbook:
     for i, letter in enumerate(ALPHABET):
         r = top + 1 + i
         put(ws, f"B{r}", letter, bold=True, align="center", box=True)
-        put(ws, f"C{r}", f"=INDEX({counts},{i + 1})", align="center", box=True)
+        put(ws, f"C{r}", f"=INDEX({counts},ROW()-{top})", align="center", box=True)
         put(ws, f"D{r}", f'=IF(LetterCount=0,"",C{r}/LetterCount*{PERCENT})', fmt="0.0", align="center", box=True)
         put(ws, f"E{r}", ENGLISH_PCT[i], fmt="0.0", align="center", box=True)
         merge_put(ws, r, "F", "J", f'=IF(D{r}="","",REPT("{BAR}",ROUND(D{r}*{BAR_PER_PERCENT},0)))',
@@ -652,11 +652,6 @@ def build_counts(spec: SheetSpec) -> Workbook:
                   color="9E9E9E", size=SIZE_SMALL)
     end = top + N_LETTERS
     ws.conditional_formatting.add(f"B{top + 1}:C{end}", FormulaRule(formula=[f"$C{top + 1}=0"], fill=_fill(FILL_WARN)))
-    bar_chart(ws, title="Your text (blue) and English (orange), percent",
-              cats=Reference(ws, min_col=2, min_row=top + 1, max_row=end),
-              data=[Reference(ws, min_col=4, min_row=top, max_row=end),
-                    Reference(ws, min_col=5, min_row=top, max_row=end)],
-              anchor=f"B{end + 2}", y_title="percent", width=26)
     return finish(page)
 
 
@@ -679,18 +674,18 @@ def build_caesar(spec: SheetSpec) -> Workbook:
     text_input(page, caesar(BAKER, CAESAR_SHIFT))
     counts = letter_counts_row(work, 5)
     english = english_row(work, 7)
-    put(work, "A9", "Counts after moving back by the shift in column A (columns: plain a to z)")
+    # the counts again to the right, so a window of 26 starting s places in holds the counts moved back by s
+    for c in cols(col(2 + N_LETTERS), N_LETTERS):
+        put(work, f"{c}6", f"={col(column_index_from_string(c) - N_LETTERS)}6")
+    put(work, "A9", "Shift s, and the chi-squared of the text moved back by s")
     grid_top = 10
     for s in range(N_LETTERS):
         r = grid_top + s
         put(work, f"A{r}", s)
-        for p, c in enumerate(cols("B", N_LETTERS)):
-            put(work, f"{c}{r}", f"=INDEX({counts},MOD({p}+$A{r},{N_LETTERS})+1)")
-        last = col(1 + N_LETTERS)
-        put(work, f"{col(2 + N_LETTERS)}{r}",
-            f'=IF(LetterCount=0,"",ROUND(SUMPRODUCT((B{r}:{last}{r}-LetterCount*{english})^2/(LetterCount*{english})),{CHI_DECIMALS}))')
-    chi_col = col(2 + N_LETTERS)
-    chis = f"Workings!${chi_col}${grid_top}:${chi_col}${grid_top + N_LETTERS - 1}"
+        moved = f"OFFSET($B$6,0,$A{r},1,{N_LETTERS})"
+        put(work, f"B{r}", f'=IF(LetterCount=0,"",ROUND(SUMPRODUCT(({moved}-LetterCount*{english})^2'
+                           f"/(LetterCount*{english})),{CHI_DECIMALS}))")
+    chis = f"Workings!$B${grid_top}:$B${grid_top + N_LETTERS - 1}"
 
     page.heading("The best shift")
     shifts = f"Workings!$A${grid_top}:$A${grid_top + N_LETTERS - 1}"
@@ -944,20 +939,14 @@ def build_vigenere(spec: SheetSpec) -> Workbook:
     def slice_size(L: str, j: str) -> str:
         return f"IF({j}>{scanned},0,INT(({scanned}-{j})/{L})+1)"
 
-    # chi-squared weights, one column per shift s: W[x][s] = 1 / English[(x - s) mod 26], then a 0 row
-    w_top = pos_top + SCAN_LETTERS + 5
-    put(work, f"A{w_top - 4}", "Weights 1/English: cipher letter x (rows) and shift s (columns); a last row of 0")
-    eng = english_row(work, w_top - 3)
-    put(work, f"A{w_top - 1}", "x \\ s")
-    for s, c in enumerate(cols("B", N_LETTERS)):
-        put(work, f"{c}{w_top - 1}", s)
-    for x in range(N_LETTERS + 1):
-        r = w_top + x
-        work[f"A{r}"] = x
-        for c in cols("B", N_LETTERS):
-            work[f"{c}{r}"] = 0 if x == N_LETTERS else f"=1/INDEX({eng},MOD($A{r}-{c}${w_top - 1},26)+1)"
-    weights = f"Workings!$B${w_top}:${col(1 + N_LETTERS)}${w_top + N_LETTERS}"
-    sum_english = f"SUM({eng})"
+    # English frequencies twice over, down one column: a window of 27 rows starting at (26 - s) mod 26
+    # holds English[(x - s) mod 26] for cipher letters x = 0..25 (the 27th row is ignored)
+    w_top = pos_top + SCAN_LETTERS + 3
+    put(work, f"A{w_top - 1}", "English, twice over (for chi-squared of a shifted slice)")
+    for i in range(2 * N_LETTERS):
+        work[f"A{w_top + i}"] = ALPHABET[i % N_LETTERS]
+        work[f"B{w_top + i}"] = ENGLISH_PCT[i % N_LETTERS] / PERCENT
+    english_twice = f"Workings!$B${w_top}"
 
     page.heading("The scan: average slice IoC for each key length")
     page.note(f"English is about {IOC_ENGLISH}, random letters about {IOC_RANDOM:.3f}. Green: {SLICE_IOC_GOOD} or "
@@ -1000,7 +989,7 @@ def build_vigenere(spec: SheetSpec) -> Workbook:
     L_q = f"{q(page.name)}{L_ref}"
 
     # Workings: chi-squared of each slice (rows) for each shift (columns), and the best shift
-    ch_top = w_top + N_LETTERS + 5
+    ch_top = w_top + 2 * N_LETTERS + 4
     put(work, f"A{ch_top - 2}", "Chosen L: chi-squared of slice j (rows) moved back by shift s (columns)")
     chi_cols = cols("B", N_LETTERS)
     for s, c in enumerate(chi_cols):
@@ -1013,10 +1002,11 @@ def build_vigenere(spec: SheetSpec) -> Workbook:
         r = ch_top + j - 1
         work[f"A{r}"] = j
         n = slice_size(L_q, f"$A{r}")
-        f2 = f"{slice_counts(L_q, f'$A{r}')}^2"
+        freq = slice_counts(L_q, f"$A{r}")
         for c in chi_cols:
-            work[f"{c}{r}"] = (f'=IF(OR($A{r}>{L_q},{n}<1),"",ROUND(SUMPRODUCT({f2},INDEX({weights},0,{c}${ch_top - 1}+1))'
-                               f"/{n}-2*{n}+{n}*{sum_english},{CHI_DECIMALS}))")
+            expected = f"{n}*OFFSET({english_twice},MOD(26-{c}${ch_top - 1},26),0,{N_LETTERS + 1},1)"
+            work[f"{c}{r}"] = (f'=IF(OR($A{r}>{L_q},{n}<1),"",ROUND(SUMPRODUCT((ROW($A$1:$A${N_LETTERS + 1})<={N_LETTERS})'
+                               f"*({freq}-{expected})^2/{expected}),{CHI_DECIMALS}))")
         chi_row = f"{chi_cols[0]}{r}:{chi_cols[-1]}{r}"
         work[f"{best_col}{r}"] = f'=IF($A{r}>{L_q},"",{argmin(chi_row, codes_row)})'
 
@@ -1561,9 +1551,9 @@ _CELL_REF = re.compile(r'<c r="([A-Z]+)(\d+)"')
 _ROW = re.compile(r'<row r="(\d+)"([^>]*?)(/>|>(.*?)</row>)', re.S)
 _FORMULA_CELL = re.compile(r'<c r="([A-Z]+)(\d+)"([^>]*)><f>([^<]*)</f></c>')
 MIN_SHARED = 2  # a run of at least this many filled-down formulas becomes one shared formula
-THEME_PART = "xl/theme/theme1.xml"
+OPTIONAL_PARTS = ("xl/theme/theme1.xml", "docProps/app.xml", "docProps/core.xml")
 STRIP_ADDRESSES = False  # True is valid OOXML (and LibreOffice reads it) but Google Sheets refuses to convert it
-DROP_THEME = True  # optional part; Google Sheets converts without it
+DROP_THEME = True  # drop OPTIONAL_PARTS; Google Sheets converts without them
 
 
 def _share_formulas(xml: str) -> str:
@@ -1649,14 +1639,16 @@ def _compact(data: bytes, *, strip_addresses: bool = STRIP_ADDRESSES, drop_theme
     src = zipfile.ZipFile(io.BytesIO(data))
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as dst:
+        dropped = OPTIONAL_PARTS if drop_theme else ()
+        names = "|".join(re.escape(p.rsplit("/", 1)[1]) for p in dropped) or "(?!)"
         for item in src.infolist():
-            if drop_theme and item.filename == THEME_PART:
-                continue  # optional: the sheets set every font and color themselves
+            if item.filename in dropped:
+                continue  # optional parts: the theme (every font and color is set) and document properties
             content = src.read(item.filename)
             if item.filename.startswith("xl/worksheets/sheet"):
                 content = _compact_sheet(content.decode("utf-8"), strip_addresses=strip_addresses).encode("utf-8")
-            elif drop_theme and item.filename in ("[Content_Types].xml", "xl/_rels/workbook.xml.rels"):
-                content = re.sub(r"<(Override|Relationship)\b[^>]*theme1\.xml\"[^>]*/>", "",
+            elif item.filename in ("[Content_Types].xml", "xl/_rels/workbook.xml.rels", "_rels/.rels"):
+                content = re.sub(rf"<(Override|Relationship)\b[^>]*({names})\"[^>]*/>", "",
                                  content.decode("utf-8")).encode("utf-8")
             dst.writestr(item.filename, content)
     return buf.getvalue()
