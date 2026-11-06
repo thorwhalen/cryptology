@@ -5,7 +5,7 @@
     python guides/scripts/build_book.py --only web  # html/*.html and html/index.json
 
 The book is the nine guides (guides/NN-*.md) as chapters, between front matter (a cover from
-book/cover.jpg, a title page, a copyright page, the contents, book/before-you-start.md) and back
+book/cover.jpg, a title page, a copyright page, the dedication in book/dedication.md, the contents, book/before-you-start.md) and back
 matter (every guide's "Words to know", merged A to Z, then where to go next and about the book).
 
 The web edition is one HTML fragment per guide (no <html> or <head>: the cryptology app wraps
@@ -212,6 +212,29 @@ def unnumbered(markdown: str) -> str:
     )
 
 
+def dedication() -> list[str]:
+    """The dedication's paragraphs (book/dedication.md), for its own page in the book and the app's book page."""
+    path = BOOK / "dedication.md"
+    return [p.strip() for p in path.read_text(encoding="utf-8").split("\n\n") if p.strip()] if path.exists() else []
+
+
+def dedication_page() -> str:
+    paragraphs = dedication()
+    if not paragraphs:
+        return ""
+    body = "\n\n\\medskip\n".join(paragraphs)
+    return rf"""
+\thispagestyle{{empty}}
+\vspace*{{0.28\textheight}}
+\begin{{center}}
+\begin{{minipage}}{{0.72\textwidth}}\centering\itshape\large
+{body}
+\end{{minipage}}
+\end{{center}}
+\clearpage
+"""
+
+
 def cover_pdf(work: Path) -> Path:
     """The cover on an A4 page: fit to the height, the sides padded in the cover's own paper color."""
     from PIL import Image
@@ -232,7 +255,7 @@ def build_pdf(all_guides: list[Guide]) -> Path:
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp)
         cover = cover_pdf(work)
-        (work / "copyright.tex").write_text(copyright_page(), encoding="utf-8")
+        (work / "copyright.tex").write_text(copyright_page() + dedication_page(), encoding="utf-8")
         (work / "titlepage.tex").write_text(title_page(cover), encoding="utf-8")
         front = read_guide(BOOK / "before-you-start.md")
         parts = [as_chapter(front).replace("# Before you start", "# Before you start {.unnumbered}", 1)]
@@ -313,7 +336,7 @@ def build_web(all_guides: list[Guide]) -> Path:
             "sections": sections_of(html),
             "words": [{"term": t, "definition": d} for t, d in g.words],
         })
-    index = {"title": TITLE, "subtitle": SUBTITLE, "edition": EDITION, "book": f"pdf/{BOOK_PDF.name}", "cover": "guides/book/cover.jpg", "icon": "html/icon.png", "guides": entries}
+    index = {"title": TITLE, "subtitle": SUBTITLE, "edition": EDITION, "book": f"pdf/{BOOK_PDF.name}", "cover": "guides/book/cover.jpg", "icon": "html/icon.png", "dedication": dedication(), "guides": entries}
     (HTML_DIR / "index.json").write_text(json.dumps(index, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return HTML_DIR
 
