@@ -4,6 +4,10 @@ Learn how classical ciphers are broken. Nine illustrated guides to cryptanalysis
 
 **The interactive app** that goes with them, with tools, exercises and competition sections: [apps.thorwhalen.com/cryptology](https://apps.thorwhalen.com/cryptology/).
 
+## The book
+
+All nine guides as one book, with a cover, contents, a preface for readers and the adults helping them, and every guide's words merged A to Z: [**Cryptanalysis guides for young codebreakers** (PDF)](pdf/cryptanalysis-guides-for-young-codebreakers.pdf). Read it online, with links straight into the app's tools and exercises: [apps.thorwhalen.com/cryptology/#/guides](https://apps.thorwhalen.com/cryptology/#/guides).
+
 ## The guides
 
 Each guide is a PDF (in [`pdf/`](pdf/)) built from markdown (in [`guides/`](guides/)), with its figures. Each stands on its own, and each says which ciphers its method breaks, why it works, when to try it, and ends with exercises and answers.
@@ -26,8 +30,11 @@ They also work well as sources for Google's Gemini Notebook (NotebookLM): its Vi
 
 ```sh
 python guides/scripts/fig_04_index_of_coincidence.py   # one guide's figures (matplotlib)
-guides/scripts/build_pdfs.sh                          # every PDF (pandoc + xelatex)
+guides/scripts/build_pdfs.sh                          # every guide's PDF (pandoc + xelatex)
+python guides/scripts/build_book.py                   # the book PDF, and html/ for the web edition
 ```
+
+Green "In the app" boxes are blockquotes that start with `**In the app:**`; `guides/scripts/app_links.lua` styles them in the PDFs and the HTML. The book's cover, preface and LaTeX header are in `guides/book/`. The web edition in `html/` is one HTML fragment per guide plus `index.json` (sections and words); the cryptology app reads it at a pinned commit.
 
 How the guides are written: [`guides/style-guide.md`](guides/style-guide.md). Guide 08's live hill-climbing figures need an English quadgram table: set `QUADGRAMS` to a file of `QUADGRAM COUNT` lines (for example Practical Cryptography's `english_quadgrams.txt`).
 

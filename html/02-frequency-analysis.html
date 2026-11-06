@@ -1,0 +1,701 @@
+<section id="frequency-analysis" class="level1">
+<h1>Frequency analysis</h1>
+<p><em>Counting letters to break Caesar, affine and substitution
+ciphers</em></p>
+<p><strong>By the end you can break a Caesar cipher by sliding a bar
+chart, score how English a text looks with one number, and crack a full
+substitution cipher using letter counts and common words.</strong></p>
+<section id="the-big-idea" class="level2">
+<h2>The big idea</h2>
+<p>In English, letters do not appear equally often. E turns up about
+once in every eight letters. Z turns up about once in every 1,300. A
+simple cipher swaps each letter for another, but it swaps it the same
+way every time. So if E was the commonest letter in the message, then
+whatever E turned into is now the commonest letter in the ciphertext.
+Count the letters in the ciphertext, compare the counts with English,
+and the disguise starts to slip. This is <strong>frequency
+analysis</strong>, and it is the oldest serious codebreaking method
+there is.</p>
+<figure>
+<img src="figures/02-english-frequencies.png"
+alt="A bar chart of how often each letter appears in English. E is tallest at 12.7 percent, followed by T, A, O, I and N, highlighted in orange. J, Q, X and Z are almost zero." />
+<figcaption aria-hidden="true">A bar chart of how often each letter
+appears in English. E is tallest at 12.7 percent, followed by T, A, O, I
+and N, highlighted in orange. J, Q, X and Z are almost
+zero.</figcaption>
+</figure>
+</section>
+<section id="a-thousand-years-ago-in-baghdad" class="level2">
+<h2>A thousand years ago in Baghdad</h2>
+<p>The first person known to have written this method down was
+<strong>al-Kindi</strong>, a scholar who worked in Baghdad in the 800s.
+His book, <em>A Manuscript on Deciphering Cryptographic Messages</em>,
+was lost for centuries and rediscovered in an archive in Istanbul in
+1987. His instructions were roughly: take a long text in the same
+language, count how often each letter appears, then count the letters of
+the secret message, and match the commonest with the commonest, the
+second with the second, and so on. That idea broke every simple
+substitution cipher for the next several hundred years.</p>
+</section>
+<section id="which-ciphers-it-breaks" class="level2">
+<h2>Which ciphers it breaks</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Cipher family</th>
+<th>Does frequency analysis help?</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Caesar</td>
+<td>Yes, completely</td>
+<td>Slide the ciphertext’s bar chart until it matches English. Only 26
+positions to try</td>
+</tr>
+<tr>
+<td>Affine</td>
+<td>Yes</td>
+<td>Guess which letters are E and T, then solve for the key (see Guide
+03, Keys and brute force)</td>
+</tr>
+<tr>
+<td>Keyword substitution</td>
+<td>Yes</td>
+<td>Frequencies give the first few letters; common words and the keyword
+finish it</td>
+</tr>
+<tr>
+<td>General substitution</td>
+<td>Yes, with more work</td>
+<td>Frequencies, then common words, then letter patterns</td>
+</tr>
+<tr>
+<td>Vigenère, Beaufort</td>
+<td>Only after splitting</td>
+<td>Each slice of the ciphertext is a Caesar cipher; use frequency
+analysis on each slice (see Guide 05)</td>
+</tr>
+<tr>
+<td>Transposition</td>
+<td>No</td>
+<td>The letter counts are already exactly English; only the order
+changed. (That fact itself tells you it is a transposition)</td>
+</tr>
+<tr>
+<td>Playfair, Hill</td>
+<td>No, not on single letters</td>
+<td>These encrypt pairs of letters, so you count pairs instead (see
+Guide 09)</td>
+</tr>
+<tr>
+<td>Homophonic substitution</td>
+<td>Weakly</td>
+<td>Common letters get several symbols each, which flattens the counts
+on purpose</td>
+</tr>
+</tbody>
+</table>
+<div class="in-app">
+<p><strong>In the app:</strong> The family tree has a page for each of
+these: <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/caesar">Caesar</a>,
+<a
+href="https://apps.thorwhalen.com/cryptology/#/tree/affine">affine</a>,
+<a
+href="https://apps.thorwhalen.com/cryptology/#/tree/monoalphabetic">simple
+substitution</a> and <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/keyword">keyword
+substitution</a>.</p>
+</div>
+</section>
+<section id="why-it-works" class="level2">
+<h2>Why it works</h2>
+<p>Try this experiment. Take a page of any book and count every letter
+on it, making a tally mark under A, B, C and so on. It takes about
+twenty minutes. Then do the same with a different page from a different
+book. The two tallies will look remarkably alike. E will be at or near
+the top. T, A, O, I and N will follow. J, Q, X and Z will have only a
+few marks. Codebreakers remember the order of the top dozen as a
+nonsense phrase: <strong>ETAOIN SHRDLU</strong>.</p>
+<p>Now imagine the page had been put through a substitution cipher,
+where every e was written as F, every t as V, and so on. Your tally for
+the ciphertext would have the same tall bars and short bars. They would
+just be standing over different letters. The tall bar over F is the clue
+that F means e.</p>
+<p>This works because a simple substitution is
+<strong>consistent</strong>: the same plaintext letter always becomes
+the same ciphertext letter. That consistency is the weakness.</p>
+</section>
+<section id="the-grown-up-version" class="level2">
+<h2>The grown-up version</h2>
+<section id="frequencies" class="level3">
+<h3>Frequencies</h3>
+<p>The <strong>frequency</strong> of a letter is the number of times it
+appears, divided by the total number of letters. In a text of 152
+letters where t appears 18 times, its frequency is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>18</mn><mi>/</mi><mn>152</mn><mo>≈</mo><mn>0.118</mn></mrow><annotation encoding="application/x-tex">18 / 152 \approx 0.118</annotation></semantics></math>,
+or 11.8%. (The sign
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≈</mo><annotation encoding="application/x-tex">\approx</annotation></semantics></math>
+means “approximately equal to”.)</p>
+<p>The <strong>expected count</strong> of a letter is how many times it
+would appear if the text were perfectly average English. If English uses
+e 12.7% of the time, then in 152 letters you would expect
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>152</mn><mo>×</mo><mn>0.127</mn><mo>≈</mo><mn>19.3</mn></mrow><annotation encoding="application/x-tex">152 \times 0.127 \approx 19.3</annotation></semantics></math>
+copies of e.</p>
+</section>
+<section id="fitting-a-caesar-shift" class="level3">
+<h3>Fitting a Caesar shift</h3>
+<p>A Caesar cipher slides every letter the same number of places along
+the alphabet. So its bar chart is the English bar chart slid along by
+the same number of places. To find the shift, slide the ciphertext’s bar
+chart back one place at a time until its tall bars sit on top of
+English’s tall bars. With paper, you can draw the ciphertext’s counts on
+a strip and literally slide it along a printed English chart.</p>
+</section>
+<section id="chi-squared-how-english-is-this" class="level3">
+<h3>Chi-squared: how English is this?</h3>
+<p>Looking at two bar charts and saying “those match well” is a
+judgment. A computer, or a tired codebreaker at midnight, needs a
+number. The standard one is called <strong>chi-squared</strong> (say
+“kai squared”;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>χ</mi><annotation encoding="application/x-tex">\chi</annotation></semantics></math>
+is the Greek letter chi).</p>
+<p>For each letter, compare the count you <strong>observed</strong>
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>O</mi><annotation encoding="application/x-tex">O</annotation></semantics></math>)
+with the count you <strong>expected</strong>
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>)
+for English. Then:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>χ</mi><mn>2</mn></msup><mo>=</mo><mo>∑</mo><mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>O</mi><mo>−</mo><mi>E</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>E</mi></mfrac></mrow><annotation encoding="application/x-tex">\chi^2 = \sum \frac{(O - E)^2}{E}</annotation></semantics></math></p>
+<p>Read it from the inside out:</p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo>−</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">O - E</annotation></semantics></math>
+is how far off this letter’s count is.</li>
+<li>Squaring it,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>O</mi><mo>−</mo><mi>E</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><annotation encoding="application/x-tex">(O - E)^2</annotation></semantics></math>,
+makes every difference positive (too many and too few both count as bad)
+and makes big misses count much more than small ones.</li>
+<li>Dividing by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>
+makes the miss relative to what was expected. Being 3 short of an
+expected 19 is a small surprise; seeing 3 copies when you expected 0.1
+is a huge one.</li>
+<li>The symbol
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>∑</mo><annotation encoding="application/x-tex">\sum</annotation></semantics></math>
+(capital sigma) means “add this up over all 26 letters”.</li>
+</ul>
+<p>A <strong>low</strong> score means the counts look like English. A
+<strong>high</strong> score means they do not. A perfect, impossible
+match would score 0. The exact value of a good score depends on the
+length of the text; what matters is that the right answer scores far
+lower than all the wrong ones.</p>
+<p>To use it on a Caesar cipher, try all 26 shifts. For each one, shift
+the ciphertext back, count the letters, and work out
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>χ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\chi^2</annotation></semantics></math>.
+The shift with the lowest score is almost always the key.</p>
+<div class="in-app">
+<p><strong>In the app:</strong> <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/caesar">Caesar</a>
+slides English over your text’s letter counts. Its Disk view turns a
+cipher wheel, and its Scores view scores every shift, the way a computer
+would.</p>
+</div>
+</section>
+</section>
+<section id="worked-example-1-a-caesar-cipher-by-sliding-and-by-scoring"
+class="level2">
+<h2>Worked example 1: a Caesar cipher, by sliding and by scoring</h2>
+<p>Here is a ciphertext I made from an original sentence:</p>
+<pre class="text"><code>PGPCJ XZCYT YRESP MLVPC ZYZFC DECPP EDPWW DESPQ TCDEW ZLQZQ
+ESPOL JEZLW LCRPM WLNVN CZHES PNCZH HLTED ZYESP HTYOZ HDTWW
+LYOAL JDHTE SLDST YJMFE EZYES LETEQ ZFYOD ZXPHS PCPTY ESPEZ
+HY</code></pre>
+<p><strong>Step 1: count.</strong> There are 152 letters. The commonest
+are E (18 times), P (16), Z (14), then Y, L (11 each), and C, S (10
+each).</p>
+<p><strong>Step 2: the obvious guess, and why it fails.</strong> The
+commonest ciphertext letter is E. If E stands for e, the shift is 0, and
+the ciphertext would already be English. It is not. So in this message,
+e is not the commonest letter. That happens in short texts: here, as you
+will see, the message has more t’s than e’s.</p>
+<p><strong>Step 3: try the next guess.</strong> Suppose P stands for e.
+From e to P is 11 places (f, g, h, i, j, k, l, m, n, o, P). Then E would
+stand for the letter 11 places before E, which is t. And Z would stand
+for o. Commonest letters t, e, o: that sounds like English.</p>
+<p><strong>Step 4: check with the bar charts.</strong> The picture below
+shows the ciphertext moved back by 0, 4 and 11 places, laid over
+English. Only the shift of 11 puts the ciphertext’s tall bars on
+English’s tall bars.</p>
+<figure>
+<img src="figures/02-caesar-slide.png"
+alt="Three bar charts. In each, light blue bars show English letter frequencies and solid bars show the ciphertext moved back by some shift. At shift 0 and shift 4 the solid bars miss the blue ones, with chi-squared scores of 2037.9 and 962.8. At shift 11 they line up closely, with a chi-squared score of 14.6." />
+<figcaption aria-hidden="true">Three bar charts. In each, light blue
+bars show English letter frequencies and solid bars show the ciphertext
+moved back by some shift. At shift 0 and shift 4 the solid bars miss the
+blue ones, with chi-squared scores of 2037.9 and 962.8. At shift 11 they
+line up closely, with a chi-squared score of 14.6.</figcaption>
+</figure>
+<p><strong>Step 5: score every shift.</strong> Here is the chi-squared
+calculation for the shift of 11, letter by letter. The text has 152
+letters, so the expected count of each letter is 152 times its English
+frequency.</p>
+<table>
+<thead>
+<tr>
+<th>Letter</th>
+<th>Observed
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>O</mi><annotation encoding="application/x-tex">O</annotation></semantics></math></th>
+<th>Expected
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math></th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>O</mi><mo>−</mo><mi>E</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>/</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">(O-E)^2/E</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>11</td>
+<td>12.46</td>
+<td>0.17</td>
+</tr>
+<tr>
+<td>b</td>
+<td>3</td>
+<td>2.28</td>
+<td>0.23</td>
+</tr>
+<tr>
+<td>c</td>
+<td>3</td>
+<td>4.26</td>
+<td>0.37</td>
+</tr>
+<tr>
+<td>d</td>
+<td>4</td>
+<td>6.54</td>
+<td>0.98</td>
+</tr>
+<tr>
+<td>e</td>
+<td>16</td>
+<td>19.30</td>
+<td>0.57</td>
+</tr>
+<tr>
+<td>f</td>
+<td>4</td>
+<td>3.34</td>
+<td>0.13</td>
+</tr>
+<tr>
+<td>g</td>
+<td>2</td>
+<td>3.04</td>
+<td>0.36</td>
+</tr>
+<tr>
+<td>h</td>
+<td>10</td>
+<td>9.27</td>
+<td>0.06</td>
+</tr>
+<tr>
+<td>i</td>
+<td>9</td>
+<td>10.64</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td>j</td>
+<td>0</td>
+<td>0.23</td>
+<td>0.23</td>
+</tr>
+<tr>
+<td>k</td>
+<td>2</td>
+<td>1.17</td>
+<td>0.59</td>
+</tr>
+<tr>
+<td>l</td>
+<td>7</td>
+<td>6.08</td>
+<td>0.14</td>
+</tr>
+<tr>
+<td>m</td>
+<td>2</td>
+<td>3.65</td>
+<td>0.74</td>
+</tr>
+<tr>
+<td>n</td>
+<td>11</td>
+<td>10.18</td>
+<td>0.07</td>
+</tr>
+<tr>
+<td>o</td>
+<td>14</td>
+<td>11.40</td>
+<td>0.59</td>
+</tr>
+<tr>
+<td>p</td>
+<td>1</td>
+<td>2.89</td>
+<td>1.23</td>
+</tr>
+<tr>
+<td>q</td>
+<td>0</td>
+<td>0.14</td>
+<td>0.14</td>
+</tr>
+<tr>
+<td>r</td>
+<td>10</td>
+<td>9.12</td>
+<td>0.08</td>
+</tr>
+<tr>
+<td>s</td>
+<td>9</td>
+<td>9.58</td>
+<td>0.03</td>
+</tr>
+<tr>
+<td>t</td>
+<td>18</td>
+<td>13.83</td>
+<td>1.26</td>
+</tr>
+<tr>
+<td>u</td>
+<td>3</td>
+<td>4.26</td>
+<td>0.37</td>
+</tr>
+<tr>
+<td>v</td>
+<td>1</td>
+<td>1.49</td>
+<td>0.16</td>
+</tr>
+<tr>
+<td>w</td>
+<td>8</td>
+<td>3.65</td>
+<td>5.19</td>
+</tr>
+<tr>
+<td>x</td>
+<td>0</td>
+<td>0.23</td>
+<td>0.23</td>
+</tr>
+<tr>
+<td>y</td>
+<td>4</td>
+<td>3.04</td>
+<td>0.30</td>
+</tr>
+<tr>
+<td>z</td>
+<td>0</td>
+<td>0.11</td>
+<td>0.11</td>
+</tr>
+</tbody>
+</table>
+<p>The last column adds up to 14.58, which rounds to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>χ</mi><mn>2</mn></msup><mo>≈</mo><mn>14.6</mn></mrow><annotation encoding="application/x-tex">\chi^2 \approx 14.6</annotation></semantics></math>.
+The biggest single contribution is w (5.19): this message happens to
+mention a crow, a windowsill and somewhere, so it has more w’s than
+average English.</p>
+<p>Compare the shift of 0. Then the ciphertext letter Z, which appears
+14 times, would have to be the plaintext letter z, which English expects
+only
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>152</mn><mo>×</mo><mn>0.00074</mn><mo>≈</mo><mn>0.11</mn></mrow><annotation encoding="application/x-tex">152 \times 0.00074 \approx 0.11</annotation></semantics></math>
+times in a text this long. That one letter contributes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>14</mn><mo>−</mo><mn>0.11</mn><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>/</mi><mn>0.11</mn><mo>≈</mo><mn>1715</mn></mrow><annotation encoding="application/x-tex">(14 - 0.11)^2 / 0.11 \approx 1715</annotation></semantics></math>
+to the score. Wrong shifts are punished hard.</p>
+<p>Doing this for all 26 shifts gives the chart below. Shift 11 scores
+14.6. The next-best shift, 22, scores 586.9. It is not close.</p>
+<figure>
+<img src="figures/02-chi-squared-by-shift.png"
+alt="A bar chart of the chi-squared score for each of the 26 Caesar shifts. Most scores are between about 600 and 3,650. Shift 11 has an almost invisible bar with a score of 14.6, marked as the lowest and most English." />
+<figcaption aria-hidden="true">A bar chart of the chi-squared score for
+each of the 26 Caesar shifts. Most scores are between about 600 and
+3,650. Shift 11 has an almost invisible bar with a score of 14.6, marked
+as the lowest and most English.</figcaption>
+</figure>
+<p><strong>Step 6: decrypt.</strong> Moving every letter back 11 places
+gives:</p>
+<p><code>every morning the baker on our street sells the first loaf of the day to a large black crow the crow waits on the windowsill and pays with a shiny button that it found somewhere in the town</code></p>
+</section>
+<section
+id="worked-example-2-a-substitution-cipher-by-counts-and-common-words"
+class="level2">
+<h2>Worked example 2: a substitution cipher, by counts and common
+words</h2>
+<p>A keyword substitution scrambles the alphabet, so there is no single
+shift to find: each letter has its own disguise. There are far too many
+possible keys to try them all (Guide 03 explains just how many).
+Frequency analysis lets you find them one letter at a time. Here is a
+ciphertext that kept its spaces and punctuation, which makes it a good
+first one to break:</p>
+<pre class="text"><code>EV ZSU S OPIW SMW RXEFV MEAKV ZKFM VKF PIW OIPOH EM VKF VPZFT
+UVPQQFW SV FBSOVIC MEMF. MPNPWC EM VKF YEIISAF OPXIW TFJFJNFT S
+VEJF ZKFM VKF OIPOH KSW NFFM ZTPMA, UP VKF QFPQIF ASVKFTFW EM VKF
+URXSTF VP UVSTF SV EV. VKF NSHFT USEW VKSV VKF VPZFT ZSU KSXMVFW.
+VKF VFSOKFT USEW VKSV VKF AFSTU ZFTF UEJQIC LTPDFM. NXV S UJSII
+AETI ZEVK S ISMVFTM OIEJNFW VKF UVSETU SMW LPXMW S MPVF VXOHFW
+NFVZFFM VKF ZKFFIU. EV USEW VKSV VKF OIPOH ZPXIW UVSTV SASEM ZKFM
+UPJFPMF EM VKF YEIISAF VPIW VKF VTXVK.</code></pre>
+<p><strong>Step 1: count the letters.</strong> There are 389 letters.
+The ten commonest are F (57), V (50), S (34), K (29), M (24), E (22), P
+(22), I (21), W (18) and T (18). The letter G never appears.</p>
+<p><strong>Step 2: match by rank, but only as a first guess.</strong>
+English’s commonest letters are e, t, a, o, i, n. So F is probably e, V
+is probably t, S might be a. Beyond the top three, the ranks get
+unreliable: in a few hundred letters, letters with similar frequencies
+easily swap places. The picture shows how the true answers line up. The
+top three match exactly; the rest are close but shuffled.</p>
+<figure>
+<img src="figures/02-rank-matching.png"
+alt="Two ranked lists side by side. On the left, the ten commonest ciphertext letters F, V, S, K, M, E, P, I, W, T with their percentages. On the right, the ten commonest English letters E, T, A, O, I, N, S, H, R, D. Green arrows join F to E, V to T and S to A. Red arrows show the rest cross over: K goes to H, M to N, E to I, P to O." />
+<figcaption aria-hidden="true">Two ranked lists side by side. On the
+left, the ten commonest ciphertext letters F, V, S, K, M, E, P, I, W, T
+with their percentages. On the right, the ten commonest English letters
+E, T, A, O, I, N, S, H, R, D. Green arrows join F to E, V to T and S to
+A. Red arrows show the rest cross over: K goes to H, M to N, E to I, P
+to O.</figcaption>
+</figure>
+<p><strong>Step 3: use the commonest word.</strong> The three-letter
+word <code>VKF</code> appears 15 times. The commonest three-letter word
+in English is “the”. And V and F are the two commonest letters, which
+fits t and e perfectly. So <strong>V = t, K = h, F = e</strong>.</p>
+<p><strong>Step 4: one-letter words.</strong> The word <code>S</code>
+stands alone 5 times. One-letter English words are “a” and “I”. S is
+also the third commonest letter, like a. So <strong>S = a</strong>.
+Check it: the word <code>VKSV</code>, which appears 3 times, now reads
+t-h-a-t. “That.” It fits.</p>
+<p><strong>Step 5: short words.</strong> Two-letter words
+<code>EV</code> (3 times) and <code>EM</code> (4 times) both start with
+E. With V = t, <code>EV</code> is “?t”, so it could be “it” or “at”.
+Since a is taken, E = i. Then <code>EM</code> is “i?”: “in” or “is”. The
+four-letter word <code>ZKFM</code> appears 3 times and reads “?he?”.
+Words that fit are “when”, “then”, “them”, “they”. If M = n (from “in”),
+then <code>ZKFM</code> is “?hen”, and since t is already taken, it must
+be “when”. So <strong>E = i, M = n, Z = w</strong>.</p>
+<p><strong>Step 6: more words fall.</strong> Now <code>ZSU</code> reads
+“wa?”, which is surely “was”: <strong>U = s</strong>. <code>SMW</code>
+reads “an?”, most likely “and”: <strong>W = d</strong>. Check:
+<code>USEW</code> now reads “said”, a real word, so both guesses hold
+up. The word <code>PIW</code> now reads “??d”, with two letters you have
+not found yet, in the phrase <code>VKF PIW OIPOH</code>: “the ??d
+?????”. A common three-letter word ending in d is “old”: <strong>P = o,
+I = l</strong>. Then <code>OIPOH</code> reads “?lo??” with its first and
+fourth letters the same: “clock”. So <strong>O = c, H = k</strong>.</p>
+<figure>
+<img src="figures/02-substitution-steps.png"
+alt="Four rows of the same ciphertext line, each with the plaintext found so far written underneath. Row 1 fills in t, h and e. Row 2 adds a. Row 3 adds i, n and w. Row 4 adds s, d, o, l, c and k, so the line reads “it was a cold and ..iet ni.ht when the old clock in the towe.”. Letters found at each step are highlighted in a new color." />
+<figcaption aria-hidden="true">Four rows of the same ciphertext line,
+each with the plaintext found so far written underneath. Row 1 fills in
+t, h and e. Row 2 adds a. Row 3 adds i, n and w. Row 4 adds s, d, o, l,
+c and k, so the line reads “it was a cold and ..iet ni.ht when the old
+clock in the towe.”. Letters found at each step are highlighted in a new
+color.</figcaption>
+</figure>
+<p><strong>Step 7: finish by reading.</strong> The first sentence now
+reads “it was a cold and ??iet ni?ht when the old clock in the towe? …”
+and your brain fills the gaps. “quiet” gives <strong>R = q, X =
+u</strong>; “night” gives <strong>A = g</strong>. The rest fall the same
+way: <code>VPZFT</code> is “tower” (T = r), <code>MPNPWC</code> is
+“nobody” (N = b, C = y), <code>TFJFJNFT</code> is “remember” (J = m),
+<code>UVPQQFW</code> is “stopped” (Q = p), <code>YEIISAF</code> is
+“village” (Y = v), <code>LTPDFM</code> is “frozen” (L = f, D = z), and
+<code>FBSOVIC</code> is “exactly” (B = x). That is 25 letters. The 26th,
+G, never appears because the message has no j.</p>
+<p><strong>Step 8: recover the key.</strong> Write down the cipher
+letter for each plaintext letter, in alphabetical order. A keyword
+substitution starts its cipher alphabet with a keyword, then lists the
+unused letters in order. Here the keyword jumps out:</p>
+<figure>
+<img src="figures/02-key-recovered.png"
+alt="The plain alphabet a to z in blue boxes, with the cipher alphabet underneath in orange boxes: S N O W F L A K E, highlighted, followed by G H I J M P Q R T U V X Y Z B C D." />
+<figcaption aria-hidden="true">The plain alphabet a to z in blue boxes,
+with the cipher alphabet underneath in orange boxes: S N O W F L A K E,
+highlighted, followed by G H I J M P Q R T U V X Y Z B C D.</figcaption>
+</figure>
+<p>The keyword was SNOWFLAKE. Once you spot a keyword, you can fill in
+any letters you were unsure about, and check every one.</p>
+<p>The full message:
+<code>it was a cold and quiet night when the old clock in the tower stopped at exactly nine. nobody in the village could remember a time when the clock had been wrong, so the people gathered in the square to stare at it. ...</code></p>
+<div class="in-app">
+<p><strong>In the app:</strong> <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/substitution">Substitution</a>
+lets you tap a cipher letter, then the plain letter you think it stands
+for, and fills in the text as you go.</p>
+</div>
+</section>
+<section id="when-to-try-it" class="level2">
+<h2>When to try it</h2>
+<ul>
+<li>The IoC is near English (about 0.067), so there is one cipher
+alphabet (see Guide 01, Reading the clues).</li>
+<li>The letter counts are bumpy, with a few very common letters and a
+few missing ones, but not on the English letters.</li>
+<li>The ciphertext keeps its spaces: then common words make it
+fast.</li>
+<li>You suspect a Caesar or affine cipher, and want to score the
+candidates rather than read 26 or 312 attempts by eye.</li>
+<li>You have split a Vigenère ciphertext into slices: each slice is a
+Caesar cipher, and chi-squared finds each slice’s shift.</li>
+</ul>
+</section>
+<section id="when-not-to" class="level2">
+<h2>When not to</h2>
+<ul>
+<li>The letter counts already look exactly like English. Then the
+letters are untouched and only their order has changed: it is a
+transposition, and no letter swap will help.</li>
+<li>The counts are flat (IoC near 0.040). Several alphabets are mixing
+the counts, so first find the key length (guides 04 and 05).</li>
+<li>The text is very short (under about 50 letters). Counts that small
+are unreliable. Look for cribs instead (Guide 06).</li>
+</ul>
+</section>
+<section id="traps-and-tips" class="level2">
+<h2>Traps and tips</h2>
+<ul>
+<li><strong>The commonest letter is not always e.</strong> In worked
+example 1, t beat e. Never stake everything on one letter; match the
+whole shape, or use chi-squared.</li>
+<li><strong>Ranks below the top few are a mess.</strong> Use frequencies
+to get started, then switch to words as soon as you can.</li>
+<li><strong>Unusual texts.</strong> A message about a zoo full of
+zebras, or a text full of names, has strange counts. A message written
+without the letter e (it has been done, as a whole novel) would fool you
+completely.</li>
+<li><strong>Missing spaces.</strong> Most competition ciphers remove
+spaces or group letters in fives. Then look for common letter groups
+instead of words: TH, HE, IN, ER, AN are the commonest pairs, and THE,
+AND, ING are the commonest triples. A ciphertext triple that appears
+many times is probably THE.</li>
+<li><strong>Double letters.</strong> A substitution keeps doubles: LL
+stays a double, just of a different letter. English doubles are usually
+LL, EE, SS, OO, TT.</li>
+<li><strong>Write in pencil.</strong> Every guess might be wrong. Keep a
+table of which cipher letter maps to which plaintext letter, and when a
+guess produces nonsense, undo it.</li>
+<li><strong>Look for the keyword.</strong> After a dozen letters, write
+the cipher alphabet out in order. A keyword substitution leaves a
+recognizable word at the start, and a long run of the alphabet in order
+after it. Spotting it fills in the rest.</li>
+</ul>
+</section>
+<section id="try-it-yourself" class="level2">
+<h2>Try it yourself</h2>
+<ol type="1">
+<li>A long Caesar ciphertext has commonest letters X, M, T and H, in
+that order. What is the shift? Check your answer using all four
+letters.</li>
+<li>A text has 200 letters. The letter e appears 30 times and the letter
+z appears 2 times. Using English frequencies of 12.7% for e and 0.074%
+for z, work out each letter’s contribution
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>O</mi><mo>−</mo><mi>E</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>/</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">(O - E)^2 / E</annotation></semantics></math>
+to the chi-squared score. Which letter makes the score worse, and
+why?</li>
+<li>A substitution ciphertext with spaces contains the word
+<code>ZIT</code> nine times, the word <code>ZIQZ</code> twice, and the
+word <code>Q</code> on its own three times. What do these three words
+probably say?</li>
+</ol>
+<div class="in-app">
+<p><strong>In the app:</strong> Practice with <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/caesar/1">Caesar:
+match the bars</a>, then <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/substitution-spaces/1">Substitution
+with word breaks</a>, then the harder <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/substitution-blocks/1">Substitution
+without word breaks</a>.</p>
+</div>
+</section>
+<section id="answers" class="level2">
+<h2>Answers</h2>
+<ol type="1">
+<li>If X is e, the shift is 19 (e is letter 4 and X is letter 23,
+counting A as 0;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>23</mn><mo>−</mo><mn>4</mn><mo>=</mo><mn>19</mn></mrow><annotation encoding="application/x-tex">23 - 4 = 19</annotation></semantics></math>).
+Check: t is letter 19, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>19</mn><mo>+</mo><mn>19</mn><mo>=</mo><mn>38</mn></mrow><annotation encoding="application/x-tex">19 + 19 = 38</annotation></semantics></math>,
+which goes past Z, so subtract 26 to get 12, which is M. a moves to T,
+and o moves to H. All four fit, so the shift is 19.</li>
+<li>For e:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mn>200</mn><mo>×</mo><mn>0.127</mn><mo>=</mo><mn>25.4</mn></mrow><annotation encoding="application/x-tex">E = 200 \times 0.127 = 25.4</annotation></semantics></math>,
+so the contribution is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>30</mn><mo>−</mo><mn>25.4</mn><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>/</mi><mn>25.4</mn><mo>=</mo><mn>21.16</mn><mi>/</mi><mn>25.4</mn><mo>≈</mo><mn>0.83</mn></mrow><annotation encoding="application/x-tex">(30 - 25.4)^2 / 25.4 = 21.16 / 25.4 \approx 0.83</annotation></semantics></math>.
+For z:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mn>200</mn><mo>×</mo><mn>0.00074</mn><mo>=</mo><mn>0.148</mn></mrow><annotation encoding="application/x-tex">E = 200 \times 0.00074 = 0.148</annotation></semantics></math>,
+so the contribution is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>2</mn><mo>−</mo><mn>0.148</mn><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>/</mi><mn>0.148</mn><mo>≈</mo><mn>23.2</mn></mrow><annotation encoding="application/x-tex">(2 - 0.148)^2 / 0.148 \approx 23.2</annotation></semantics></math>.
+The two z’s make the score much worse, because z is so rare that even
+two of them are a big surprise, while 30 e’s is only a little more than
+expected.</li>
+<li><code>ZIT</code> = the, <code>ZIQZ</code> = that, <code>Q</code> =
+a. The letters agree: Z = t and I = h in both words, and Q = a in both
+“that” and “a”.</li>
+</ol>
+</section>
+<section id="words-to-know" class="level2">
+<h2>Words to know</h2>
+<ul>
+<li><strong>Frequency analysis</strong>: breaking a cipher by comparing
+its letter counts with those of the language.</li>
+<li><strong>Frequency</strong>: how often a letter appears, as a
+fraction of all the letters.</li>
+<li><strong>Expected count</strong>: how many times a letter would
+appear in this many letters of average English.</li>
+<li><strong>Chi-squared</strong>
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>χ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\chi^2</annotation></semantics></math>):
+a score of how far a set of counts is from English; lower means more
+English-like.</li>
+<li><strong>Monoalphabetic substitution</strong>: a cipher that replaces
+each letter with another, the same way every time.</li>
+<li><strong>Keyword substitution</strong>: a substitution whose cipher
+alphabet starts with a keyword, followed by the unused letters in
+order.</li>
+<li><strong>ETAOIN SHRDLU</strong>: the approximate order of the twelve
+commonest letters in English.</li>
+</ul>
+</section>
+<section id="going-further" class="level2">
+<h2>Going further</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Frequency_analysis">Frequency
+analysis</a> on Wikipedia.</li>
+<li><a href="https://en.wikipedia.org/wiki/Al-Kindi">Al-Kindi</a> on
+Wikipedia.</li>
+<li><a
+href="http://practicalcryptography.com/cryptanalysis/text-characterisation/chi-squared-statistic/">Practical
+Cryptography: chi-squared statistic</a> and <a
+href="http://practicalcryptography.com/cryptanalysis/letter-frequencies-various-languages/english-letter-frequencies/">English
+letter frequencies</a>.</li>
+<li><a href="https://www.cipherchallenge.org/resources-media/">The
+National Cipher Challenge resources</a>, whose BOSS lessons build up to
+cracking keyword ciphers.</li>
+<li>Simon Singh, <em>The Code Book</em> (1999), chapter 1, tells the
+story of al-Kindi and of Mary Queen of Scots, whose substitution cipher
+was broken by frequency analysis.</li>
+</ul>
+</section>
+</section>

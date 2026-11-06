@@ -1,0 +1,639 @@
+<section id="two-letters-at-a-time" class="level1">
+<h1>Two letters at a time</h1>
+<p><em>Polybius, Playfair and Hill: ciphers that work on pairs</em></p>
+<p><strong>By the end you can recognize a Playfair or a Hill cipher just
+by counting, and you can break a Hill cipher from four letters you can
+guess.</strong></p>
+<section id="the-big-idea" class="level2">
+<h2>The big idea</h2>
+<p>Most simple ciphers change one letter at a time, so E always turns
+into the same thing, and counting letters gives the game away.
+<strong>Polygraphic</strong> ciphers (“poly” means many, “graph” means
+letter) change letters in groups, usually pairs. Now E turns into
+different letters depending on its partner: the E in HE and the E in ER
+are encrypted differently. Counting single letters stops working. But
+pairs of letters have their own fingerprint, because some pairs are far
+more common than others.</p>
+<figure>
+<img src="figures/09-digraphs.png"
+alt="The twelve commonest pairs of letters in English, from TH (3.56 percent of all pairs) and HE (3.07 percent) down to TI and ES (1.34 percent each), compared with 0.15 percent, the share each pair would have if all 676 pairs were equally likely." />
+<figcaption aria-hidden="true">The twelve commonest pairs of letters in
+English, from TH (3.56 percent of all pairs) and HE (3.07 percent) down
+to TI and ES (1.34 percent each), compared with 0.15 percent, the share
+each pair would have if all 676 pairs were equally likely.</figcaption>
+</figure>
+<p>TH is more than twenty times as common as an average pair. A cipher
+that works on pairs is really a substitution on pairs instead of
+letters, and that is where you attack it. Each of these ciphers also
+leaves its own set of <strong>tells</strong>: small rules it can never
+break, which you can check by counting.</p>
+</section>
+<section id="which-ciphers-it-breaks" class="level2">
+<h2>Which ciphers it breaks</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Cipher</th>
+<th>Do these methods help?</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Polybius square</td>
+<td>Yes</td>
+<td>Each letter becomes two digits. Turn each pair back into one symbol,
+then use frequency analysis (Guide 02).</td>
+</tr>
+<tr>
+<td>ADFGVX</td>
+<td>Partly</td>
+<td>A Polybius square followed by a columnar transposition: undo the
+transposition first (Guide 07), then the square.</td>
+</tr>
+<tr>
+<td>Playfair</td>
+<td>Yes</td>
+<td>Check its tells. Then use a crib, reversed pairs, and pair
+frequencies, or a computer search (Guide 08).</td>
+</tr>
+<tr>
+<td>Four-square, two-square</td>
+<td>Partly</td>
+<td>Similar tells to Playfair, similar attacks.</td>
+</tr>
+<tr>
+<td>Hill (2x2)</td>
+<td>Yes</td>
+<td>Check its tells. A four-letter crib gives four equations: solve them
+for the key.</td>
+</tr>
+<tr>
+<td>Caesar, Vigenère, substitution</td>
+<td>No</td>
+<td>They work one letter at a time: see Guides 02 to 05.</td>
+</tr>
+<tr>
+<td>Transposition</td>
+<td>No</td>
+<td>Letter counts look like plain English (Guide 07).</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="why-it-works" class="level2">
+<h2>Why it works</h2>
+<section id="the-polybius-square-letters-as-coordinates" class="level3">
+<h3>The Polybius square: letters as coordinates</h3>
+<p>Write the alphabet in a 5x5 square. There are 26 letters and only 25
+spaces, so I and J share a square (J is the rarest letter, and you can
+usually guess it back from the context). Number the rows and columns 1
+to 5. Now every letter has an address: row first, then column.</p>
+<figure>
+<img src="figures/09-polybius.png"
+alt="A 5x5 square of letters A to Z (I and J together) with rows numbered 1 to 5 in red and columns 1 to 5 in blue; HELLO becomes 23 15 31 31 34." />
+<figcaption aria-hidden="true">A 5x5 square of letters A to Z (I and J
+together) with rows numbered 1 to 5 in red and columns 1 to 5 in blue;
+HELLO becomes 23 15 31 31 34.</figcaption>
+</figure>
+<p>On its own, Polybius is just a substitution wearing a disguise: each
+letter always becomes the same pair of digits. Group the digits in
+pairs, give each pair a symbol, and count. The tells: only the digits 1
+to 5, and an even number of them.</p>
+<p>The square becomes important because it <strong>hides inside other
+ciphers</strong>. The <strong>ADFGVX</strong> cipher, used by the German
+army in 1918, used a 6x6 square (26 letters plus 10 digits), with rows
+and columns labeled A, D, F, G, V and X instead of numbers. Those six
+letters were chosen because they sound very different in Morse code.
+Each letter became two of them, and then the whole string was scrambled
+by a columnar transposition. Tell: a ciphertext made of only the letters
+A, D, F, G, V and X. Other ciphers built on the square include bifid and
+the Nihilist cipher.</p>
+</section>
+<section id="playfair-a-square-that-encrypts-pairs" class="level3">
+<h3>Playfair: a square that encrypts pairs</h3>
+<p>Playfair was invented in 1854 by Charles Wheatstone and named after
+his friend Lord Playfair, who promoted it. It was used by the British
+army in the Boer War and the First World War. It uses a 5x5 square too,
+but filled from a <strong>keyword</strong>. For the keyword LANTERN:
+write its letters without repeats (L, A, N, T, E, R), then the rest of
+the alphabet in order, skipping letters already used and merging J into
+I.</p>
+<pre><code>L A N T E
+R B C D F
+G H I K M
+O P Q S U
+V W X Y Z</code></pre>
+<p><strong>Preparing the message.</strong> Take the letters only (J
+becomes I) and split them into pairs. A pair may never be two of the
+same letter, so if a pair would be doubled, put an X between them. If
+one letter is left over at the end, add an X. “The balloon will rise at
+noon” becomes:</p>
+<pre><code>TH EB AL LO ON WI LX LR IS EA TN OX ON</code></pre>
+<p>Look at WI LX LR: “will” has a double L, so an X goes between the Ls.
+In “noon”, the double O gets an X.</p>
+<p><strong>Encrypting each pair.</strong> There are three rules,
+depending on where the two letters sit in the square.</p>
+<figure>
+<img src="figures/09-playfair-rules.png"
+alt="Three copies of the LANTERN square. Rectangle rule: T and H are corners of a rectangle, and each is replaced by the corner in its own row, giving AK. Same row rule: A and L each move one step right, giving NA. Same column rule: L and O each move one step down, giving RV." />
+<figcaption aria-hidden="true">Three copies of the LANTERN square.
+Rectangle rule: T and H are corners of a rectangle, and each is replaced
+by the corner in its own row, giving AK. Same row rule: A and L each
+move one step right, giving NA. Same column rule: L and O each move one
+step down, giving RV.</figcaption>
+</figure>
+<ol type="1">
+<li><strong>Rectangle.</strong> If the letters are in different rows and
+columns, they mark two corners of a rectangle. Replace each letter with
+the other corner <strong>in its own row</strong>. TH becomes AK.</li>
+<li><strong>Same row.</strong> Replace each letter with the one to its
+right (wrapping from the end of the row back to the start). AL becomes
+NA.</li>
+<li><strong>Same column.</strong> Replace each letter with the one below
+it (wrapping from the bottom back to the top). LO becomes RV.</li>
+</ol>
+<p>The whole message encrypts to
+<code>AK AF NA RV QL XH NV RG KQ LN ET QV QL</code>. To decrypt, do the
+opposite: left instead of right, up instead of down, and rectangles stay
+the same. The receiver gets <code>THEBALLOONWILXLRISEATNOXON</code> and
+simply ignores the extra Xs.</p>
+</section>
+<section id="spotting-playfair" class="level3">
+<h3>Spotting Playfair</h3>
+<p>The rules force some patterns, and they are the tells.</p>
+<ul>
+<li><strong>Even length.</strong> The message always ends up in whole
+pairs.</li>
+<li><strong>No doubled pair.</strong> Split the ciphertext into pairs
+from the start: no pair is ever two of the same letter (like
+<code>EE</code>), because the plaintext pairs never are, and the rules
+never turn two different letters into two equal ones.</li>
+<li><strong>At most 25 letters, usually no J.</strong> J was merged into
+I.</li>
+<li><strong>No letter encrypts to itself.</strong> In a pair, the first
+ciphertext letter is never the first plaintext letter, and the same for
+the second.</li>
+<li><strong>Reversed pairs.</strong> If AB becomes XY, then BA becomes
+YX. In our message ON became QL, so NO would become LQ. English has
+common reversed pairs (ER and RE, ES and SE, ON and NO), so look for a
+ciphertext pair and its reverse that are both common.</li>
+<li><strong>Index of coincidence in between.</strong> Pair encryption
+smooths out the counts a little: the index of coincidence (the chance
+that two letters picked at random match, Guide 04) is lower than
+English’s 0.067, but higher than a Hill cipher’s.</li>
+</ul>
+<figure>
+<img src="figures/09-tells.png"
+alt="The same 342-letter paragraph as English, as Playfair and as Hill. All three have an even length. Playfair has 0 doubled pairs, 0 Js and only 25 different letters. Hill has 6 doubled pairs, 11 Js, all 26 letters, and an index of coincidence of 0.041, against 0.057 for Playfair and 0.067 for English." />
+<figcaption aria-hidden="true">The same 342-letter paragraph as English,
+as Playfair and as Hill. All three have an even length. Playfair has 0
+doubled pairs, 0 Js and only 25 different letters. Hill has 6 doubled
+pairs, 11 Js, all 26 letters, and an index of coincidence of 0.041,
+against 0.057 for Playfair and 0.067 for English.</figcaption>
+</figure>
+<p><strong>Breaking Playfair.</strong> With a crib (a word you expect in
+the message), you can work out which letters share rows and columns, and
+rebuild the square bit by bit. Without one, the strongest method is a
+computer search: the key is the square, a move swaps two letters (or two
+rows, or two columns), and the score is the English score of the
+decryption. That is exactly the method in Guide 08 (Scoring and hill
+climbing), and Playfair needs its simulated annealing version and about
+100 letters or more.</p>
+<div class="in-app">
+<p><strong>In the app:</strong> The family tree has pages for the <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/polybius">Polybius
+square</a> and <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/playfair">Playfair</a>.
+<a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/counts">Counts</a>
+shows a text’s length and every letter’s count, so an odd length or a
+missing J stands out.</p>
+</div>
+</section>
+</section>
+<section id="the-grown-up-version-the-hill-cipher" class="level2">
+<h2>The grown-up version: the Hill cipher</h2>
+<p>The Hill cipher, invented by the mathematician Lester Hill in 1929,
+turns encryption into arithmetic. You need two ideas: multiplying a
+matrix by a pair of numbers, and clock arithmetic.</p>
+<section id="letters-as-numbers" class="level3">
+<h3>Letters as numbers</h3>
+<p>Number the letters from zero: A = 0, B = 1, C = 2, and so on up to Z
+= 25. Starting at zero makes the arithmetic tidy.</p>
+</section>
+<section id="matrices-rows-times-columns" class="level3">
+<h3>Matrices: rows times columns</h3>
+<p>A <strong>matrix</strong> is a box of numbers. The Hill key is a 2x2
+matrix, four numbers in two rows and two columns. We write it with
+square brackets, and give the four numbers names:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>a</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>b</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>c</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>d</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>8</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>17</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">K = \begin{bmatrix} a &amp; b \\ c &amp; d \end{bmatrix} = \begin{bmatrix} 5 &amp; 8 \\ 17 &amp; 3 \end{bmatrix}</annotation></semantics></math></p>
+<p>The pair of plaintext letters is written as a column of two numbers.
+To multiply the matrix by the column, take each <strong>row</strong> of
+the matrix and the <strong>column</strong> of letters, multiply the
+matching numbers, and add.</p>
+<figure>
+<img src="figures/09-matrix-multiply.png"
+alt="The key matrix with rows 5, 8 and 17, 3 times the column 3, 4 (the letters D and E). Top row: 5 times 3 plus 8 times 4 is 47, which leaves 21, the letter V. Bottom row: 17 times 3 plus 3 times 4 is 63, which leaves 11, the letter L." />
+<figcaption aria-hidden="true">The key matrix with rows 5, 8 and 17, 3
+times the column 3, 4 (the letters D and E). Top row: 5 times 3 plus 8
+times 4 is 47, which leaves 21, the letter V. Bottom row: 17 times 3
+plus 3 times 4 is 63, which leaves 11, the letter L.</figcaption>
+</figure>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>8</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>17</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>3</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>4</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>5</mn><mo>×</mo><mn>3</mn><mo>+</mo><mn>8</mn><mo>×</mo><mn>4</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>17</mn><mo>×</mo><mn>3</mn><mo>+</mo><mn>3</mn><mo>×</mo><mn>4</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>47</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>63</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{bmatrix} 5 &amp; 8 \\ 17 &amp; 3 \end{bmatrix} \begin{bmatrix} 3 \\ 4 \end{bmatrix} = \begin{bmatrix} 5 \times 3 + 8 \times 4 \\ 17 \times 3 + 3 \times 4 \end{bmatrix} = \begin{bmatrix} 47 \\ 63 \end{bmatrix}</annotation></semantics></math></p>
+<p>But 47 and 63 are not letters. We need to bring them back between 0
+and 25.</p>
+</section>
+<section id="clock-arithmetic-mod-26" class="level3">
+<h3>Clock arithmetic: mod 26</h3>
+<p>Imagine a clock with 26 hours, one for each letter. Counting 47 hours
+around it, you go once all the way round (26) and then 21 more, landing
+on 21, which is V. Mathematicians write this as</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>47</mn><mo>≡</mo><mn>21</mn><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">47 \equiv 21 \pmod{26}</annotation></semantics></math></p>
+<p>and read it “47 is congruent to 21, mod 26”. The symbol
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≡</mo><annotation encoding="application/x-tex">\equiv</annotation></semantics></math>
+means “lands on the same place on the clock”, and “mod 26” says the
+clock has 26 hours. In practice: <strong>divide by 26 and keep the
+remainder</strong>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>63</mn><mo>=</mo><mn>2</mn><mo>×</mo><mn>26</mn><mo>+</mo><mn>11</mn></mrow><annotation encoding="application/x-tex">63 = 2 \times 26 + 11</annotation></semantics></math>,
+so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>63</mn><mo>≡</mo><mn>11</mn><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">63 \equiv 11 \pmod{26}</annotation></semantics></math>,
+which is L. Negative numbers go backward round the clock:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>1</mn><mo>≡</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">-1 \equiv 25</annotation></semantics></math>,
+because one step back from 0 is 25.</p>
+<figure>
+<img src="figures/09-mod26-clock.png"
+alt="A clock face with 26 positions numbered 0 to 25 and labeled A to Z; an arrow points to 21, the letter V, showing that 47 is once round the clock and 21 more." />
+<figcaption aria-hidden="true">A clock face with 26 positions numbered 0
+to 25 and labeled A to Z; an arrow points to 21, the letter V, showing
+that 47 is once round the clock and 21 more.</figcaption>
+</figure>
+<p>So the pair DE encrypts to VL. In symbols, with plaintext pair
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>p</mi><mn>1</mn></msub><mo>,</mo><msub><mi>p</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(p_1, p_2)</annotation></semantics></math>
+and ciphertext pair
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>c</mi><mn>1</mn></msub><mo>,</mo><msub><mi>c</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(c_1, c_2)</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mn>1</mn></msub><mo>≡</mo><mi>a</mi><msub><mi>p</mi><mn>1</mn></msub><mo>+</mo><mi>b</mi><msub><mi>p</mi><mn>2</mn></msub><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>c</mi><mn>2</mn></msub><mo>≡</mo><mi>c</mi><mspace width="0.167em"></mspace><msub><mi>p</mi><mn>1</mn></msub><mo>+</mo><mi>d</mi><mspace width="0.167em"></mspace><msub><mi>p</mi><mn>2</mn></msub><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">c_1 \equiv a p_1 + b p_2 \pmod{26}, \qquad c_2 \equiv c\, p_1 + d\, p_2 \pmod{26}</annotation></semantics></math></p>
+</section>
+<section id="undoing-it-inverses" class="level3">
+<h3>Undoing it: inverses</h3>
+<p>To decrypt, you need a second matrix that undoes the first. On the
+26-hour clock, “dividing” means multiplying by an
+<strong>inverse</strong>: the inverse of 3 is 9, because
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>9</mn><mo>=</mo><mn>27</mn><mo>≡</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">3 \times 9 = 27 \equiv 1</annotation></semantics></math>.
+Only numbers that share no factor with 26 (so not even, and not 13) have
+an inverse. Here is the full list, worth copying onto a card:</p>
+<table>
+<thead>
+<tr>
+<th>number</th>
+<th>1</th>
+<th>3</th>
+<th>5</th>
+<th>7</th>
+<th>9</th>
+<th>11</th>
+<th>15</th>
+<th>17</th>
+<th>19</th>
+<th>21</th>
+<th>23</th>
+<th>25</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>inverse</td>
+<td>1</td>
+<td>9</td>
+<td>21</td>
+<td>15</td>
+<td>3</td>
+<td>19</td>
+<td>7</td>
+<td>23</td>
+<td>11</td>
+<td>5</td>
+<td>17</td>
+<td>25</td>
+</tr>
+</tbody>
+</table>
+<p>For a matrix, the number that matters is its
+<strong>determinant</strong>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">ad - bc</annotation></semantics></math>.
+The key can be undone only if the determinant has an inverse. Then the
+undo matrix is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>≡</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mi>d</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mi>b</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mi>c</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>a</mi></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K^{-1} \equiv (ad - bc)^{-1} \begin{bmatrix} d &amp; -b \\ -c &amp; a \end{bmatrix} \pmod{26}</annotation></semantics></math></p>
+<p>(swap
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>,
+flip the signs of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>,
+and multiply every entry by the inverse of the determinant).</p>
+</section>
+<section id="spotting-hill" class="level3">
+<h3>Spotting Hill</h3>
+<ul>
+<li><strong>Even length</strong> (for a 2x2 key; a 3x3 key gives a
+multiple of 3).</li>
+<li><strong>Flat letter counts.</strong> The index of coincidence is
+near 0.04, much flatter than English and flatter than Playfair.</li>
+<li><strong>All 26 letters can appear</strong>, including J, and doubled
+pairs are allowed.</li>
+<li><strong>Repeats only in step.</strong> The same plaintext pair,
+starting at an odd position (counting from 1), always gives the same
+ciphertext pair. So repeated pairs in the ciphertext line up on pair
+boundaries.</li>
+</ul>
+<div class="in-app">
+<p><strong>In the app:</strong> The <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/hill">Hill
+cipher</a> in the family tree, next to Playfair and the other ciphers
+that work on pairs.</p>
+</div>
+</section>
+</section>
+<section id="a-worked-example-breaking-hill-with-a-crib" class="level2">
+<h2>A worked example: breaking Hill with a crib</h2>
+<p>You intercept this message, which you believe is a Hill cipher:</p>
+<pre><code>VL GZ WS UD NQ PB XV DH VF GZ YL MP VL ZL BP MP QV PB UP IK UT MS AP</code></pre>
+<p><strong>Step 1. Check the tells.</strong> 46 letters: even. Doubled
+pairs are allowed in Hill, and repeats are on pair boundaries: VL
+appears twice, as do GZ, PB and MP. With only 46 letters the
+single-letter counts say little (P comes up 7 times, but that is mostly
+because PB and MP each appear twice), so the even length and the
+repeated pairs are the best clues. Everything fits Hill.</p>
+<p><strong>Step 2. Guess a crib.</strong> The message looks like a
+letter to an agent, and letters often begin with “dear”. So guess that
+the first four letters DEAR became VLGZ. In numbers:</p>
+<ul>
+<li>D E is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(3, 4)</annotation></semantics></math>,
+and became V L, which is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>21</mn><mo>,</mo><mn>11</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(21, 11)</annotation></semantics></math>.</li>
+<li>A R is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>17</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0, 17)</annotation></semantics></math>,
+and became G Z, which is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>6</mn><mo>,</mo><mn>25</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(6, 25)</annotation></semantics></math>.</li>
+</ul>
+<p><strong>Step 3. Write the equations.</strong> Use the formulas above,
+once for each crib pair. The top row of the key,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>,
+makes the first letter of each ciphertext pair:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mi>a</mi><mo>+</mo><mn>4</mn><mi>b</mi><mo>≡</mo><mn>21</mn><mo>,</mo><mspace width="2.0em"></mspace><mn>0</mn><mi>a</mi><mo>+</mo><mn>17</mn><mi>b</mi><mo>≡</mo><mn>6</mn><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">3a + 4b \equiv 21, \qquad 0a + 17b \equiv 6 \pmod{26}</annotation></semantics></math></p>
+<p>The bottom row,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>,
+makes the second letter of each pair:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mi>c</mi><mo>+</mo><mn>4</mn><mi>d</mi><mo>≡</mo><mn>11</mn><mo>,</mo><mspace width="2.0em"></mspace><mn>0</mn><mi>c</mi><mo>+</mo><mn>17</mn><mi>d</mi><mo>≡</mo><mn>25</mn><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">3c + 4d \equiv 11, \qquad 0c + 17d \equiv 25 \pmod{26}</annotation></semantics></math></p>
+<p><strong>Step 4. Solve for b and d.</strong> Because A is 0, the
+second equation in each row has only one unknown.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>17</mn><mi>b</mi><mo>≡</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">17b \equiv 6</annotation></semantics></math>:
+multiply both sides by the inverse of 17, which is 23.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>≡</mo><mn>6</mn><mo>×</mo><mn>23</mn><mo>=</mo><mn>138</mn><mo>=</mo><mn>5</mn><mo>×</mo><mn>26</mn><mo>+</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">b \equiv 6 \times 23 = 138 = 5 \times 26 + 8</annotation></semantics></math>,
+so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">b = 8</annotation></semantics></math>.
+Check:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>17</mn><mo>×</mo><mn>8</mn><mo>=</mo><mn>136</mn><mo>=</mo><mn>5</mn><mo>×</mo><mn>26</mn><mo>+</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">17 \times 8 = 136 = 5 \times 26 + 6</annotation></semantics></math>.
+Yes. In the same way,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>17</mn><mi>d</mi><mo>≡</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">17d \equiv 25</annotation></semantics></math>
+gives
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>≡</mo><mn>25</mn><mo>×</mo><mn>23</mn><mo>=</mo><mn>575</mn><mo>=</mo><mn>22</mn><mo>×</mo><mn>26</mn><mo>+</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">d \equiv 25 \times 23 = 575 = 22 \times 26 + 3</annotation></semantics></math>,
+so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">d = 3</annotation></semantics></math>.
+Check:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>17</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>51</mn><mo>=</mo><mn>26</mn><mo>+</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">17 \times 3 = 51 = 26 + 25</annotation></semantics></math>.
+Yes. (If you don’t have the inverse table, you can just try
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>…</mi></mrow><annotation encoding="application/x-tex">b = 0, 1, 2, \dots</annotation></semantics></math>
+until
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>17</mn><mi>b</mi></mrow><annotation encoding="application/x-tex">17b</annotation></semantics></math>
+leaves remainder 6.)</p>
+<p><strong>Step 5. Solve for a and c.</strong> Put
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">b = 8</annotation></semantics></math>
+into the first equation:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mi>a</mi><mo>+</mo><mn>32</mn><mo>≡</mo><mn>21</mn></mrow><annotation encoding="application/x-tex">3a + 32 \equiv 21</annotation></semantics></math>,
+so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mi>a</mi><mo>≡</mo><mn>21</mn><mo>−</mo><mn>32</mn><mo>=</mo><mi>−</mi><mn>11</mn><mo>≡</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">3a \equiv 21 - 32 = -11 \equiv 15</annotation></semantics></math>.
+Since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>5</mn><mo>=</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">3 \times 5 = 15</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">a = 5</annotation></semantics></math>.
+Put
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">d = 3</annotation></semantics></math>
+into the other:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mi>c</mi><mo>+</mo><mn>12</mn><mo>≡</mo><mn>11</mn></mrow><annotation encoding="application/x-tex">3c + 12 \equiv 11</annotation></semantics></math>,
+so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mi>c</mi><mo>≡</mo><mi>−</mi><mn>1</mn><mo>≡</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">3c \equiv -1 \equiv 25</annotation></semantics></math>.
+Multiply by 9 (the inverse of 3):
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>≡</mo><mn>225</mn><mo>=</mo><mn>8</mn><mo>×</mo><mn>26</mn><mo>+</mo><mn>17</mn></mrow><annotation encoding="application/x-tex">c \equiv 225 = 8 \times 26 + 17</annotation></semantics></math>,
+so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>17</mn></mrow><annotation encoding="application/x-tex">c = 17</annotation></semantics></math>.
+Check:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>17</mn><mo>=</mo><mn>51</mn><mo>≡</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">3 \times 17 = 51 \equiv 25</annotation></semantics></math>.
+Yes.</p>
+<figure>
+<img src="figures/09-hill-crib.png"
+alt="The crib DEAR, as the numbers (3, 4) and (0, 17), encrypted to VLGZ, the numbers (21, 11) and (6, 25). The top row’s two equations give b = 8 and then a = 5; the bottom row’s give d = 3 and then c = 17." />
+<figcaption aria-hidden="true">The crib DEAR, as the numbers (3, 4) and
+(0, 17), encrypted to VLGZ, the numbers (21, 11) and (6, 25). The top
+row’s two equations give b = 8 and then a = 5; the bottom row’s give d =
+3 and then c = 17.</figcaption>
+</figure>
+<p>So the key is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>8</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>17</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">K = \begin{bmatrix} 5 &amp; 8 \\ 17 &amp; 3 \end{bmatrix}</annotation></semantics></math></p>
+<p><strong>Step 6. Build the undo matrix.</strong> The determinant is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi><mo>=</mo><mn>5</mn><mo>×</mo><mn>3</mn><mo>−</mo><mn>8</mn><mo>×</mo><mn>17</mn><mo>=</mo><mn>15</mn><mo>−</mo><mn>136</mn><mo>=</mo><mi>−</mi><mn>121</mn></mrow><annotation encoding="application/x-tex">ad - bc = 5 \times 3 - 8 \times 17 = 15 - 136 = -121</annotation></semantics></math>.
+On the clock,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>121</mn><mo>+</mo><mn>5</mn><mo>×</mo><mn>26</mn><mo>=</mo><mn>9</mn></mrow><annotation encoding="application/x-tex">-121 + 5 \times 26 = 9</annotation></semantics></math>,
+so the determinant is 9, and its inverse is 3. Swap
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>
+and flip the signs of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>,
+then multiply by 3:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>K</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>≡</mo><mn>3</mn><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>3</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>8</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>17</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>5</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>9</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>24</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>−</mi><mn>51</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>15</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo>≡</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>9</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>15</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K^{-1} \equiv 3 \begin{bmatrix} 3 &amp; -8 \\ -17 &amp; 5 \end{bmatrix} = \begin{bmatrix} 9 &amp; -24 \\ -51 &amp; 15 \end{bmatrix} \equiv \begin{bmatrix} 9 &amp; 2 \\ 1 &amp; 15 \end{bmatrix} \pmod{26}</annotation></semantics></math></p>
+<p><strong>Step 7. Decrypt.</strong> The third pair is WS, which is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>22</mn><mo>,</mo><mn>18</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(22, 18)</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>9</mn><mo>×</mo><mn>22</mn><mo>+</mo><mn>2</mn><mo>×</mo><mn>18</mn><mo>=</mo><mn>234</mn><mo>=</mo><mn>9</mn><mo>×</mo><mn>26</mn><mo>+</mo><mn>0</mn><mo>≡</mo><mn>0</mn><mo>=</mo><mtext mathvariant="normal">A</mtext><mo>,</mo><mspace width="2.0em"></mspace><mn>1</mn><mo>×</mo><mn>22</mn><mo>+</mo><mn>15</mn><mo>×</mo><mn>18</mn><mo>=</mo><mn>292</mn><mo>=</mo><mn>11</mn><mo>×</mo><mn>26</mn><mo>+</mo><mn>6</mn><mo>≡</mo><mn>6</mn><mo>=</mo><mtext mathvariant="normal">G</mtext></mrow><annotation encoding="application/x-tex">9 \times 22 + 2 \times 18 = 234 = 9 \times 26 + 0 \equiv 0 = \text{A}, \qquad 1 \times 22 + 15 \times 18 = 292 = 11 \times 26 + 6 \equiv 6 = \text{G}</annotation></semantics></math></p>
+<p>AG. The fourth pair UD,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>20</mn><mo>,</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(20, 3)</annotation></semantics></math>,
+gives
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>186</mn><mo>≡</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">186 \equiv 4</annotation></semantics></math>
+(E) and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>65</mn><mo>≡</mo><mn>13</mn></mrow><annotation encoding="application/x-tex">65 \equiv 13</annotation></semantics></math>
+(N): EN. Carrying on through the whole message gives
+<code>dear agent the papers are hidden inside the clock tower</code>.
+The crib was right.</p>
+<p><strong>What if the crib’s place is unknown?</strong> Slide it along
+the ciphertext, starting only at odd positions (1, 3, 5, …) so it lines
+up with the pairs. Each position gives four equations. If they have no
+solution, or the key has no inverse, or the decryption is gibberish,
+move on.</p>
+<p><strong>The grown-up shortcut.</strong> Put the two crib pairs side
+by side as the columns of a matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>,
+and the two ciphertext pairs as the columns of a matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>.
+Then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>≡</mo><mi>K</mi><mi>P</mi></mrow><annotation encoding="application/x-tex">C \equiv K P</annotation></semantics></math>,
+so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>≡</mo><mi>C</mi><msup><mi>P</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">K \equiv C P^{-1}</annotation></semantics></math>.
+That is the same calculation as Steps 3 to 5, done all at once, and it
+works for any crib whose matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>
+has an inverse.</p>
+</section>
+<section id="when-to-try-it" class="level2">
+<h2>When to try it</h2>
+<ul>
+<li><strong>Polybius:</strong> the ciphertext is only digits 1 to 5, or
+only five or six different letters (such as A, D, F, G, V, X).</li>
+<li><strong>Playfair:</strong> even length, no doubled pair at the pair
+boundaries, no J, index of coincidence a bit below English.</li>
+<li><strong>Hill:</strong> even length (or a multiple of 3), flat
+counts, J and doubled pairs present, and a good guess for a word in the
+message.</li>
+</ul>
+<p><strong>When not to:</strong> an odd length rules out Playfair and
+2x2 Hill. A doubled pair at a pair boundary rules out Playfair. Letter
+counts that look exactly like English mean a transposition (Guide
+07).</p>
+</section>
+<section id="traps-and-tips" class="level2">
+<h2>Traps and tips</h2>
+<ul>
+<li><strong>Count pairs from the very first letter.</strong> The tells
+are about pairs 1-2, 3-4, 5-6, and so on. A doubled letter across a
+boundary (the 2nd and 3rd letters, say) means nothing.</li>
+<li><strong>Short texts.</strong> In 30 letters, a substitution cipher
+might have no doubled pair just by luck. The no-doubles tell gets
+convincing at around 80 letters or more.</li>
+<li><strong>The Xs.</strong> After decrypting Playfair, remove the X
+between doubled letters and at the end. But some messages really contain
+X (as in “box”), so read carefully.</li>
+<li><strong>I or J?</strong> A Playfair or Polybius decryption shows I
+where the sender wrote J: “IUST” is “just”.</li>
+<li><strong>Check every step on the clock.</strong> One slip in a
+remainder ruins the whole Hill key. After solving, re-encrypt the crib
+with your key to check it gives the ciphertext.</li>
+<li><strong>Even determinants are impossible.</strong> If your Hill key
+comes out with an even determinant (or 13), it cannot be a real key: the
+crib or its position is wrong.</li>
+<li><strong>Choose cribs with an A.</strong> Since A = 0, a crib
+containing A makes some equations very simple, as in the worked
+example.</li>
+</ul>
+</section>
+<section id="try-it-yourself" class="level2">
+<h2>Try it yourself</h2>
+<ol type="1">
+<li>Decode this Polybius message (standard square, as in the picture):
+<code>22 34 34 14 31 45 13 25</code>.</li>
+<li>Which of these could be Playfair? (a) <code>QWERTYUIOPLKJ</code> (b)
+<code>MNBVCCXZLKAS</code> (c) <code>HGFDSAPOIUYT</code>.</li>
+<li>Encrypt the pair HI with the key
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>8</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>17</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">K = \begin{bmatrix} 5 &amp; 8 \\ 17 &amp; 3 \end{bmatrix}</annotation></semantics></math>.</li>
+<li>With the keyword LANTERN, ON encrypts to QL. Without using the
+square, what does NO encrypt to?</li>
+<li>Can these be Hill keys? (a)
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>2</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>4</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\begin{bmatrix} 2 &amp; 4 \\ 1 &amp; 3 \end{bmatrix}</annotation></semantics></math>
+(b)
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>3</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>7</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\begin{bmatrix} 3 &amp; 2 \\ 5 &amp; 7 \end{bmatrix}</annotation></semantics></math></li>
+</ol>
+</section>
+<section id="answers" class="level2">
+<h2>Answers</h2>
+<ol type="1">
+<li>22 = G, 34 = O, 34 = O, 14 = D, 31 = L, 45 = U, 13 = C, 25 = K:
+“good luck”.</li>
+<li><ol type="a">
+<li>No: it has 13 letters (odd), and it contains a J. (b) No: split into
+pairs, MN BV CC XZ LK AS, and CC is a doubled pair. (c) Yes, it could
+be: 12 letters, pairs HG FD SA PO IU YT, no doubled pair, no J.</li>
+</ol></li>
+<li>H = 7, I = 8. Top:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo>×</mo><mn>7</mn><mo>+</mo><mn>8</mn><mo>×</mo><mn>8</mn><mo>=</mo><mn>99</mn><mo>=</mo><mn>3</mn><mo>×</mo><mn>26</mn><mo>+</mo><mn>21</mn></mrow><annotation encoding="application/x-tex">5 \times 7 + 8 \times 8 = 99 = 3 \times 26 + 21</annotation></semantics></math>,
+so 21 = V. Bottom:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>17</mn><mo>×</mo><mn>7</mn><mo>+</mo><mn>3</mn><mo>×</mo><mn>8</mn><mo>=</mo><mn>143</mn><mo>=</mo><mn>5</mn><mo>×</mo><mn>26</mn><mo>+</mo><mn>13</mn></mrow><annotation encoding="application/x-tex">17 \times 7 + 3 \times 8 = 143 = 5 \times 26 + 13</annotation></semantics></math>,
+so 13 = N. HI becomes VN.</li>
+<li>LQ: reversing a plaintext pair reverses its ciphertext pair.</li>
+<li><ol type="a">
+<li>No: the determinant is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><mn>3</mn><mo>−</mo><mn>4</mn><mo>×</mo><mn>1</mn><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">2 \times 3 - 4 \times 1 = 2</annotation></semantics></math>,
+which is even, so it has no inverse. (b) Yes:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>7</mn><mo>−</mo><mn>2</mn><mo>×</mo><mn>5</mn><mo>=</mo><mn>11</mn></mrow><annotation encoding="application/x-tex">3 \times 7 - 2 \times 5 = 11</annotation></semantics></math>,
+and 11 has an inverse (19).</li>
+</ol></li>
+</ol>
+</section>
+<section id="words-to-know" class="level2">
+<h2>Words to know</h2>
+<ul>
+<li><strong>Polygraphic cipher</strong>: a cipher that encrypts groups
+of letters (usually pairs) together.</li>
+<li><strong>Digraph</strong>: a pair of letters, such as TH.</li>
+<li><strong>Polybius square</strong>: a 5x5 grid that turns each letter
+into a row number and a column number.</li>
+<li><strong>ADFGVX</strong>: a 6x6 Polybius square labeled A, D, F, G,
+V, X, followed by a columnar transposition.</li>
+<li><strong>Playfair</strong>: a cipher that encrypts pairs with a
+keyword square, using the rectangle, row and column rules.</li>
+<li><strong>Hill cipher</strong>: a cipher that multiplies pairs of
+letter numbers by a matrix, mod 26.</li>
+<li><strong>Matrix</strong>: a rectangular box of numbers.</li>
+<li><strong>Mod 26 (modular arithmetic)</strong>: arithmetic on a
+26-hour clock: keep only the remainder after dividing by 26.</li>
+<li><strong>Congruent
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≡</mo><annotation encoding="application/x-tex">\equiv</annotation></semantics></math>)</strong>:
+landing on the same place on the clock.</li>
+<li><strong>Inverse (mod 26)</strong>: the number you multiply by to get
+1 on the clock.</li>
+<li><strong>Determinant</strong>: for a 2x2 matrix,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">ad - bc</annotation></semantics></math>;
+the key can be undone only if this has an inverse mod 26.</li>
+<li><strong>Crib</strong>: a word you guess is in the plaintext.</li>
+<li><strong>Tell</strong>: a pattern a cipher always or never produces,
+which helps you recognize it.</li>
+</ul>
+</section>
+<section id="going-further" class="level2">
+<h2>Going further</h2>
+<ul>
+<li><a
+href="http://practicalcryptography.com/ciphers/classical-era/playfair/">Practical
+Cryptography: Playfair cipher</a></li>
+<li><a
+href="http://practicalcryptography.com/ciphers/classical-era/hill/">Practical
+Cryptography: Hill cipher</a></li>
+<li><a
+href="http://practicalcryptography.com/ciphers/classical-era/adfgvx/">Practical
+Cryptography: ADFGVX cipher</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Polybius_square">Wikipedia:
+Polybius square</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Playfair_cipher">Wikipedia:
+Playfair cipher</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Hill_cipher">Wikipedia: Hill
+cipher</a></li>
+<li><a
+href="https://en.wikipedia.org/wiki/Modular_arithmetic">Wikipedia:
+Modular arithmetic</a></li>
+<li>Simon Singh, <em>The Code Book</em> (1999), for Playfair and ADFGVX
+in war.</li>
+<li><a href="https://www.cipherchallenge.org/">The National Cipher
+Challenge</a> for practice ciphertexts.</li>
+</ul>
+</section>
+</section>

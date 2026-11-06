@@ -52,6 +52,8 @@ So the rule is: **a repeat in the ciphertext usually means the same plaintext un
 
 Write any sentence that uses "the" several times. Write the keyword `CAT` over and over above it, and encrypt only the letters of each "the". Circle the copies of "the" that come out the same. Number the letters of the sentence (ignoring spaces) and subtract the starting positions of two circled copies: every such gap will be a multiple of 3.
 
+> **In the app:** [Repeats](https://apps.thorwhalen.com/cryptology/#/workbench/repeats) lists the runs of letters that repeat in your text, the gaps between them, and how often each number divides a gap. Its Comb view finds the key length another way, by sliding the text against itself.
+
 ## The grown-up version
 
 ### Factors and multiples
@@ -157,6 +159,8 @@ The key letters spell `BRIDGE`. "Most common letter = e" would have got only fou
 
 When the key letters spell a real word, you almost certainly have it right. If one column gives a strange letter (`BRIDXE`), re-check that column.
 
+> **In the app:** Once you have a key length, [Vigenère](https://apps.thorwhalen.com/cryptology/#/workbench/vigenere) splits the text into slices and lets you solve each slice as a Caesar, one at a time or all side by side.
+
 ## A variant: the Beaufort cipher
 
 The Beaufort cipher, named after Admiral Francis Beaufort (the same man as the Beaufort wind scale), uses a repeating keyword just like Vigenère, but with a different rule. Instead of "plain plus key", it is "key minus plain":
@@ -231,6 +235,8 @@ So when Kasiski gives gaps with no common factor, and splitting into columns nev
 1. Find $\gcd(42, 70)$ using Euclid's method. Then find $\gcd(42, 70, 98)$.
 2. A Vigenère ciphertext has repeats with gaps 24, 36, 60, 84 and 17. What key length do you guess, and what do you do with the 17?
 3. In a Vigenère column, the most common letters are W, J and S. If W stands for e, what is the key letter for that column? Do J and S then make sense?
+
+> **In the app:** The [Vigenère](https://apps.thorwhalen.com/cryptology/#/ex/vigenere/1) exercise walks the whole path: key length, slices, then each slice as a Caesar. Its place in the family tree: [Vigenère](https://apps.thorwhalen.com/cryptology/#/tree/vigenere).
 
 ## Words to know
 

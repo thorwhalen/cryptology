@@ -82,6 +82,8 @@ The rules force some patterns, and they are the tells.
 
 **Breaking Playfair.** With a crib (a word you expect in the message), you can work out which letters share rows and columns, and rebuild the square bit by bit. Without one, the strongest method is a computer search: the key is the square, a move swaps two letters (or two rows, or two columns), and the score is the English score of the decryption. That is exactly the method in Guide 08 (Scoring and hill climbing), and Playfair needs its simulated annealing version and about 100 letters or more.
 
+> **In the app:** The family tree has pages for the [Polybius square](https://apps.thorwhalen.com/cryptology/#/tree/polybius) and [Playfair](https://apps.thorwhalen.com/cryptology/#/tree/playfair). [Counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts) shows a text's length and every letter's count, so an odd length or a missing J stands out.
+
 ## The grown-up version: the Hill cipher
 
 The Hill cipher, invented by the mathematician Lester Hill in 1929, turns encryption into arithmetic. You need two ideas: multiplying a matrix by a pair of numbers, and clock arithmetic.
@@ -138,6 +140,8 @@ $$K^{-1} \equiv (ad - bc)^{-1} \begin{bmatrix} d & -b \\ -c & a \end{bmatrix} \p
 - **Flat letter counts.** The index of coincidence is near 0.04, much flatter than English and flatter than Playfair.
 - **All 26 letters can appear**, including J, and doubled pairs are allowed.
 - **Repeats only in step.** The same plaintext pair, starting at an odd position (counting from 1), always gives the same ciphertext pair. So repeated pairs in the ciphertext line up on pair boundaries.
+
+> **In the app:** The [Hill cipher](https://apps.thorwhalen.com/cryptology/#/tree/hill) in the family tree, next to Playfair and the other ciphers that work on pairs.
 
 ## A worked example: breaking Hill with a crib
 

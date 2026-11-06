@@ -55,6 +55,8 @@ The same works for subtraction and multiplication:
 - **Subtraction:** $3 - 8 = -5$. A negative number means you went backwards past 0, so add 26: $-5 + 26 = 21$, which is V. (Check: 8 steps back from D lands on V.)
 - **Multiplication:** $7 \times 8 = 56$. Take away 26 as many times as you can: $56 - 26 - 26 = 4$, which is E.
 
+> **In the app:** [Caesar](https://apps.thorwhalen.com/cryptology/#/workbench/caesar) has a Disk view: a cipher wheel you turn one step at a time, through all 26 shifts.
+
 ## The grown-up version
 
 ### Modular arithmetic
@@ -110,6 +112,8 @@ With the inverse, the decryption rule is
 $$D(y) = a^{-1}(y - b) \bmod 26$$
 
 where $y$ is a ciphertext letter's number.
+
+> **In the app:** [Affine](https://apps.thorwhalen.com/cryptology/#/workbench/affine) has a dial for $a$ and one for $b$. Its wheel shows what multiplying does to the alphabet, and why 2 and 13 make letters collide.
 
 ## Worked example 1: brute force on a Caesar cipher
 
@@ -201,6 +205,8 @@ So the key is $a = 11$, $b = 6$. And 11 is on the list of allowed values, which 
 1. Work out each of these mod 26: (a) $17 + 15$, (b) $7 \times 8$, (c) $5 - 9$.
 2. Find the inverse of 5 mod 26. (Hint: look through 27, 53, 79, 105, ...)
 3. An affine ciphertext's commonest letter is C and its second commonest is Z. Guess that C is e and Z is t. Find the key $(a, b)$, then decrypt the word `GCYU`.
+
+> **In the app:** Try [Caesar: match the bars](https://apps.thorwhalen.com/cryptology/#/ex/caesar/1) and the [Affine](https://apps.thorwhalen.com/cryptology/#/ex/affine/1) exercise, where you solve for the multiplier and the shift. The [affine](https://apps.thorwhalen.com/cryptology/#/tree/affine) page of the family tree shows its relatives, Caesar and decimation.
 
 ## Answers
 

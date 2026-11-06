@@ -1,0 +1,667 @@
+<section id="the-index-of-coincidence" class="level1">
+<h1>The index of coincidence</h1>
+<p><em>How often do two letters match? One number that tells one
+alphabet from several</em></p>
+<p><strong>By the end you can tell, from counting letters alone, whether
+a message uses one alphabet or several, and if several, how
+many.</strong></p>
+<section id="the-big-idea" class="level2">
+<h2>The big idea</h2>
+<p>Take a page of English. Close your eyes, put your finger on a letter,
+then put your finger on another letter somewhere else. How often are the
+two letters the same? In English it happens about 66 times in every 1000
+tries. In a jumble of random letters it happens only about 38 times in
+1000. That one number, the chance that two letters picked at random
+match, is called the <strong>index of coincidence</strong>. It survives
+some kinds of encryption and is destroyed by others. So it tells you
+which kind of cipher you are facing before you have read a single
+word.</p>
+<figure>
+<img src="figures/04-match-grids.png"
+alt="Two grids of 1000 squares. On the left, English text: 66 green squares mark the pairs of letters that matched. On the right, random letters: only 38 orange squares matched." />
+<figcaption aria-hidden="true">Two grids of 1000 squares. On the left,
+English text: 66 green squares mark the pairs of letters that matched.
+On the right, random letters: only 38 orange squares
+matched.</figcaption>
+</figure>
+</section>
+<section id="which-ciphers-it-breaks" class="level2">
+<h2>Which ciphers it breaks</h2>
+<p>The index of coincidence (IoC for short) does not usually hand you
+the key. It tells you what kind of cipher you have, and for the Vigenère
+family it tells you the length of the key. That is often the hardest
+step.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Cipher family</th>
+<th>Does the IoC help?</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Caesar, affine, keyword, any simple substitution</td>
+<td>Yes, as an identifier</td>
+<td>IoC stays near 0.066, like English. Tells you “one alphabet”: go to
+frequency analysis (Guide 02).</td>
+</tr>
+<tr>
+<td>Transposition (rail fence, columnar)</td>
+<td>Yes, as an identifier</td>
+<td>IoC stays near 0.066, and the letter counts themselves look exactly
+like English.</td>
+</tr>
+<tr>
+<td>Vigenère, Beaufort, variant Beaufort</td>
+<td>Yes, strongly</td>
+<td>IoC drops toward 0.038. Splitting into columns finds the key
+length.</td>
+</tr>
+<tr>
+<td>Autokey, running key</td>
+<td>Partly</td>
+<td>IoC is low, but no key length makes the columns look like English.
+That itself is a clue.</td>
+</tr>
+<tr>
+<td>Playfair, Hill (two letters at a time)</td>
+<td>A little</td>
+<td>IoC lands in between (around 0.045 to 0.055). Other tests settle it
+(Guide 09).</td>
+</tr>
+<tr>
+<td>Enigma and other machines</td>
+<td>No</td>
+<td>The alphabet changes every letter and never repeats in a short
+message.</td>
+</tr>
+</tbody>
+</table>
+<div class="in-app">
+<p><strong>In the app:</strong> The family tree shows the <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/polyalphabetic">polyalphabetic</a>
+family, where the <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/vigenere">Vigenère
+cipher</a> lives.</p>
+</div>
+</section>
+<section id="why-it-works" class="level2">
+<h2>Why it works</h2>
+<section id="a-tiny-experiment" class="level3">
+<h3>A tiny experiment</h3>
+<p>Write the word <code>BANANA</code> on six slips of paper and put them
+in a hat. Pull out one slip, keep it out, then pull a second slip. What
+is the chance that both slips show the same letter?</p>
+<p>Count the ways. There are 6 slips for your first pick and 5 left for
+your second pick, so there are
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>×</mo><mn>5</mn><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">6 \times 5 = 30</annotation></semantics></math>
+ways to pull two slips in order. Now count the ways that give a
+match:</p>
+<ul>
+<li>Two A’s: there are 3 A’s for the first pick and 2 A’s left for the
+second, so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>2</mn><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3 \times 2 = 6</annotation></semantics></math>
+ways.</li>
+<li>Two N’s:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><mn>1</mn><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">2 \times 1 = 2</annotation></semantics></math>
+ways.</li>
+<li>Two B’s: there is only one B, so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>×</mo><mn>0</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">1 \times 0 = 0</annotation></semantics></math>
+ways.</li>
+</ul>
+<p>That gives
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>+</mo><mn>2</mn><mo>+</mo><mn>0</mn><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">6 + 2 + 0 = 8</annotation></semantics></math>
+matching ways out of 30, so the chance of a match is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>8</mn><mi>/</mi><mn>30</mn><mo>≈</mo><mn>0.267</mn></mrow><annotation encoding="application/x-tex">8/30 \approx 0.267</annotation></semantics></math>.
+<code>BANANA</code> is a very “repetitive” word, so its matching chance
+is high.</p>
+</section>
+<section id="why-english-is-lumpy" class="level3">
+<h3>Why English is lumpy</h3>
+<p>English uses its letters very unevenly. About 12.7% of the letters in
+ordinary English are E, about 9.1% are T, and fewer than 1 in 1000 are
+Z. When you pick two letters at random, the chance that both are E is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.127</mn><mo>×</mo><mn>0.127</mn><mo>≈</mo><mn>0.016</mn></mrow><annotation encoding="application/x-tex">0.127 \times 0.127 \approx 0.016</annotation></semantics></math>.
+The chance that both are T is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.091</mn><mo>×</mo><mn>0.091</mn><mo>≈</mo><mn>0.008</mn></mrow><annotation encoding="application/x-tex">0.091 \times 0.091 \approx 0.008</annotation></semantics></math>.
+Do this for all 26 letters and add the answers: you get about
+<strong>0.066</strong>.</p>
+<p>Now imagine a language in which every letter is equally common, so
+each one is 1/26 of the text. The chance that both picks are A is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>26</mn></mfrac><mo>×</mo><mfrac><mn>1</mn><mn>26</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{26} \times \frac{1}{26}</annotation></semantics></math>,
+and the same for B, and so on. Twenty-six of those add up to exactly
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>26</mn></mfrac><mo>≈</mo></mrow><annotation encoding="application/x-tex">\frac{1}{26} \approx</annotation></semantics></math>
+<strong>0.038</strong>.</p>
+<figure>
+<img src="figures/04-where-matches-come-from.png"
+alt="Bar chart, letters sorted from E down to Z. Each bar is the chance that both of two random picks are that letter. The E bar is the tallest at 0.016; a dashed orange line shows the much lower 1/26 times 1/26 value for random letters." />
+<figcaption aria-hidden="true">Bar chart, letters sorted from E down to
+Z. Each bar is the chance that both of two random picks are that letter.
+The E bar is the tallest at 0.016; a dashed orange line shows the much
+lower 1/26 times 1/26 value for random letters.</figcaption>
+</figure>
+<p>So the IoC measures <strong>how lumpy</strong> the letter counts are.
+Tall peaks and deep valleys give a high IoC. A flat spread gives a low
+one.</p>
+</section>
+<section id="what-encryption-does-to-the-lumps" class="level3">
+<h3>What encryption does to the lumps</h3>
+<p>Here is the key insight, and it is worth reading twice.</p>
+<ul>
+<li><strong>Substitution renames letters.</strong> If every e becomes
+<code>X</code>, then <code>X</code> is now the most common letter. The
+peaks move to new letters, but they are just as tall. The IoC does not
+care which letter is tall, only how tall the peaks are. So the IoC stays
+the same.</li>
+<li><strong>Transposition moves letters around.</strong> The letters are
+all still there, just in a different order. The counts do not change at
+all, so the IoC does not change at all.</li>
+<li><strong>Vigenère uses several alphabets.</strong> In a Vigenère
+cipher, each letter is shifted by an amount that depends on its
+position. With the key <code>STORM</code>, the 1st, 6th, 11th… letters
+are shifted by S, the 2nd, 7th, 12th… by T, and so on. So the plaintext
+e’s turn into five different ciphertext letters. Each tall peak gets
+chopped into five smaller peaks spread across the alphabet. The counts
+flatten out, and the IoC drops toward 0.038.</li>
+</ul>
+<figure>
+<img src="figures/04-flattened.png"
+alt="Two bar charts of letter counts for the same message. Top, the plaintext in green: tall peaks at E, T, O, N, A. Bottom, the same message after a Vigenère cipher with key STORM, in orange: the bars are much more even." />
+<figcaption aria-hidden="true">Two bar charts of letter counts for the
+same message. Top, the plaintext in green: tall peaks at E, T, O, N, A.
+Bottom, the same message after a Vigenère cipher with key STORM, in
+orange: the bars are much more even.</figcaption>
+</figure>
+</section>
+</section>
+<section id="the-grown-up-version" class="level2">
+<h2>The grown-up version</h2>
+<section id="naming-the-pieces" class="level3">
+<h3>Naming the pieces</h3>
+<p>Mathematicians use a few short symbols here. Each one is just a name
+for something you already did with <code>BANANA</code>.</p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+is the total number of letters in the text. For <code>BANANA</code>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">N = 6</annotation></semantics></math>.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mi>A</mi></msub><annotation encoding="application/x-tex">f_A</annotation></semantics></math>
+is the number of times A appears (the “frequency” of A). For
+<code>BANANA</code>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>A</mi></msub><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">f_A = 3</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>B</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">f_B = 1</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>N</mi></msub><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">f_N = 2</annotation></semantics></math>,
+and every other letter has
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">f = 0</annotation></semantics></math>.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mi>i</mi></msub><annotation encoding="application/x-tex">f_i</annotation></semantics></math>
+means “the count of letter number
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>”,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+runs through the alphabet:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i = 1</annotation></semantics></math>
+for A,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">i = 2</annotation></semantics></math>
+for B, up to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>26</mn></mrow><annotation encoding="application/x-tex">i = 26</annotation></semantics></math>
+for Z.</li>
+</ul>
+</section>
+<section id="the-sigma-sign" class="level3">
+<h3>The sigma sign</h3>
+<p>The Greek capital letter sigma,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>∑</mo><annotation encoding="application/x-tex">\sum</annotation></semantics></math>,
+means “add up”. Writing</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mn>26</mn></munderover><msub><mi>f</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\sum_{i=1}^{26} f_i</annotation></semantics></math></p>
+<p>means “work out
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mi>i</mi></msub><annotation encoding="application/x-tex">f_i</annotation></semantics></math>
+for every letter from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i = 1</annotation></semantics></math>
+(A) to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>26</mn></mrow><annotation encoding="application/x-tex">i = 26</annotation></semantics></math>
+(Z), and add all 26 answers together”. That sum is just
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>,
+the total number of letters. Sigma is shorthand that saves you writing a
+sum with 26 terms.</p>
+</section>
+<section id="the-formula" class="level3">
+<h3>The formula</h3>
+<p>In <code>BANANA</code> you worked out “count times (count minus one)”
+for each letter, added them up, and divided by “total times (total minus
+one)”. With the symbols above, that is:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">I</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">C</mi></mrow><mo>=</mo><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mn>26</mn></munderover><msub><mi>f</mi><mi>i</mi></msub><mspace width="0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>f</mi><mi>i</mi></msub><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>N</mi><mspace width="0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">\mathrm{IoC} = \frac{\sum_{i=1}^{26} f_i\,(f_i - 1)}{N\,(N - 1)}</annotation></semantics></math></p>
+<p>Read it out loud like this: “For every letter, multiply its count by
+one less than its count. Add those up. Divide by the total number of
+letters times one less than the total.” The top counts the ordered pairs
+of slips that match. The bottom counts all ordered pairs of slips. Check
+it on <code>BANANA</code>: the top is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>2</mn><mo>+</mo><mn>1</mn><mo>×</mo><mn>0</mn><mo>+</mo><mn>2</mn><mo>×</mo><mn>1</mn><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">3 \times 2 + 1 \times 0 + 2 \times 1 = 8</annotation></semantics></math>,
+the bottom is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>×</mo><mn>5</mn><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">6 \times 5 = 30</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>8</mn><mi>/</mi><mn>30</mn><mo>≈</mo><mn>0.267</mn></mrow><annotation encoding="application/x-tex">8/30 \approx 0.267</annotation></semantics></math>.</p>
+</section>
+<section id="kappa-the-numbers-to-remember" class="level3">
+<h3>Kappa: the numbers to remember</h3>
+<p>Cryptographers write the expected IoC of a language with the Greek
+letter kappa,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>κ</mi><annotation encoding="application/x-tex">\kappa</annotation></semantics></math>.</p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>κ</mi><mtext mathvariant="normal">English</mtext></msub><mo>≈</mo><mn>0.066</mn></mrow><annotation encoding="application/x-tex">\kappa_{\text{English}} \approx 0.066</annotation></semantics></math>.
+(Different counts of English give values from 0.065 to 0.067. Any of
+these is fine.)</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>κ</mi><mtext mathvariant="normal">random</mtext></msub><mo>=</mo><mfrac><mn>1</mn><mn>26</mn></mfrac><mo>≈</mo><mn>0.038</mn></mrow><annotation encoding="application/x-tex">\kappa_{\text{random}} = \frac{1}{26} \approx 0.038</annotation></semantics></math>.</li>
+</ul>
+<p>If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mi>i</mi></msub><annotation encoding="application/x-tex">p_i</annotation></semantics></math>
+is the fraction of English text that is letter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+(so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>E</mi></msub><mo>=</mo><mn>0.127</mn></mrow><annotation encoding="application/x-tex">p_E = 0.127</annotation></semantics></math>),
+then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>κ</mi><mtext mathvariant="normal">English</mtext></msub><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mn>26</mn></msubsup><msubsup><mi>p</mi><mi>i</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\kappa_{\text{English}} = \sum_{i=1}^{26} p_i^2</annotation></semantics></math>,
+which is exactly the “add up all 26 bars” calculation from the chart
+above.</p>
+<p>Some books multiply the IoC by 26, so English becomes about 1.73 and
+random text becomes 1.00. It is the same measurement on a different
+scale. Check which scale a tool uses before comparing numbers.</p>
+</section>
+</section>
+<section id="a-worked-example" class="level2">
+<h2>A worked example</h2>
+<p>Here is a 271-letter message, encrypted with a Vigenère cipher. We
+will pretend we do not know the key.</p>
+<pre><code>LASCU YAHYA MLSBQ WISIT SWBFF KICBQ FMCRZ QHBVR GKHYD WXKVQ
+CLKYQ FMVVN GTHWU FTZCK UTAVU LUFFG YAHWX GNFFU DTGKM UDCWX
+WMHVD KTBUM KFOCX OHCUQ FUCOI AMVEA FTAVA FBHZZ KBRVF ZXPFJ
+OTGRN JTGJW WROEP SGCKQ LAOKE SBRFZ DRHYU KMVVX AZVKU KGCKI
+ZTHZF KXSDE DHCBG FWSIF ZXGVH WGHYE LXDRF EBREU YAHRZ VMSCX
+FHCEQ OAOKK GNTZZ VMVVD W</code></pre>
+<p>(The spaces every five letters are only there to make it easier to
+read. They are not word breaks.)</p>
+<section id="step-1-the-ioc-of-the-whole-message" class="level3">
+<h3>Step 1: the IoC of the whole message</h3>
+<p>Count every letter. The most common are F (21 times), K (18), V (17)
+and H (15). The rarest are P (2) and J (3). Now work out
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(f-1)</annotation></semantics></math>
+for each of the 26 letters and add them up. For example F gives
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>21</mn><mo>×</mo><mn>20</mn><mo>=</mo><mn>420</mn></mrow><annotation encoding="application/x-tex">21 \times 20 = 420</annotation></semantics></math>
+and K gives
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>18</mn><mo>×</mo><mn>17</mn><mo>=</mo><mn>306</mn></mrow><annotation encoding="application/x-tex">18 \times 17 = 306</annotation></semantics></math>.
+All 26 together come to 3064. The bottom of the fraction is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>271</mn><mo>×</mo><mn>270</mn><mo>=</mo><mn>73170</mn></mrow><annotation encoding="application/x-tex">271 \times 270 = 73170</annotation></semantics></math>.
+So:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">I</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">C</mi></mrow><mo>=</mo><mfrac><mn>3064</mn><mn>73170</mn></mfrac><mo>≈</mo><mn>0.042</mn></mrow><annotation encoding="application/x-tex">\mathrm{IoC} = \frac{3064}{73170} \approx 0.042</annotation></semantics></math></p>
+<p>That is far below English (0.066) and close to random (0.038). It is
+not a substitution and not a transposition. Something has flattened the
+letter counts: our first suspect is the Vigenère family.</p>
+<p>For comparison, the plaintext (the message before encryption) has an
+IoC of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5086</mn><mi>/</mi><mn>73170</mn><mo>≈</mo><mn>0.070</mn></mrow><annotation encoding="application/x-tex">5086/73170 \approx 0.070</annotation></semantics></math>.
+That is a little above 0.066, which is normal for a short text with lots
+of t’s and e’s. If we encrypt the same plaintext with a keyword
+substitution, or shuffle it with a columnar transposition, the IoC stays
+at exactly 0.070.</p>
+<figure>
+<img src="figures/04-ioc-by-cipher.png"
+alt="Horizontal bars showing the index of coincidence of the same 271-letter message: plaintext, substitution and transposition all at 0.070, near the English line at 0.066; two Vigenère versions at 0.046 and 0.042, near the random line at 0.038." />
+<figcaption aria-hidden="true">Horizontal bars showing the index of
+coincidence of the same 271-letter message: plaintext, substitution and
+transposition all at 0.070, near the English line at 0.066; two Vigenère
+versions at 0.046 and 0.042, near the random line at 0.038.</figcaption>
+</figure>
+</section>
+<section id="step-2-split-into-columns" class="level3">
+<h3>Step 2: split into columns</h3>
+<p>If the key has 5 letters, then every 5th letter was shifted by the
+same amount. Write the ciphertext in rows of 5. Each column is then a
+plain Caesar cipher: one alphabet, shifted. A Caesar cipher keeps the
+lumps of English, so each column should have an IoC near 0.066.</p>
+<figure>
+<img src="figures/04-columns.png"
+alt="The ciphertext written in rows of five letters, each column painted a different color. Under each column is the key letter that shifted it: S, T, O, R, M." />
+<figcaption aria-hidden="true">The ciphertext written in rows of five
+letters, each column painted a different color. Under each column is the
+key letter that shifted it: S, T, O, R, M.</figcaption>
+</figure>
+<p>We do not know the key length yet, so we try them all. For each guess
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+(for “length”), split the ciphertext into
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+columns, work out the IoC of each column, and take the average. For the
+guess
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">L = 5</annotation></semantics></math>,
+the five columns have 55, 54, 54, 54 and 54 letters, and their IoCs
+are:</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IoC</td>
+<td>0.063</td>
+<td>0.072</td>
+<td>0.089</td>
+<td>0.076</td>
+<td>0.060</td>
+</tr>
+</tbody>
+</table>
+<p>The average is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>0.063</mn><mo>+</mo><mn>0.072</mn><mo>+</mo><mn>0.089</mn><mo>+</mo><mn>0.076</mn><mo>+</mo><mn>0.060</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>5</mn><mo>≈</mo><mn>0.072</mn></mrow><annotation encoding="application/x-tex">(0.063 + 0.072 + 0.089 + 0.076 + 0.060) / 5 \approx 0.072</annotation></semantics></math>.
+That looks like English.</p>
+</section>
+<section id="step-3-compare-all-the-guesses" class="level3">
+<h3>Step 3: compare all the guesses</h3>
+<table>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr>
+<th>Guess
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math></th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th><strong>5</strong></th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th><strong>10</strong></th>
+<th>11</th>
+<th>12</th>
+<th>13</th>
+<th>14</th>
+<th><strong>15</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Average IoC</td>
+<td>.042</td>
+<td>.043</td>
+<td>.045</td>
+<td>.045</td>
+<td><strong>.072</strong></td>
+<td>.048</td>
+<td>.040</td>
+<td>.044</td>
+<td>.050</td>
+<td><strong>.070</strong></td>
+<td>.041</td>
+<td>.048</td>
+<td>.040</td>
+<td>.043</td>
+<td><strong>.080</strong></td>
+</tr>
+</tbody>
+</table>
+<figure>
+<img src="figures/04-period-scan.png"
+alt="Bar chart of the average column IoC for guessed key lengths 1 to 16. Most bars sit near the random line. Bars at 5, 10 and 15 jump up past the English line." />
+<figcaption aria-hidden="true">Bar chart of the average column IoC for
+guessed key lengths 1 to 16. Most bars sit near the random line. Bars at
+5, 10 and 15 jump up past the English line.</figcaption>
+</figure>
+<p>Three guesses jump up: 5, 10 and 15. Why three? If the key is
+<code>STORM</code>, then splitting into 10 columns also puts only
+same-shifted letters together: column 1 holds the 1st, 11th, 21st…
+letters, which were all shifted by S. Any multiple of the true length
+works. So <strong>choose the smallest length that jumps</strong>: 5.</p>
+<p>Notice that 15 scored even higher than 5. With 15 columns, each
+column holds only 18 letters, and short columns give jumpy numbers (more
+on that below). Never pick the tallest bar blindly.</p>
+</section>
+<section id="step-4-what-next" class="level3">
+<h3>Step 4: what next?</h3>
+<p>Now you know you are facing five Caesar ciphers, side by side. Solve
+each column with frequency analysis (see Guide 02, Frequency analysis,
+and Guide 05, Repeats and key length, which finishes this kind of
+example). For the record, the key was <code>STORM</code>, and the
+message begins
+<code>the lighthouse keeper had not spoken to anyone...</code>.</p>
+<div class="in-app">
+<p><strong>In the app:</strong> <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/counts">Counts</a>
+shows the IoC of any text, with English (0.067) and random letters
+(0.038) marked. <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/vigenere">Vigenère</a>
+cuts a text into slices for each key length and shows each slice’s
+IoC.</p>
+</div>
+</section>
+</section>
+<section id="friedmans-estimate" class="level2">
+<h2>Friedman’s estimate</h2>
+<p>William Friedman, the American cryptologist who invented the index of
+coincidence around 1920, also found a way to guess the key length
+straight from the IoC of the whole message, with no splitting at
+all.</p>
+<p>Here is the idea. Pick two letters at random from a Vigenère message
+with a key of length
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>.
+Either they are in the same column, or they are not.</p>
+<ul>
+<li>They land in the same column about
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mn>1</mn><mi>L</mi></mfrac><annotation encoding="application/x-tex">\frac{1}{L}</annotation></semantics></math>
+of the time. Then they were shifted by the same amount, so they match as
+often as English letters do:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mtext mathvariant="normal">English</mtext></msub><annotation encoding="application/x-tex">\kappa_{\text{English}}</annotation></semantics></math>.</li>
+<li>The rest of the time,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mfrac><mn>1</mn><mi>L</mi></mfrac></mrow><annotation encoding="application/x-tex">1 - \frac{1}{L}</annotation></semantics></math>,
+they were shifted by different amounts, and they match about as often as
+random letters:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mtext mathvariant="normal">random</mtext></msub><annotation encoding="application/x-tex">\kappa_{\text{random}}</annotation></semantics></math>.</li>
+</ul>
+<p>So we expect</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">I</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">C</mi></mrow><mo>≈</mo><mfrac><mn>1</mn><mi>L</mi></mfrac><mspace width="0.167em"></mspace><msub><mi>κ</mi><mtext mathvariant="normal">English</mtext></msub><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mfrac><mn>1</mn><mi>L</mi></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>κ</mi><mtext mathvariant="normal">random</mtext></msub></mrow><annotation encoding="application/x-tex">\mathrm{IoC} \approx \frac{1}{L}\,\kappa_{\text{English}} + \left(1 - \frac{1}{L}\right)\kappa_{\text{random}}</annotation></semantics></math></p>
+<p>Solve that for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+and you get <strong>Friedman’s estimate</strong>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>≈</mo><mfrac><mrow><msub><mi>κ</mi><mtext mathvariant="normal">English</mtext></msub><mo>−</mo><msub><mi>κ</mi><mtext mathvariant="normal">random</mtext></msub></mrow><mrow><mrow><mi mathvariant="normal">I</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">C</mi></mrow><mo>−</mo><msub><mi>κ</mi><mtext mathvariant="normal">random</mtext></msub></mrow></mfrac><mo>=</mo><mfrac><mrow><mn>0.066</mn><mo>−</mo><mn>0.038</mn></mrow><mrow><mrow><mi mathvariant="normal">I</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">C</mi></mrow><mo>−</mo><mn>0.038</mn></mrow></mfrac></mrow><annotation encoding="application/x-tex">L \approx \frac{\kappa_{\text{English}} - \kappa_{\text{random}}}{\mathrm{IoC} - \kappa_{\text{random}}} = \frac{0.066 - 0.038}{\mathrm{IoC} - 0.038}</annotation></semantics></math></p>
+<p>Try it on our message, where the IoC was 0.0419:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>≈</mo><mfrac><mrow><mn>0.066</mn><mo>−</mo><mn>0.0385</mn></mrow><mrow><mn>0.0419</mn><mo>−</mo><mn>0.0385</mn></mrow></mfrac><mo>=</mo><mfrac><mn>0.0275</mn><mn>0.0034</mn></mfrac><mo>≈</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">L \approx \frac{0.066 - 0.0385}{0.0419 - 0.0385} = \frac{0.0275}{0.0034} \approx 8</annotation></semantics></math></p>
+<p>The true answer is 5, so Friedman’s guess is rough. Look at the
+bottom of that fraction: it is a tiny difference, 0.0034. A wobble of
+0.002 in the IoC (perfectly normal for 271 letters) changes the answer a
+lot. Treat Friedman’s estimate as a ballpark (“small key, not a huge
+one”) and let the column test give the exact length. Longer texts make
+it more reliable. (There is a more exact version of the formula that
+also uses
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>,
+but for a few hundred letters it gives nearly the same answer, here
+7.9.)</p>
+</section>
+<section id="when-to-try-it" class="level2">
+<h2>When to try it</h2>
+<ul>
+<li><strong>Always, early.</strong> The IoC takes a few minutes by hand
+and seconds with a spreadsheet. Work it out for every new ciphertext,
+right after counting the letters.</li>
+<li><strong>IoC near 0.066 and the counts look like English</strong> (e,
+t, a, o at the top): a transposition. The letters are right, only their
+order is wrong.</li>
+<li><strong>IoC near 0.066 but the wrong letters are common</strong>: a
+substitution of some kind (Caesar, affine, keyword, general).</li>
+<li><strong>IoC between 0.038 and about 0.055</strong>: several
+alphabets. Run the column test. A clear jump at some length means
+Vigenère, Beaufort or a relative.</li>
+<li><strong>Low IoC and no length jumps</strong>: think autokey, running
+key, or a cipher that works on pairs of letters.</li>
+</ul>
+<section id="when-not-to" class="level3">
+<h3>When not to</h3>
+<ul>
+<li><strong>Very short messages</strong> (under about 50 letters). The
+numbers wobble too much to trust.</li>
+<li><strong>Messages made of digits or symbols</strong> that stand for
+pairs of letters (such as a Polybius square). Turn them back into single
+symbols first, or the IoC measures the wrong thing.</li>
+<li>When you already know the cipher type from the story or from a hint.
+Use the IoC to check, not to waste time.</li>
+</ul>
+</section>
+</section>
+<section id="traps-and-tips" class="level2">
+<h2>Traps and tips</h2>
+<figure>
+<img src="figures/04-short-texts.png"
+alt="Two shaded bands showing the IoC of many simulated texts. For English-like text the band is centered near 0.066, and for random letters near 0.038. At 20 letters both bands are wide and overlap; by 500 letters they are thin and far apart." />
+<figcaption aria-hidden="true">Two shaded bands showing the IoC of many
+simulated texts. For English-like text the band is centered near 0.066,
+and for random letters near 0.038. At 20 letters both bands are wide and
+overlap; by 500 letters they are thin and far apart.</figcaption>
+</figure>
+<ul>
+<li><strong>Short texts give wobbly numbers.</strong> In the chart
+above, 20-letter samples of English-like text land anywhere between
+0.037 and 0.11, and random ones between 0.021 and 0.063. The two ranges
+overlap. By 200 letters, English-like text stays between about 0.058 and
+0.074, and random text between about 0.037 and 0.041. So the longer the
+text, the more you can trust the IoC.</li>
+<li><strong>Columns are shorter than the whole text.</strong> A
+271-letter message split into 15 columns gives columns of only 18
+letters. Their IoCs are noisy, which is why a multiple of the key length
+can score even higher than the key length itself.</li>
+<li><strong>Unusual texts have unusual IoCs.</strong> A list of names, a
+text full of numbers spelled out, or a message that avoids the letter e
+can sit well away from 0.066. Use 0.060 to 0.075 as “English-like”, not
+exactly 0.066.</li>
+<li><strong>Strip spaces and punctuation first.</strong> Count only
+letters, and make capitals and small letters the same.</li>
+<li><strong>Two layers of cipher.</strong> A substitution followed by a
+transposition still has an English-like IoC, because neither step
+flattens the counts. If the IoC says “one alphabet” but nothing reads,
+suspect two steps.</li>
+<li><strong>Do not round too early.</strong> Keep at least four decimal
+places while you work. The differences that matter are in the third
+decimal place.</li>
+</ul>
+</section>
+<section id="try-it-yourself" class="level2">
+<h2>Try it yourself</h2>
+<ol type="1">
+<li>Work out the IoC of the word <code>LETTERS</code>. (Hint:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">N = 7</annotation></semantics></math>.)</li>
+<li>A 400-letter ciphertext has an IoC of 0.067. When you count the
+letters, the most common are E, T, A and O, in about the right amounts
+for English. What kind of cipher is it most likely to be, and why?</li>
+<li>A ciphertext has an IoC of 0.044. Use Friedman’s estimate (with
+0.066 and 0.038) to guess the key length. Then the column test gives
+averages of 0.044 for length 3, 0.068 for length 6, 0.045 for length 7
+and 0.069 for length 12. What key length do you choose?</li>
+</ol>
+<div class="in-app">
+<p><strong>In the app:</strong> <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/spot/1">Spot the
+cipher</a> asks you to tell one alphabet from several by the IoC. The <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/vigenere/1">Vigenère</a>
+exercise takes you from the key length to the answer.</p>
+</div>
+</section>
+<section id="words-to-know" class="level2">
+<h2>Words to know</h2>
+<ul>
+<li><strong>Index of coincidence (IoC)</strong>: the chance that two
+letters picked at random from a text are the same letter.</li>
+<li><strong>Kappa
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>κ</mi><annotation encoding="application/x-tex">\kappa</annotation></semantics></math>)</strong>:
+the IoC you expect from a language or from random letters: about 0.066
+for English and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>26</mn><mo>≈</mo><mn>0.038</mn></mrow><annotation encoding="application/x-tex">1/26 \approx 0.038</annotation></semantics></math>
+for random letters.</li>
+<li><strong>Sigma
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>∑</mo><annotation encoding="application/x-tex">\sum</annotation></semantics></math>)</strong>:
+a sign that means “add up all of these”.</li>
+<li><strong>Frequency
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>)</strong>:
+how many times a letter appears in a text.</li>
+<li><strong>Monoalphabetic</strong>: using one cipher alphabet for the
+whole message (Caesar, substitution).</li>
+<li><strong>Polyalphabetic</strong>: switching between several cipher
+alphabets (Vigenère, Beaufort).</li>
+<li><strong>Period or key length</strong>: how many letters the key has
+before it repeats.</li>
+<li><strong>Column test</strong>: splitting a ciphertext into
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+columns and averaging their IoCs to test whether the key length is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>.</li>
+<li><strong>Friedman’s estimate</strong>: a formula that guesses the key
+length from the IoC of the whole message.</li>
+</ul>
+</section>
+<section id="going-further" class="level2">
+<h2>Going further</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Index_of_coincidence">Index
+of coincidence (Wikipedia)</a></li>
+<li><a
+href="http://practicalcryptography.com/cryptanalysis/text-characterisation/index-coincidence/">Index
+of coincidence (Practical Cryptography)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/William_F._Friedman">William
+F. Friedman (Wikipedia)</a></li>
+<li><a
+href="https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher">Vigenère
+cipher (Wikipedia)</a></li>
+<li>Simon Singh, <em>The Code Book</em> (1999), chapter 2, on how the
+Vigenère cipher was finally broken.</li>
+<li><a
+href="https://www.cipherchallenge.org/hints-tips-and-cribs-etc/">The
+National Cipher Challenge: hints, tips and cribs</a></li>
+</ul>
+</section>
+<section id="answers" class="level2">
+<h2>Answers</h2>
+<ol type="1">
+<li><code>LETTERS</code> has L 1, E 2, T 2, R 1, S 1. The top is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>+</mo><mn>2</mn><mo>+</mo><mn>2</mn><mo>+</mo><mn>0</mn><mo>+</mo><mn>0</mn><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">0 + 2 + 2 + 0 + 0 = 4</annotation></semantics></math>
+(from E:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2 \times 1</annotation></semantics></math>
+and T:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2 \times 1</annotation></semantics></math>).
+The bottom is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>7</mn><mo>×</mo><mn>6</mn><mo>=</mo><mn>42</mn></mrow><annotation encoding="application/x-tex">7 \times 6 = 42</annotation></semantics></math>.
+IoC
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mn>4</mn><mi>/</mi><mn>42</mn><mo>≈</mo><mn>0.095</mn></mrow><annotation encoding="application/x-tex">= 4/42 \approx 0.095</annotation></semantics></math>.</li>
+<li>A transposition. The IoC is English-like, so only one alphabet is in
+play. And the common letters are the right ones (E, T, A, O), so the
+letters have not been renamed, only moved.</li>
+<li>Friedman:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>0.066</mn><mo>−</mo><mn>0.038</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0.044</mn><mo>−</mo><mn>0.038</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>0.028</mn><mi>/</mi><mn>0.006</mn><mo>≈</mo><mn>4.7</mn></mrow><annotation encoding="application/x-tex">(0.066 - 0.038)/(0.044 - 0.038) = 0.028/0.006 \approx 4.7</annotation></semantics></math>,
+so “around 5”. The column test jumps at 6 and 12, and 12 is a multiple
+of 6. Choose <strong>6</strong>, the smallest length that jumps.
+(Friedman was close, but not exact, as usual.)</li>
+</ol>
+</section>
+</section>

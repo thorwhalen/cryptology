@@ -1,0 +1,810 @@
+<section id="cribs-and-patterns" class="level1">
+<h1>Cribs and patterns</h1>
+<p><em>Guess a word, pin it to the ciphertext, and let the cipher give
+itself away</em></p>
+<p><strong>By the end you can use one guessed word to unlock a
+substitution, rebuild a keyword alphabet, find a Vigenère key, and
+measure the width of a transposition.</strong></p>
+<section id="the-big-idea" class="level2">
+<h2>The big idea</h2>
+<p>Codebreakers rarely start from nothing. A letter probably begins with
+a greeting. A report probably mentions the weather. A message in a story
+probably names someone you met in the last message. A word you expect to
+find in the plaintext is called a <strong>crib</strong> (or a
+<strong>probable word</strong>). If you can guess where the crib sits in
+the ciphertext, you can line the two up and read off part of the key.
+And part of the key is usually enough to get the rest.</p>
+<figure>
+<img src="figures/06-crib-idea.png"
+alt="A substitution ciphertext drawn as word tiles. Three cribs are written under their tiles: “dear tom” at the start (a greeting), “the” under the commonest three-letter word, and “eleanor” under the last word (a name from an earlier message)." />
+<figcaption aria-hidden="true">A substitution ciphertext drawn as word
+tiles. Three cribs are written under their tiles: “dear tom” at the
+start (a greeting), “the” under the commonest three-letter word, and
+“eleanor” under the last word (a name from an earlier
+message).</figcaption>
+</figure>
+</section>
+<section id="which-ciphers-it-breaks" class="level2">
+<h2>Which ciphers it breaks</h2>
+<p>Cribs are the most general tool in this whole series. What changes
+from cipher to cipher is how you “line up” the crib.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Cipher family</th>
+<th>Do cribs help?</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Caesar, affine</td>
+<td>Yes, instantly</td>
+<td>One crib letter gives a Caesar shift. Two crib letters usually give
+both numbers of an affine key.</td>
+</tr>
+<tr>
+<td>Simple or keyword substitution, with word breaks</td>
+<td>Yes, strongly</td>
+<td>Word <strong>patterns</strong> find where a crib fits. Each crib
+fills in several letters at once.</td>
+</tr>
+<tr>
+<td>Keyword substitution</td>
+<td>Yes, and more</td>
+<td>A part of the cipher alphabet lets you guess the keyword and fill in
+the rest.</td>
+</tr>
+<tr>
+<td>Substitution without word breaks</td>
+<td>Yes, more slowly</td>
+<td>Slide the crib’s pattern along the text, looking for letters that
+repeat in the right places.</td>
+</tr>
+<tr>
+<td>Vigenère, Beaufort</td>
+<td>Yes</td>
+<td><strong>Crib dragging</strong>: slide the crib along, subtract, and
+look for a readable piece of key.</td>
+</tr>
+<tr>
+<td>Autokey</td>
+<td>Yes, with a twist</td>
+<td>Dragging gives a piece of the key, and in autokey the key
+<em>is</em> earlier plaintext.</td>
+</tr>
+<tr>
+<td>Columnar transposition, rail fence</td>
+<td>Yes</td>
+<td>Where the crib’s letters land tells you the number of columns.</td>
+</tr>
+<tr>
+<td>Playfair, Hill</td>
+<td>Yes</td>
+<td>A crib is the classic way into a Hill cipher (see Guide 09, Two
+letters at a time).</td>
+</tr>
+<tr>
+<td>Enigma</td>
+<td>Yes, historically</td>
+<td>Bletchley Park’s machines were driven by cribs (see the history
+section).</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="where-good-cribs-come-from" class="level2">
+<h2>Where good cribs come from</h2>
+<p>A crib is only useful if it is likely to be right. Good sources, from
+strongest to weakest:</p>
+<ul>
+<li><strong>Names and words from earlier messages.</strong> In a puzzle
+series, characters, places and objects come back. If the last message
+was signed by Eleanor, this one may be too.</li>
+<li><strong>Openings and closings.</strong> Letters start with “dear …”
+and end with a name. Reports start with a date or a place.</li>
+<li><strong>Words the story makes likely.</strong> A message about a
+stolen painting probably contains <code>painting</code>,
+<code>museum</code> or <code>gallery</code>.</li>
+<li><strong>The commonest words.</strong> <code>the</code>,
+<code>and</code>, <code>that</code>, <code>of</code>. Weak on their own,
+because they fit almost anywhere, but strong once you have a few other
+letters.</li>
+<li><strong>Habits of the sender.</strong> Spelled-out numbers, a
+favorite sign-off, the same phrase at the start of every message.</li>
+</ul>
+<p>A long crib beats a short one. A crib with repeated letters (like
+<code>letter</code> or <code>keeper</code>) beats one without, because
+repeats show up in the ciphertext as a pattern you can spot.</p>
+</section>
+<section id="why-it-works-word-patterns" class="level2">
+<h2>Why it works: word patterns</h2>
+<section id="patterns-survive-substitution" class="level3">
+<h3>Patterns survive substitution</h3>
+<p>A substitution cipher replaces each letter with another letter,
+always the same one. So if a word has two letters the same, its
+ciphertext also has two letters the same, in the same places. The
+letters change; the <strong>shape</strong> does not.</p>
+<p>To write that shape down, label the letters of a word in the order
+they first appear: the first new letter is A, the next new letter is B,
+and so on. A letter that comes back gets its old label again.</p>
+<ul>
+<li><code>that</code>: t is A, h is B, a is C, and t comes back as A.
+Pattern <strong>ABCA</strong>.</li>
+<li><code>letter</code>: l is A, e is B, t is C, t again is C, e again
+is B, r is D. Pattern <strong>ABCCBD</strong>.</li>
+<li><code>people</code>: p A, e B, o C, p A, l D, e B. Pattern
+<strong>ABCADB</strong>.</li>
+</ul>
+<figure>
+<img src="figures/06-word-patterns.png"
+alt="Six words drawn as colored tiles, where equal letters share a color: THAT (ABCA), LETTER (ABCCBD), PEOPLE (ABCADB), KEEPER (ABBCBD), SEVEN (ABCBD) and ELEANOR (ABACDEF)." />
+<figcaption aria-hidden="true">Six words drawn as colored tiles, where
+equal letters share a color: THAT (ABCA), LETTER (ABCCBD), PEOPLE
+(ABCADB), KEEPER (ABBCBD), SEVEN (ABCBD) and ELEANOR
+(ABACDEF).</figcaption>
+</figure>
+<p>The ciphertext word <code>TDEEDB</code> has pattern ABCCBD, the same
+as <code>letter</code>. The ciphertext word <code>EOD</code> has pattern
+ABC, which tells you very little: 198 of the 5,000 commonest English
+words have three different letters.</p>
+</section>
+<section id="pattern-lists" class="level3">
+<h3>Pattern lists</h3>
+<p>Cryptographers keep <strong>pattern lists</strong>: every common
+word, filed under its pattern. You look up a ciphertext word’s pattern
+and get a short list of candidates. Some patterns are rare, and those
+are gold. In a list of the 5,000 commonest English words (counted from a
+large collection of books):</p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>How many common words</th>
+<th>Some of them</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ABCD</td>
+<td>528</td>
+<td>with, have, from, what, your, time</td>
+</tr>
+<tr>
+<td>ABCA</td>
+<td>15</td>
+<td>that, says, dead, else, high, edge</td>
+</tr>
+<tr>
+<td>ABCCBD</td>
+<td>13</td>
+<td>better, letter, common, follow, bottom, cotton</td>
+</tr>
+<tr>
+<td>ABCBD</td>
+<td>14</td>
+<td>never, state, visit, seven, fever, motor</td>
+</tr>
+<tr>
+<td>ABBCBD</td>
+<td>5</td>
+<td>seemed, assist, deeper, keeper, peered</td>
+</tr>
+<tr>
+<td>ABACDEF</td>
+<td>7</td>
+<td>against, moments, suspect, alarmed, elegant</td>
+</tr>
+</tbody>
+</table>
+<p>So a ciphertext word with pattern ABBCBD has only five common
+candidates. Once you know even one or two of its letters, usually only
+one candidate survives.</p>
+<figure>
+<img src="figures/06-pattern-lookup.png"
+alt="The ciphertext word SDDYDB, with e, e, e and r already known. Its pattern ABBCBD has five common words. Seemed, assist and peered have the wrong letters, deeper needs a d that is already used, and keeper fits." />
+<figcaption aria-hidden="true">The ciphertext word SDDYDB, with e, e, e
+and r already known. Its pattern ABBCBD has five common words. Seemed,
+assist and peered have the wrong letters, deeper needs a d that is
+already used, and keeper fits.</figcaption>
+</figure>
+<div class="in-app">
+<p><strong>In the app:</strong> <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/patterns/1">Pattern
+words</a> trains you to recognize a word from the shape of its repeated
+letters.</p>
+</div>
+</section>
+</section>
+<section id="a-worked-example-a-keyword-substitution" class="level2">
+<h2>A worked example: a keyword substitution</h2>
+<p>Here is a message, with its word breaks kept. In the previous puzzle,
+a girl called Eleanor wrote to her friend Tom.</p>
+<pre><code>RDGB EXV, EOD TDEEDB LXF IXFWR PC IBXV EOD SDDYDB. OD OPR G
+CDAXWR TDEEDB FWRDB EOD UDTT PW EOD XTR AOGYDT. VDDE VD EODBD
+GE CDHDW GWR UBPWN G TGVY. DTDGWXB</code></pre>
+<section id="step-1-the-name" class="level3">
+<h3>Step 1: the name</h3>
+<p>The last word, <code>DTDGWXB</code>, stands alone after the final
+full stop, just where a signature goes. Its pattern is ABACDEF, and so
+is the pattern of <code>eleanor</code>. Try it. That gives six letters
+at once: cipher D = e, T = l, G = a, W = n, X = o, B = r.</p>
+</section>
+<section id="step-2-the-greeting" class="level3">
+<h3>Step 2: the greeting</h3>
+<p>The first word <code>RDGB</code> now reads <code>?ear</code>. A
+letter that starts “?ear Tom” can only be <code>dear</code>, so R =
+d. The second word <code>EXV</code> reads <code>?o?</code>, and
+<code>tom</code> fits: E = t, V = m.</p>
+</section>
+<section id="step-3-the-commonest-word" class="level3">
+<h3>Step 3: the commonest word</h3>
+<p><code>EOD</code> appears four times. With E = t and D = e it reads
+<code>t?e</code>, which must be <code>the</code>. So O = h.</p>
+</section>
+<section id="step-4-patterns-check-the-guesses" class="level3">
+<h3>Step 4: patterns check the guesses</h3>
+<p><code>TDEEDB</code> now reads <code>letter</code>. It has pattern
+ABCCBD, as <code>letter</code> should, so the guesses agree with each
+other. <code>SDDYDB</code> reads <code>?ee?er</code>. Its pattern is
+ABBCBD, and of the five common words with that pattern only
+<code>deeper</code> and <code>keeper</code> match <code>?ee?er</code>.
+But plain d is already taken (cipher R), so it is <code>keeper</code>: S
+= k, Y = p.</p>
+</section>
+<section id="step-5-the-rest-falls-out" class="level3">
+<h3>Step 5: the rest falls out</h3>
+<p>With 12 letters known, every word is nearly readable:
+<code>LXF</code> is <code>you</code>, <code>IBXV</code> is
+<code>from</code>, <code>CDAXWR</code> is <code>second</code>,
+<code>CDHDW</code> is <code>seven</code>, and so on. The message is:</p>
+<p><code>dear tom, the letter you found is from the keeper. he hid a second letter under the bell in the old chapel. meet me there at seven and bring a lamp. eleanor</code></p>
+<p>You have now found 21 of the 26 letters of the cipher alphabet. The
+message never used j, q, w, x or z, so those five are still missing. For
+this message that does not matter, but if the next message uses the same
+key, it will. That is where the keyword comes in.</p>
+</section>
+</section>
+<section id="rebuilding-a-keyword-alphabet" class="level2">
+<h2>Rebuilding a keyword alphabet</h2>
+<section id="how-a-keyword-alphabet-is-made" class="level3">
+<h3>How a keyword alphabet is made</h3>
+<p>A random cipher alphabet is hard to remember, so people build one
+from a <strong>keyword</strong>:</p>
+<ol type="1">
+<li>Write the keyword, crossing out any letter you have already written.
+<code>GUARDIAN</code> becomes <code>GUARDIN</code>.</li>
+<li>Carry on with the rest of the alphabet in order, starting from the
+letter after the keyword’s last letter, skipping letters already used,
+and wrapping round from Z to A.</li>
+</ol>
+<p>After <code>GUARDIN</code> the alphabet carries on from O: O, P, Q,
+(R is used), S, T, (U is used), V, W, X, Y, Z, then round to (A is used)
+B, C, (D is used) E, F, (G is used) H, (I is used) J, K, L, M.</p>
+<pre><code>plain:   a b c d e f g h i j k l m n o p q r s t u v w x y z
+cipher:  G U A R D I N O P Q S T V W X Y Z B C E F H J K L M</code></pre>
+<p>Some puzzle makers start the second part from A instead of from the
+letter after the keyword. That gives <code>GUARDINBCEFHJ...</code>.
+Either way, the idea below works.</p>
+</section>
+<section id="seeing-part-of-it-is-enough" class="level3">
+<h3>Seeing part of it is enough</h3>
+<p>Write the 21 letters you found under the plain alphabet, with a
+<code>?</code> for the five you are missing:</p>
+<pre><code>plain:   a b c d e f g h i j k l m n o p q r s t u v w x y z
+found:   G U A R D I N O P ? S T V W X Y ? B C E F H ? ? L ?</code></pre>
+<p>Two things jump out:</p>
+<ul>
+<li><strong>The start spells a word.</strong> G U A R D I N looks like
+<code>guardian</code> with its repeated A crossed out.</li>
+<li><strong>The rest is in alphabetical order.</strong> From O onward
+the found letters climb through the alphabet: O P ? S T V W X Y ? B C E
+F H ? ? L ?. The only letters that ever get skipped are letters of the
+keyword.</li>
+</ul>
+<p>So the gaps fill themselves. Between P and S the only unused letter
+is Q, so j = Q. After Y comes Z, so q = Z. Between H and L the unused
+letters are J and K, so w = J and x = K. After L the only letter left is
+M, so z = M.</p>
+<figure>
+<img src="figures/06-keyword-alphabet.png"
+alt="The plain alphabet, the 21 cipher letters found from cribs (with five question marks), and the rebuilt alphabet: the keyword part GUARDIN in pink, then the rest of the alphabet in order, with the five never-seen letters Q, Z, J, K and M filled in orange." />
+<figcaption aria-hidden="true">The plain alphabet, the 21 cipher letters
+found from cribs (with five question marks), and the rebuilt alphabet:
+the keyword part GUARDIN in pink, then the rest of the alphabet in
+order, with the five never-seen letters Q, Z, J, K and M filled in
+orange.</figcaption>
+</figure>
+<p>This works even if you only see the tail. The letters missing from
+the alphabetical run (here R, U, D, G, I, N and A) must be the keyword’s
+letters. Unscramble them and you often have the keyword.</p>
+<div class="in-app">
+<p><strong>In the app:</strong> <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/substitution">Substitution</a>
+shows your key as you fill it in, so a keyword alphabet’s giveaway run,
+such as STUVWXYZ, stands out. More on the cipher: <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/keyword">keyword
+substitution</a>.</p>
+</div>
+</section>
+</section>
+<section id="the-grown-up-version" class="level2">
+<h2>The grown-up version</h2>
+<section id="letters-as-numbers" class="level3">
+<h3>Letters as numbers</h3>
+<p>To work with the Vigenère cipher you need letters as numbers: A = 0,
+B = 1, C = 2, and so on up to Z = 25. Encryption <strong>adds</strong>
+the key letter to the plain letter. If the sum goes past 25, you take
+away 26 so that it wraps back round to the start of the alphabet.</p>
+<p>Mathematicians write “wrap round after 26” as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pmod{26}</annotation></semantics></math>,
+read “modulo 26” or “mod 26”. The Vigenère rule is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>≡</mo><mi>p</mi><mo>+</mo><mi>k</mi><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">c \equiv p + k \pmod{26}</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
+is the plain letter,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+the key letter and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+the cipher letter. The sign
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≡</mo><annotation encoding="application/x-tex">\equiv</annotation></semantics></math>
+means “is the same, once you have wrapped round”. For example, plain s
+(18) with key letter L (11) gives
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>18</mn><mo>+</mo><mn>11</mn><mo>=</mo><mn>29</mn></mrow><annotation encoding="application/x-tex">18 + 11 = 29</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>29</mn><mo>−</mo><mn>26</mn><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">29 - 26 = 3</annotation></semantics></math>,
+which is D.</p>
+</section>
+<section id="turning-the-rule-round" class="level3">
+<h3>Turning the rule round</h3>
+<p>If you know the cipher letter and you have <em>guessed</em> the plain
+letter, you can work out the key letter by subtracting:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>≡</mo><mi>c</mi><mo>−</mo><mi>p</mi><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">k \equiv c - p \pmod{26}</annotation></semantics></math></p>
+<p>If the answer is negative, add 26. That one line is the whole of crib
+dragging.</p>
+<p>For the <strong>Beaufort</strong> cipher the rule is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>≡</mo><mi>k</mi><mo>−</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">c \equiv k - p</annotation></semantics></math>,
+so the key is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>≡</mo><mi>c</mi><mo>+</mo><mi>p</mi><mrow><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">k \equiv c + p \pmod{26}</annotation></semantics></math>.
+Same method, different sum.</p>
+</section>
+</section>
+<section id="a-worked-example-crib-dragging-a-vigenère" class="level2">
+<h2>A worked example: crib dragging a Vigenère</h2>
+<p>Here is a 115-letter Vigenère ciphertext. The story tells us it is
+about a professor, so <code>professor</code> is a good crib.</p>
+<pre><code>FTYKB RYHPR FBKED UCEQE QVHUJ MFUSH RBJVV RJADV RBTRE JSZFP
+TUVVI DPPWA XIOGH UJCWQ QXNNS KGFYU OATVS DTVPR KOCGH UJGFC
+FQXRP VIESA EFOJS</code></pre>
+<p>(The groups of five are only for reading. They are not word
+breaks.)</p>
+<section id="step-1-slide-and-subtract" class="level3">
+<h3>Step 1: slide and subtract</h3>
+<p>Put the crib under the first nine ciphertext letters and subtract,
+letter by letter. Then move the crib one place to the right and do it
+again. At each position you get a nine-letter “key fragment”. At a wrong
+position the fragment is gibberish. At the right position it is a piece
+of the real key, so it should look like part of a word, or a word
+repeating.</p>
+<figure>
+<img src="figures/06-crib-drag.png"
+alt="A table sliding the crib professor along the ciphertext, positions 1 to 14. The key fragments are gibberish except at position 10, highlighted, where the fragment reads CONFALCON." />
+<figcaption aria-hidden="true">A table sliding the crib professor along
+the ciphertext, positions 1 to 14. The key fragments are gibberish
+except at position 10, highlighted, where the fragment reads
+CONFALCON.</figcaption>
+</figure>
+<p>At position 10 the ciphertext is <code>RFBKEDUCE</code>. Subtract
+<code>professor</code>:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>F</th>
+<th>B</th>
+<th>K</th>
+<th>E</th>
+<th>D</th>
+<th>U</th>
+<th>C</th>
+<th>E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cipher
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math></td>
+<td>17</td>
+<td>5</td>
+<td>1</td>
+<td>10</td>
+<td>4</td>
+<td>3</td>
+<td>20</td>
+<td>2</td>
+<td>4</td>
+</tr>
+<tr>
+<td>crib
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math></td>
+<td>15</td>
+<td>17</td>
+<td>14</td>
+<td>5</td>
+<td>4</td>
+<td>18</td>
+<td>18</td>
+<td>14</td>
+<td>17</td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>−</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">c - p</annotation></semantics></math></td>
+<td>2</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>12</mn></mrow><annotation encoding="application/x-tex">-12</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>13</mn></mrow><annotation encoding="application/x-tex">-13</annotation></semantics></math></td>
+<td>5</td>
+<td>0</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>15</mn></mrow><annotation encoding="application/x-tex">-15</annotation></semantics></math></td>
+<td>2</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>12</mn></mrow><annotation encoding="application/x-tex">-12</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>13</mn></mrow><annotation encoding="application/x-tex">-13</annotation></semantics></math></td>
+</tr>
+<tr>
+<td>add 26 if negative</td>
+<td>2</td>
+<td>14</td>
+<td>13</td>
+<td>5</td>
+<td>0</td>
+<td>11</td>
+<td>2</td>
+<td>14</td>
+<td>13</td>
+</tr>
+<tr>
+<td>key letter</td>
+<td>C</td>
+<td>O</td>
+<td>N</td>
+<td>F</td>
+<td>A</td>
+<td>L</td>
+<td>C</td>
+<td>O</td>
+<td>N</td>
+</tr>
+</tbody>
+</table>
+<figure>
+<img src="figures/06-crib-subtract.png"
+alt="The subtraction at position 10, drawn as three rows of tiles: the ciphertext RFBKEDUCE, the crib professor, and the key fragment CONFALCON, with each letter’s number and the add-26 steps." />
+<figcaption aria-hidden="true">The subtraction at position 10, drawn as
+three rows of tiles: the ciphertext RFBKEDUCE, the crib professor, and
+the key fragment CONFALCON, with each letter’s number and the add-26
+steps.</figcaption>
+</figure>
+</section>
+<section id="step-2-read-the-key" class="level3">
+<h3>Step 2: read the key</h3>
+<p><code>CONFALCON</code> is the word <code>falcon</code>, starting
+partway through and going round again. The fragment repeats after six
+letters (C O N F A L, then C O N), so the key has <strong>6</strong>
+letters. Position 10 used key letter C. Counting back, position 9 used
+L, 8 used A, 7 used F, and position 1 used the same key letter as
+position 7. So the key, read from the start, is <code>FALCON</code>.</p>
+</section>
+<section id="step-3-check" class="level3">
+<h3>Step 3: check</h3>
+<p>Decrypt the whole message with <code>FALCON</code>:
+<code>at nine the professor left the museum by the east door. the map is hidden inside the clock in his study. find it before the guards return at dawn</code>.
+Done, and you never needed to find the key length first.</p>
+</section>
+<section id="why-a-short-crib-is-risky" class="level3">
+<h3>Why a short crib is risky</h3>
+<p>Try the same thing with the crib <code>the</code>. There are 113
+positions, and only one gives a common three-letter word as its
+fragment: position 4 gives <code>RUN</code>. But that is a false alarm!
+The first real <code>the</code> is at position 7, and its fragment is
+<code>FAL</code>, which is not a word at all, just the start of
+<code>falcon</code>. Short cribs give too many accidents and too few
+clues. Use the longest crib you trust.</p>
+</section>
+</section>
+<section id="cribs-for-transposition" class="level2">
+<h2>Cribs for transposition</h2>
+<p>A transposition keeps every letter and only moves them. So you cannot
+subtract anything. Instead, a crib tells you <strong>where letters must
+end up next to each other</strong>.</p>
+<p>In a columnar transposition with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
+columns, you write the message in rows of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
+letters and read the ciphertext down the columns. Two plaintext letters
+that are
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
+places apart sit one above the other in the same column. When that
+column is read out, they come out <strong>side by side</strong>. So if
+the width is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>,
+then for every letter of the crib, the letter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
+places later must appear right after it somewhere in the ciphertext.</p>
+<p>Here is a 90-letter columnar transposition. The story says a
+submarine is involved.</p>
+<pre><code>SRIRN HTRAD RHNMW YLNTB NLAAN POTRN SLAIH CUILF EEHSF AIEAP
+ATDEH MESCR OIOEK GILNT EREAW UETRE NRBTG ADBOA</code></pre>
+<p>(Again, the groups of five are only for reading. A pair can be split
+across two groups, so look across the gaps.)</p>
+<p>Write <code>submarine</code> in rows of 5: <code>s u b m a</code>
+above <code>r i n e</code>. The stacked pairs are <code>SR</code>,
+<code>UI</code>, <code>BN</code> and <code>ME</code>. All four appear in
+the ciphertext (it even starts with <code>SR</code>). In rows of 4 the
+stacked pairs are <code>SA</code>, <code>UR</code>, <code>BI</code>,
+<code>MN</code>, <code>AE</code>, and none of them appears. Notice that
+it does not matter where in the message the crib starts: the pairs are
+the same.</p>
+<figure>
+<img src="figures/06-transposition-grids.png"
+alt="The crib SUBMARINE written in rows of 3, 4 and 5. Bars join the letters stacked in each column: green if that pair appears in the ciphertext, red if not. Width 3 has 2 of 6 pairs, width 4 has 0 of 5, width 5 has 4 of 4." />
+<figcaption aria-hidden="true">The crib SUBMARINE written in rows of 3,
+4 and 5. Bars join the letters stacked in each column: green if that
+pair appears in the ciphertext, red if not. Width 3 has 2 of 6 pairs,
+width 4 has 0 of 5, width 5 has 4 of 4.</figcaption>
+</figure>
+<p>Do this for every width you think possible and compare the share of
+pairs found:</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>Width</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th><strong>5</strong></th>
+<th>6</th>
+<th>7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pairs found</td>
+<td>3 of 7</td>
+<td>2 of 6</td>
+<td>0 of 5</td>
+<td><strong>4 of 4</strong></td>
+<td>0 of 3</td>
+<td>1 of 2</td>
+</tr>
+</tbody>
+</table>
+<figure>
+<img src="figures/06-width-scores.png"
+alt="Bar chart of the share of crib pairs found for widths 2 to 7. Width 5 is the only full bar, 4 of 4. Width 7 reaches 1 of 2, which is weak evidence because it only has 2 pairs to test." />
+<figcaption aria-hidden="true">Bar chart of the share of crib pairs
+found for widths 2 to 7. Width 5 is the only full bar, 4 of 4. Width 7
+reaches 1 of 2, which is weak evidence because it only has 2 pairs to
+test.</figcaption>
+</figure>
+<p>Only width 5 finds every pair. Some wrong widths find a few pairs by
+luck, because common pairs like <code>AN</code> and <code>RE</code> turn
+up anywhere. Then the crib helps again: the pairs tell you which
+ciphertext columns hold which plaintext letters, and that helps you put
+the columns in order. Guide 07, Transposition detective work, finishes
+the job.</p>
+</section>
+<section id="history-cribs-at-bletchley-park" class="level2">
+<h2>History: cribs at Bletchley Park</h2>
+<p>During the Second World War the German armed forces encrypted their
+radio messages with <strong>Enigma</strong>, an electric machine with
+rotating wheels. Polish mathematicians Marian Rejewski, Jerzy Różycki
+and Henryk Zygalski first broke it in the 1930s and, in July 1939,
+shared their methods with Britain and France. At Bletchley Park, the
+British codebreaking center, Alan Turing designed an electro-mechanical
+machine called the <strong>bombe</strong> to search for the day’s Enigma
+settings, and Gordon Welchman improved it. Bombes were working from
+1940.</p>
+<p>A bombe could not start from nothing. It needed a crib: a guess at a
+stretch of plaintext and where it sat in the message. Military messages
+were full of routine. Weather reports contained words like
+<code>WETTERVORHERSAGE</code> (“weather forecast”). Some stations sent
+“nothing special to report” day after day. When the routine was not
+enough, the RAF sometimes laid mines in a chosen spot, so that German
+warnings would name that spot. This was called “gardening”.</p>
+<p>One quirk of Enigma made placing a crib much easier: <strong>it never
+turned a letter into itself</strong>. So if you slide a crib along a
+ciphertext and any crib letter lands on the same ciphertext letter, that
+position is impossible.</p>
+<figure>
+<img src="figures/06-enigma-slide.png"
+alt="A made-up 30-letter ciphertext with the crib WETTERVORHERSAGE slid under it in all 15 positions. Positions where a crib letter sits on the same ciphertext letter are marked red and ruled out (5 of 15); the other 10 stay possible." />
+<figcaption aria-hidden="true">A made-up 30-letter ciphertext with the
+crib WETTERVORHERSAGE slid under it in all 15 positions. Positions where
+a crib letter sits on the same ciphertext letter are marked red and
+ruled out (5 of 15); the other 10 stay possible.</figcaption>
+</figure>
+<p>In this made-up example, 5 of the 15 positions are ruled out at once.
+On real messages, codebreakers did this by hand before giving a crib to
+the bombes.</p>
+</section>
+<section id="when-to-try-it" class="level2">
+<h2>When to try it</h2>
+<ul>
+<li><strong>You know something about the message.</strong> A story, a
+sender, a subject, an earlier message. Make a list of likely words
+before you start counting letters.</li>
+<li><strong>The ciphertext keeps its word breaks.</strong> Look up the
+patterns of the longest words and the words with repeated letters
+first.</li>
+<li><strong>A substitution is half solved.</strong> Write out the cipher
+alphabet in plain-alphabet order and look for a keyword and an
+alphabetical run.</li>
+<li><strong>You know it is a Vigenère but the key length is
+unclear.</strong> A good crib finds the key without Kasiski or the index
+of coincidence (Guides 04 and 05).</li>
+<li><strong>You know it is a transposition</strong> (the letter counts
+look like English, but nothing reads). A crib finds the width.</li>
+</ul>
+<section id="when-not-to" class="level3">
+<h3>When not to</h3>
+<ul>
+<li><strong>No context at all.</strong> With no story, only weak cribs
+like <code>the</code> are left. Start with frequency analysis (Guide 02)
+or a fitness score (Guide 08) instead.</li>
+<li><strong>Very short messages.</strong> With 30 letters, almost any
+guess can be made to fit somewhere.</li>
+<li>When a crib leads to letters that clash. <strong>Drop it at
+once.</strong> A wrong crib, defended stubbornly, wastes more time than
+anything else.</li>
+</ul>
+</section>
+</section>
+<section id="traps-and-tips" class="level2">
+<h2>Traps and tips</h2>
+<ul>
+<li><strong>Test, do not trust.</strong> A crib is a guess. Every guess
+must agree with every other: if two cribs give two different cipher
+letters for the same plain letter, one of them is wrong.</li>
+<li><strong>Short cribs give false alarms.</strong> Dragging
+<code>the</code> along 115 letters produced <code>RUN</code> by
+accident, while the real position gave <code>FAL</code>. Prefer cribs of
+six letters or more.</li>
+<li><strong>Expect the fragment to be part of a word, not a whole
+word.</strong> A key fragment usually starts partway through the keyword
+(<code>CONFALCON</code>, not <code>FALCON</code>).</li>
+<li><strong>No word breaks?</strong> Slide the crib’s <em>pattern</em>
+along the text. For <code>letter</code>, look for any six letters where
+the 3rd and 4th match and the 2nd and 5th match. Rare patterns are found
+quickly this way.</li>
+<li><strong>Names and odd words.</strong> A name like
+<code>eleanor</code> is not in a word list, so a pattern list will not
+suggest it. That is exactly why names from earlier messages make such
+good cribs.</li>
+<li><strong>Two keyword conventions.</strong> If the alphabetical run
+seems to break oddly, the second part of the alphabet may start from A
+instead of after the keyword. Try both.</li>
+<li><strong>Which way round?</strong> Some puzzles write the keyword
+alphabet as the <em>plain</em> row instead of the cipher row. If no
+keyword appears in the cipher row, look in the other direction.</li>
+<li><strong>Padding in transpositions.</strong> Extra letters like
+<code>X</code> at the end can create stray pairs. Do not let a single
+pair decide the width.</li>
+</ul>
+</section>
+<section id="try-it-yourself" class="level2">
+<h2>Try it yourself</h2>
+<ol type="1">
+<li>Write the pattern of <code>bookkeeper</code>. Then find the odd one
+out: <code>moon</code>, <code>seen</code>, <code>took</code>,
+<code>noon</code>, <code>look</code>.</li>
+<li>This Vigenère ciphertext hides the crib <code>secret</code> at
+letters 4 to 9: <code>HDPGANFAERKZFEDPASWJOHDPQHZQG</code>. Find the key
+fragment, then the key.</li>
+<li>This columnar transposition contains the word <code>garden</code>:
+<code>MTIHAEENHLOENNEMNERNHDEDUAOXEETGDBITOHSTOX</code>. Is the width 3
+or 4?</li>
+<li>Here is part of a keyword cipher alphabet. Fill in the missing
+letters and name the keyword.</li>
+</ol>
+<pre><code>plain:   a b c d e f g h i j k l m n o p q r s t u v w x y z
+cipher:  P U M ? I N O ? R S T V W X Y ? A B C D E F ? ? J L</code></pre>
+<div class="in-app">
+<p><strong>In the app:</strong> <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/substitution-spaces/1">Substitution
+with word breaks</a> is a keyword cipher to crack by hand: start from a
+crib and the common words.</p>
+</div>
+</section>
+<section id="words-to-know" class="level2">
+<h2>Words to know</h2>
+<ul>
+<li><strong>Crib</strong> (or <strong>probable word</strong>): a word or
+phrase you expect to find in the plaintext.</li>
+<li><strong>Word pattern</strong>: the shape of a word’s repeated
+letters, written with A, B, C… in order of first appearance
+(<code>that</code> is ABCA).</li>
+<li><strong>Pattern list</strong>: a list of common words grouped by
+their patterns.</li>
+<li><strong>Keyword alphabet</strong>: a cipher alphabet made from a
+keyword (repeats removed) followed by the rest of the alphabet in
+order.</li>
+<li><strong>Crib dragging</strong>: sliding a crib along a ciphertext,
+subtracting at each position, and looking for a readable piece of
+key.</li>
+<li><strong>Key fragment</strong>: the piece of key you get by
+subtracting a crib from the ciphertext.</li>
+<li><strong>Modulo 26</strong>
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mspace width="0.222em"></mspace><mo>mod</mo><mspace width="0.222em"></mspace><mn>26</mn></mrow><annotation encoding="application/x-tex">\bmod 26</annotation></semantics></math>):
+wrapping round the alphabet, so that 26 counts as 0 again.</li>
+<li><strong>Bombe</strong>: the machine designed by Alan Turing at
+Bletchley Park that used cribs to find Enigma settings.</li>
+</ul>
+</section>
+<section id="going-further" class="level2">
+<h2>Going further</h2>
+<ul>
+<li><a
+href="https://en.wikipedia.org/wiki/Known-plaintext_attack">Known-plaintext
+attack (Wikipedia)</a></li>
+<li><a
+href="https://en.wikipedia.org/wiki/Cryptanalysis_of_the_Enigma">Cryptanalysis
+of the Enigma: cribs (Wikipedia)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Bombe">Bombe
+(Wikipedia)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Keyword_cipher">Keyword
+cipher (Wikipedia)</a></li>
+<li><a
+href="http://practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-vigenere-cipher/">Cryptanalysis
+of the Vigenère cipher (Practical Cryptography)</a></li>
+<li>Simon Singh, <em>The Code Book</em> (1999), chapter 4, on Enigma,
+cribs and Bletchley Park.</li>
+<li><a
+href="https://www.cipherchallenge.org/hints-tips-and-cribs-etc/">The
+National Cipher Challenge: hints, tips and cribs</a></li>
+</ul>
+</section>
+<section id="answers" class="level2">
+<h2>Answers</h2>
+<ol type="1">
+<li><code>bookkeeper</code>: b A, o B, o B, k C, k C, e D, e D, p E, e
+D, r F, so <strong>ABBCCDDEDF</strong>. The odd one out is
+<code>noon</code> (ABBA). The other four are all ABBC.</li>
+<li>Letters 4 to 9 of the ciphertext are <code>GANFAE</code>. Subtract
+<code>secret</code>: G (6) minus s (18) is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>12</mn></mrow><annotation encoding="application/x-tex">-12</annotation></semantics></math>,
+plus 26 is 14, which is O. A (0) minus e (4) is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>4</mn><mo>+</mo><mn>26</mn><mo>=</mo><mn>22</mn></mrow><annotation encoding="application/x-tex">-4 + 26 = 22</annotation></semantics></math>,
+W. N (13) minus c (2) is 11, L. Carrying on gives the fragment
+<code>OWLOWL</code>. It repeats after three letters, and position 4 used
+key letter O, so position 1 did too: the key is <strong>OWL</strong>.
+The message reads <code>the secret door is behind the clock</code>.</li>
+<li>In rows of 3, <code>garden</code> stacks as <code>g a r</code> above
+<code>d e n</code>, giving the pairs <code>GD</code>, <code>AE</code>
+and <code>RN</code>. All three are in the ciphertext. In rows of 4 the
+pairs are <code>GE</code> and <code>AN</code>, and neither is there. The
+width is <strong>3</strong>. (The sender added two <code>X</code>s to
+fill the last row, which is why the ciphertext has 42 letters.)</li>
+<li>After <code>N</code> the run goes O, then Q: so P is in the keyword,
+and h = <strong>Q</strong>. After Y comes Z, so p = <strong>Z</strong>.
+After F come G and H, so w = <strong>G</strong> and x =
+<strong>H</strong>. The run ends J, L, skipping K, so K is a keyword
+letter, and d = <strong>K</strong>. The keyword part is
+<code>PUMKIN</code>, which is <strong>PUMPKIN</strong> with its repeated
+P crossed out.</li>
+</ol>
+</section>
+</section>

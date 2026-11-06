@@ -30,6 +30,8 @@ The first person known to have written this method down was **al-Kindi**, a scho
 | Playfair, Hill | No, not on single letters | These encrypt pairs of letters, so you count pairs instead (see Guide 09) |
 | Homophonic substitution | Weakly | Common letters get several symbols each, which flattens the counts on purpose |
 
+> **In the app:** The family tree has a page for each of these: [Caesar](https://apps.thorwhalen.com/cryptology/#/tree/caesar), [affine](https://apps.thorwhalen.com/cryptology/#/tree/affine), [simple substitution](https://apps.thorwhalen.com/cryptology/#/tree/monoalphabetic) and [keyword substitution](https://apps.thorwhalen.com/cryptology/#/tree/keyword).
+
 ## Why it works
 
 Try this experiment. Take a page of any book and count every letter on it, making a tally mark under A, B, C and so on. It takes about twenty minutes. Then do the same with a different page from a different book. The two tallies will look remarkably alike. E will be at or near the top. T, A, O, I and N will follow. J, Q, X and Z will have only a few marks. Codebreakers remember the order of the top dozen as a nonsense phrase: **ETAOIN SHRDLU**.
@@ -68,6 +70,8 @@ Read it from the inside out:
 A **low** score means the counts look like English. A **high** score means they do not. A perfect, impossible match would score 0. The exact value of a good score depends on the length of the text; what matters is that the right answer scores far lower than all the wrong ones.
 
 To use it on a Caesar cipher, try all 26 shifts. For each one, shift the ciphertext back, count the letters, and work out $\chi^2$. The shift with the lowest score is almost always the key.
+
+> **In the app:** [Caesar](https://apps.thorwhalen.com/cryptology/#/workbench/caesar) slides English over your text's letter counts. Its Disk view turns a cipher wheel, and its Scores view scores every shift, the way a computer would.
 
 ## Worked example 1: a Caesar cipher, by sliding and by scoring
 
@@ -174,6 +178,8 @@ The keyword was SNOWFLAKE. Once you spot a keyword, you can fill in any letters 
 
 The full message: `it was a cold and quiet night when the old clock in the tower stopped at exactly nine. nobody in the village could remember a time when the clock had been wrong, so the people gathered in the square to stare at it. ...`
 
+> **In the app:** [Substitution](https://apps.thorwhalen.com/cryptology/#/workbench/substitution) lets you tap a cipher letter, then the plain letter you think it stands for, and fills in the text as you go.
+
 ## When to try it
 
 - The IoC is near English (about 0.067), so there is one cipher alphabet (see Guide 01, Reading the clues).
@@ -203,6 +209,8 @@ The full message: `it was a cold and quiet night when the old clock in the tower
 1. A long Caesar ciphertext has commonest letters X, M, T and H, in that order. What is the shift? Check your answer using all four letters.
 2. A text has 200 letters. The letter e appears 30 times and the letter z appears 2 times. Using English frequencies of 12.7% for e and 0.074% for z, work out each letter's contribution $(O - E)^2 / E$ to the chi-squared score. Which letter makes the score worse, and why?
 3. A substitution ciphertext with spaces contains the word `ZIT` nine times, the word `ZIQZ` twice, and the word `Q` on its own three times. What do these three words probably say?
+
+> **In the app:** Practice with [Caesar: match the bars](https://apps.thorwhalen.com/cryptology/#/ex/caesar/1), then [Substitution with word breaks](https://apps.thorwhalen.com/cryptology/#/ex/substitution-spaces/1), then the harder [Substitution without word breaks](https://apps.thorwhalen.com/cryptology/#/ex/substitution-blocks/1).
 
 ## Answers
 

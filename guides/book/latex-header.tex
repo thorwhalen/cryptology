@@ -1,0 +1,7 @@
+% Shared by the chapter PDFs and the book: figures stay where they are written, and
+% "In the app:" boxes (scripts/app_links.lua) are drawn in the cover's green.
+\usepackage{float}
+\floatplacement{figure}{H}
+\usepackage[most]{tcolorbox}
+\definecolor{appgreen}{HTML}{1F9D55}
+\newtcolorbox{appbox}{enhanced, breakable, colback=appgreen!7, colframe=appgreen, boxrule=0pt, leftrule=3pt, arc=2pt, left=8pt, right=8pt, top=5pt, bottom=5pt, before skip=10pt, after skip=10pt}
