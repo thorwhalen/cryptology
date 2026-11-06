@@ -4,6 +4,7 @@
  "edition": "First edition, November 2026",
  "book": "pdf/cryptanalysis-guides-for-young-codebreakers.pdf",
  "cover": "guides/book/cover.jpg",
+ "icon": "html/icon.png",
  "guides": [
   {
    "id": "00-before-you-start",
