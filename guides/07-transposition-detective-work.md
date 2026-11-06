@@ -55,6 +55,8 @@ The key is just the number of rails, so there are only a handful to try. To undo
 
 **Block transposition** (also called a **permutation cipher**). Cut the message into blocks, say of 4 letters, and shuffle the letters inside every block the same way. With the shuffle "2nd, 4th, 1st, 3rd", `LOOK UNDE RTHE BIGS TONE` becomes `OKLO NEUD TERH ISBG OETN`. Notice that this is really the same grid as columnar: write the message in rows of 4, and the shuffle moves whole columns. The only difference is that you read the result row by row instead of column by column.
 
+> **In the app:** The family tree shows the [transposition](https://apps.thorwhalen.com/cryptology/#/tree/transposition) family: [rail fence](https://apps.thorwhalen.com/cryptology/#/tree/railfence), [columnar](https://apps.thorwhalen.com/cryptology/#/tree/columnar), [block](https://apps.thorwhalen.com/cryptology/#/tree/block) and [reversal](https://apps.thorwhalen.com/cryptology/#/tree/reversal).
+
 ## The grown-up version
 
 ### Width from factors
@@ -127,6 +129,8 @@ So the order is E C B A D. Read the rows: `meett hequee natth ebrid geatn oonbr 
 
 **Step 7 (bonus). Recover the key.** The strips were read in the order A, B, C, D, E, which were columns 4, 3, 2, 5, 1 of the plaintext grid. So the column numbers across the top were 5, 3, 2, 1, 4. A keyword with that alphabetical order is TIGER. You do not need the keyword to read the message, but finding it can help with the next message, which might use the same one.
 
+> **In the app:** [Columns](https://apps.thorwhalen.com/cryptology/#/workbench/columns) writes your text into a grid of the width you choose; tap one column, then another, to swap them. [Blocks](https://apps.thorwhalen.com/cryptology/#/workbench/blocks) does the same for short blocks, and [Rail fence](https://apps.thorwhalen.com/cryptology/#/workbench/rail) reads the text along a zigzag of the rails you choose.
+
 ## Double transposition: a harder note
 
 A **double transposition** does a columnar transposition and then another one on the result, often with a second keyword. The letter counts still match English, so the tells are the same. But after two scrambles, the strips no longer line up into simple rows, and anagramming by hand becomes very hard. Armies used it for exactly that reason, into the Second World War. To break it you usually need a long message and a computer search over both keys at once, scored the way Guide 08 (Scoring and hill climbing) explains.
@@ -156,6 +160,8 @@ A **double transposition** does a columnar transposition and then another one on
 2. A transposition ciphertext has 36 letters. Which widths should you try?
 3. Is this a transposition? `TLLAA OLXBL LUHAA OLIYP KNLHA UVVUI YPUNA OLTHW`. (Hint: count E and L.)
 4. This columnar transposition has width 3: `OUEHAONRETLKDTM`. Cut it into 3 strips of 5 and find the order that reads.
+
+> **In the app:** Practice with [Columnar transposition](https://apps.thorwhalen.com/cryptology/#/ex/columnar/1), [Block transposition](https://apps.thorwhalen.com/cryptology/#/ex/block/1) and [Rail fence](https://apps.thorwhalen.com/cryptology/#/ex/rail/1).
 
 ## Answers
 

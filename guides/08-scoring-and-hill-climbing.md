@@ -153,6 +153,8 @@ The beautiful part is that only two things change from cipher to cipher: **what 
 - **Playfair.** The key is a 5x5 square of letters (Guide 09). Moves: swap two letters, swap two rows or two columns, or flip the square. The landscape is very bumpy, so annealing works much better than plain climbing, and it needs about 100 letters or more.
 - **Anything new.** If someone invents a cipher you have never seen, ask: what is the key, and what is a small change to it? If you can answer both, you can climb.
 
+> **In the app:** The app has no hill climber: in [Substitution](https://apps.thorwhalen.com/cryptology/#/workbench/substitution) you do by hand what it does. Try a change to the key, and keep it if more of the text reads as English.
+
 ## When to try it
 
 - You have identified a cipher with a key too big to try in full (substitution, transposition, Playfair).
@@ -177,6 +179,8 @@ The beautiful part is that only two things change from cipher to cipher: **what 
 2. The quadgrams of THEWIND are THEW (-3.05), HEWI (-3.67), EWIN (-3.86) and WIND (-3.72). What is the fitness of THEWIND? What is its average per quadgram?
 3. In simulated annealing with $P = 10^{\Delta/T}$: at temperature $T = 10$, what is the chance of keeping a move that is 20 points worse? What about at $T = 20$? At $T = 40$?
 4. A friend runs a hill climber on a 30-letter substitution cipher and gets a perfectly readable but wrong answer. How is that possible?
+
+> **In the app:** [Substitution without word breaks](https://apps.thorwhalen.com/cryptology/#/ex/substitution-blocks/1) is the kind of text a hill climber is built for. Solve one by hand, and notice which steps you would hand to a computer.
 
 ## Answers
 

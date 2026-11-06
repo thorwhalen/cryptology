@@ -26,6 +26,8 @@ The index of coincidence (IoC for short) does not usually hand you the key. It t
 | Playfair, Hill (two letters at a time) | A little | IoC lands in between (around 0.045 to 0.055). Other tests settle it (Guide 09). |
 | Enigma and other machines | No | The alphabet changes every letter and never repeats in a short message. |
 
+> **In the app:** The family tree shows the [polyalphabetic](https://apps.thorwhalen.com/cryptology/#/tree/polyalphabetic) family, where the [Vigenère cipher](https://apps.thorwhalen.com/cryptology/#/tree/vigenere) lives.
+
 ## Why it works
 
 ### A tiny experiment
@@ -154,6 +156,8 @@ Notice that 15 scored even higher than 5. With 15 columns, each column holds onl
 
 Now you know you are facing five Caesar ciphers, side by side. Solve each column with frequency analysis (see Guide 02, Frequency analysis, and Guide 05, Repeats and key length, which finishes this kind of example). For the record, the key was `STORM`, and the message begins `the lighthouse keeper had not spoken to anyone...`.
 
+> **In the app:** [Counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts) shows the IoC of any text, with English (0.067) and random letters (0.038) marked. [Vigenère](https://apps.thorwhalen.com/cryptology/#/workbench/vigenere) cuts a text into slices for each key length and shows each slice's IoC.
+
 ## Friedman's estimate
 
 William Friedman, the American cryptologist who invented the index of coincidence around 1920, also found a way to guess the key length straight from the IoC of the whole message, with no splitting at all.
@@ -207,6 +211,8 @@ The true answer is 5, so Friedman's guess is rough. Look at the bottom of that f
 1. Work out the IoC of the word `LETTERS`. (Hint: $N = 7$.)
 2. A 400-letter ciphertext has an IoC of 0.067. When you count the letters, the most common are E, T, A and O, in about the right amounts for English. What kind of cipher is it most likely to be, and why?
 3. A ciphertext has an IoC of 0.044. Use Friedman's estimate (with 0.066 and 0.038) to guess the key length. Then the column test gives averages of 0.044 for length 3, 0.068 for length 6, 0.045 for length 7 and 0.069 for length 12. What key length do you choose?
+
+> **In the app:** [Spot the cipher](https://apps.thorwhalen.com/cryptology/#/ex/spot/1) asks you to tell one alphabet from several by the IoC. The [Vigenère](https://apps.thorwhalen.com/cryptology/#/ex/vigenere/1) exercise takes you from the key length to the answer.
 
 ## Words to know
 

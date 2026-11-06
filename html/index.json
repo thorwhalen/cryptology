@@ -1,0 +1,946 @@
+{
+ "title": "Cryptanalysis guides for young codebreakers",
+ "subtitle": "How to break classical ciphers with a pencil, squared paper and your own head",
+ "edition": "First edition, November 2026",
+ "book": "pdf/cryptanalysis-guides-for-young-codebreakers.pdf",
+ "cover": "guides/book/cover.jpg",
+ "guides": [
+  {
+   "id": "00-before-you-start",
+   "number": 0,
+   "title": "Before you start",
+   "subtitle": "How this book works, and how to use it",
+   "pdf": null,
+   "sections": [
+    {
+     "id": "who-it-is-for",
+     "heading": "Who it is for"
+    },
+    {
+     "id": "how-the-book-is-built",
+     "heading": "How the book is built"
+    },
+    {
+     "id": "which-order-to-read-them-in",
+     "heading": "Which order to read them in"
+    },
+    {
+     "id": "the-app-that-goes-with-it",
+     "heading": "The app that goes with it"
+    },
+    {
+     "id": "a-word-about-competitions",
+     "heading": "A word about competitions"
+    },
+    {
+     "id": "for-the-adult-helping",
+     "heading": "For the adult helping"
+    }
+   ],
+   "words": []
+  },
+  {
+   "id": "01-reading-the-clues",
+   "number": 1,
+   "title": "Reading the clues",
+   "subtitle": "What a ciphertext tells you before you try a single key",
+   "pdf": "pdf/01-reading-the-clues.pdf",
+   "sections": [
+    {
+     "id": "the-big-idea",
+     "heading": "The big idea"
+    },
+    {
+     "id": "which-ciphers-it-helps-with",
+     "heading": "Which ciphers it helps with"
+    },
+    {
+     "id": "why-it-works",
+     "heading": "Why it works"
+    },
+    {
+     "id": "the-six-clues-one-by-one",
+     "heading": "The six clues, one by one"
+    },
+    {
+     "id": "the-grown-up-version",
+     "heading": "The grown-up version"
+    },
+    {
+     "id": "worked-example-a-lineup-of-six-suspects",
+     "heading": "Worked example: a lineup of six suspects"
+    },
+    {
+     "id": "a-decision-flowchart",
+     "heading": "A decision flowchart"
+    },
+    {
+     "id": "when-to-use-it-and-when-not-to",
+     "heading": "When to use it, and when not to"
+    },
+    {
+     "id": "traps-and-tips",
+     "heading": "Traps and tips"
+    },
+    {
+     "id": "try-it-yourself",
+     "heading": "Try it yourself"
+    },
+    {
+     "id": "answers",
+     "heading": "Answers"
+    },
+    {
+     "id": "words-to-know",
+     "heading": "Words to know"
+    },
+    {
+     "id": "going-further",
+     "heading": "Going further"
+    }
+   ],
+   "words": [
+    {
+     "term": "Ciphertext",
+     "definition": "the scrambled message. **Plaintext**: the original message."
+    },
+    {
+     "term": "Encoding",
+     "definition": "a fixed way of rewriting letters (Morse, binary) with no secret key."
+    },
+    {
+     "term": "Frequency",
+     "definition": "how often a letter appears, as a count or a percentage."
+    },
+    {
+     "term": "Factor",
+     "definition": "a whole number that divides another exactly; 5 is a factor of 165."
+    },
+    {
+     "term": "Index of coincidence (IoC)",
+     "definition": "the chance that two letters picked at random from a text are the same; about 0.067 for English and 0.038 for random letters."
+    },
+    {
+     "term": "Monoalphabetic",
+     "definition": "using one cipher alphabet throughout. **Polyalphabetic**: switching between several."
+    },
+    {
+     "term": "Transposition",
+     "definition": "a cipher that moves letters without changing them. **Substitution**: a cipher that changes letters without moving them."
+    },
+    {
+     "term": "Padding",
+     "definition": "extra letters added to make the length fit a grid."
+    }
+   ]
+  },
+  {
+   "id": "02-frequency-analysis",
+   "number": 2,
+   "title": "Frequency analysis",
+   "subtitle": "Counting letters to break Caesar, affine and substitution ciphers",
+   "pdf": "pdf/02-frequency-analysis.pdf",
+   "sections": [
+    {
+     "id": "the-big-idea",
+     "heading": "The big idea"
+    },
+    {
+     "id": "a-thousand-years-ago-in-baghdad",
+     "heading": "A thousand years ago in Baghdad"
+    },
+    {
+     "id": "which-ciphers-it-breaks",
+     "heading": "Which ciphers it breaks"
+    },
+    {
+     "id": "why-it-works",
+     "heading": "Why it works"
+    },
+    {
+     "id": "the-grown-up-version",
+     "heading": "The grown-up version"
+    },
+    {
+     "id": "when-to-try-it",
+     "heading": "When to try it"
+    },
+    {
+     "id": "when-not-to",
+     "heading": "When not to"
+    },
+    {
+     "id": "traps-and-tips",
+     "heading": "Traps and tips"
+    },
+    {
+     "id": "try-it-yourself",
+     "heading": "Try it yourself"
+    },
+    {
+     "id": "answers",
+     "heading": "Answers"
+    },
+    {
+     "id": "words-to-know",
+     "heading": "Words to know"
+    },
+    {
+     "id": "going-further",
+     "heading": "Going further"
+    }
+   ],
+   "words": [
+    {
+     "term": "Frequency analysis",
+     "definition": "breaking a cipher by comparing its letter counts with those of the language."
+    },
+    {
+     "term": "Frequency",
+     "definition": "how often a letter appears, as a fraction of all the letters."
+    },
+    {
+     "term": "Expected count",
+     "definition": "how many times a letter would appear in this many letters of average English."
+    },
+    {
+     "term": "Chi-squared ($\\chi^2$)",
+     "definition": "a score of how far a set of counts is from English; lower means more English-like."
+    },
+    {
+     "term": "Monoalphabetic substitution",
+     "definition": "a cipher that replaces each letter with another, the same way every time."
+    },
+    {
+     "term": "Keyword substitution",
+     "definition": "a substitution whose cipher alphabet starts with a keyword, followed by the unused letters in order."
+    },
+    {
+     "term": "ETAOIN SHRDLU",
+     "definition": "the approximate order of the twelve commonest letters in English."
+    }
+   ]
+  },
+  {
+   "id": "03-keys-and-brute-force",
+   "number": 3,
+   "title": "Keys and brute force",
+   "subtitle": "Counting keys, clock arithmetic, and cracking the affine cipher with two equations",
+   "pdf": "pdf/03-keys-and-brute-force.pdf",
+   "sections": [
+    {
+     "id": "the-big-idea",
+     "heading": "The big idea"
+    },
+    {
+     "id": "which-ciphers-it-breaks",
+     "heading": "Which ciphers it breaks"
+    },
+    {
+     "id": "why-it-works",
+     "heading": "Why it works"
+    },
+    {
+     "id": "the-grown-up-version",
+     "heading": "The grown-up version"
+    },
+    {
+     "id": "when-to-try-it",
+     "heading": "When to try it"
+    },
+    {
+     "id": "when-not-to",
+     "heading": "When not to"
+    },
+    {
+     "id": "traps-and-tips",
+     "heading": "Traps and tips"
+    },
+    {
+     "id": "try-it-yourself",
+     "heading": "Try it yourself"
+    },
+    {
+     "id": "answers",
+     "heading": "Answers"
+    },
+    {
+     "id": "words-to-know",
+     "heading": "Words to know"
+    },
+    {
+     "id": "going-further",
+     "heading": "Going further"
+    }
+   ],
+   "words": [
+    {
+     "term": "Key",
+     "definition": "the secret setting of a cipher that the sender and receiver share."
+    },
+    {
+     "term": "Key space",
+     "definition": "the set of all possible keys; its size is the number of keys."
+    },
+    {
+     "term": "Brute force",
+     "definition": "trying every possible key."
+    },
+    {
+     "term": "Factorial ($n!$)",
+     "definition": "$n \\times (n - 1) \\times \\dots \\times 1$; $26!$ counts the scrambled alphabets."
+    },
+    {
+     "term": "Modular arithmetic",
+     "definition": "arithmetic on a clock; mod 26, after 25 comes 0."
+    },
+    {
+     "term": "Congruent ($\\equiv$)",
+     "definition": "landing on the same spot on the clock; $28 \\equiv 2 \\pmod{26}$."
+    },
+    {
+     "term": "Coprime",
+     "definition": "sharing no factor except 1; $\\gcd(a, 26) = 1$."
+    },
+    {
+     "term": "Affine cipher",
+     "definition": "$E(x) = ax + b \\bmod 26$, with $a$ coprime to 26."
+    },
+    {
+     "term": "Multiplicative inverse ($a^{-1}$)",
+     "definition": "the number that multiplies with $a$ to give 1 mod 26."
+    }
+   ]
+  },
+  {
+   "id": "04-index-of-coincidence",
+   "number": 4,
+   "title": "The index of coincidence",
+   "subtitle": "How often do two letters match? One number that tells one alphabet from several",
+   "pdf": "pdf/04-index-of-coincidence.pdf",
+   "sections": [
+    {
+     "id": "the-big-idea",
+     "heading": "The big idea"
+    },
+    {
+     "id": "which-ciphers-it-breaks",
+     "heading": "Which ciphers it breaks"
+    },
+    {
+     "id": "why-it-works",
+     "heading": "Why it works"
+    },
+    {
+     "id": "the-grown-up-version",
+     "heading": "The grown-up version"
+    },
+    {
+     "id": "a-worked-example",
+     "heading": "A worked example"
+    },
+    {
+     "id": "friedmans-estimate",
+     "heading": "Friedman’s estimate"
+    },
+    {
+     "id": "when-to-try-it",
+     "heading": "When to try it"
+    },
+    {
+     "id": "traps-and-tips",
+     "heading": "Traps and tips"
+    },
+    {
+     "id": "try-it-yourself",
+     "heading": "Try it yourself"
+    },
+    {
+     "id": "words-to-know",
+     "heading": "Words to know"
+    },
+    {
+     "id": "going-further",
+     "heading": "Going further"
+    },
+    {
+     "id": "answers",
+     "heading": "Answers"
+    }
+   ],
+   "words": [
+    {
+     "term": "Index of coincidence (IoC)",
+     "definition": "the chance that two letters picked at random from a text are the same letter."
+    },
+    {
+     "term": "Kappa ($\\kappa$)",
+     "definition": "the IoC you expect from a language or from random letters: about 0.066 for English and $1/26 \\approx 0.038$ for random letters."
+    },
+    {
+     "term": "Sigma ($\\sum$)",
+     "definition": "a sign that means \"add up all of these\"."
+    },
+    {
+     "term": "Frequency ($f$)",
+     "definition": "how many times a letter appears in a text."
+    },
+    {
+     "term": "Monoalphabetic",
+     "definition": "using one cipher alphabet for the whole message (Caesar, substitution)."
+    },
+    {
+     "term": "Polyalphabetic",
+     "definition": "switching between several cipher alphabets (Vigenère, Beaufort)."
+    },
+    {
+     "term": "Period or key length",
+     "definition": "how many letters the key has before it repeats."
+    },
+    {
+     "term": "Column test",
+     "definition": "splitting a ciphertext into $L$ columns and averaging their IoCs to test whether the key length is $L$."
+    },
+    {
+     "term": "Friedman's estimate",
+     "definition": "a formula that guesses the key length from the IoC of the whole message."
+    }
+   ]
+  },
+  {
+   "id": "05-repeats-and-key-length",
+   "number": 5,
+   "title": "Repeats and key length",
+   "subtitle": "The Kasiski examination: how repeated fragments give away the length of a Vigenère key",
+   "pdf": "pdf/05-repeats-and-key-length.pdf",
+   "sections": [
+    {
+     "id": "the-big-idea",
+     "heading": "The big idea"
+    },
+    {
+     "id": "which-ciphers-it-breaks",
+     "heading": "Which ciphers it breaks"
+    },
+    {
+     "id": "why-it-works",
+     "heading": "Why it works"
+    },
+    {
+     "id": "the-grown-up-version",
+     "heading": "The grown-up version"
+    },
+    {
+     "id": "a-worked-example",
+     "heading": "A worked example"
+    },
+    {
+     "id": "a-variant-the-beaufort-cipher",
+     "heading": "A variant: the Beaufort cipher"
+    },
+    {
+     "id": "why-autokey-resists-kasiski",
+     "heading": "Why autokey resists Kasiski"
+    },
+    {
+     "id": "when-to-try-it",
+     "heading": "When to try it"
+    },
+    {
+     "id": "traps-and-tips",
+     "heading": "Traps and tips"
+    },
+    {
+     "id": "try-it-yourself",
+     "heading": "Try it yourself"
+    },
+    {
+     "id": "words-to-know",
+     "heading": "Words to know"
+    },
+    {
+     "id": "going-further",
+     "heading": "Going further"
+    },
+    {
+     "id": "answers",
+     "heading": "Answers"
+    }
+   ],
+   "words": [
+    {
+     "term": "Kasiski examination",
+     "definition": "finding repeated groups in a ciphertext and using the gaps between them to find the key length."
+    },
+    {
+     "term": "Trigram",
+     "definition": "a group of three letters in a row."
+    },
+    {
+     "term": "Gap (or distance)",
+     "definition": "how many letters separate the start of one copy of a repeat from the start of the next."
+    },
+    {
+     "term": "Factor (or divisor)",
+     "definition": "a whole number that divides another with nothing left over."
+    },
+    {
+     "term": "Multiple",
+     "definition": "a number you get by multiplying a number by a whole number (12 is a multiple of 6)."
+    },
+    {
+     "term": "Greatest common divisor (gcd)",
+     "definition": "the largest number that divides every number in a list."
+    },
+    {
+     "term": "Euclid's algorithm",
+     "definition": "a fast way to find the gcd by taking remainders over and over."
+    },
+    {
+     "term": "Factor table",
+     "definition": "a grid that shows which small numbers divide which gaps."
+    },
+    {
+     "term": "Beaufort cipher",
+     "definition": "a repeating-key cipher with the rule cipher = key minus plain; it is its own inverse."
+    },
+    {
+     "term": "Autokey",
+     "definition": "a cipher whose key is a short primer followed by the message itself, so the key never repeats."
+    },
+    {
+     "term": "Primer",
+     "definition": "the short keyword that starts an autokey key."
+    }
+   ]
+  },
+  {
+   "id": "06-cribs-and-patterns",
+   "number": 6,
+   "title": "Cribs and patterns",
+   "subtitle": "Guess a word, pin it to the ciphertext, and let the cipher give itself away",
+   "pdf": "pdf/06-cribs-and-patterns.pdf",
+   "sections": [
+    {
+     "id": "the-big-idea",
+     "heading": "The big idea"
+    },
+    {
+     "id": "which-ciphers-it-breaks",
+     "heading": "Which ciphers it breaks"
+    },
+    {
+     "id": "where-good-cribs-come-from",
+     "heading": "Where good cribs come from"
+    },
+    {
+     "id": "why-it-works-word-patterns",
+     "heading": "Why it works: word patterns"
+    },
+    {
+     "id": "a-worked-example-a-keyword-substitution",
+     "heading": "A worked example: a keyword substitution"
+    },
+    {
+     "id": "rebuilding-a-keyword-alphabet",
+     "heading": "Rebuilding a keyword alphabet"
+    },
+    {
+     "id": "the-grown-up-version",
+     "heading": "The grown-up version"
+    },
+    {
+     "id": "a-worked-example-crib-dragging-a-vigenère",
+     "heading": "A worked example: crib dragging a Vigenère"
+    },
+    {
+     "id": "cribs-for-transposition",
+     "heading": "Cribs for transposition"
+    },
+    {
+     "id": "history-cribs-at-bletchley-park",
+     "heading": "History: cribs at Bletchley Park"
+    },
+    {
+     "id": "when-to-try-it",
+     "heading": "When to try it"
+    },
+    {
+     "id": "traps-and-tips",
+     "heading": "Traps and tips"
+    },
+    {
+     "id": "try-it-yourself",
+     "heading": "Try it yourself"
+    },
+    {
+     "id": "words-to-know",
+     "heading": "Words to know"
+    },
+    {
+     "id": "going-further",
+     "heading": "Going further"
+    },
+    {
+     "id": "answers",
+     "heading": "Answers"
+    }
+   ],
+   "words": [
+    {
+     "term": "Crib (or **probable word**)",
+     "definition": "a word or phrase you expect to find in the plaintext."
+    },
+    {
+     "term": "Word pattern",
+     "definition": "the shape of a word's repeated letters, written with A, B, C... in order of first appearance (`that` is ABCA)."
+    },
+    {
+     "term": "Pattern list",
+     "definition": "a list of common words grouped by their patterns."
+    },
+    {
+     "term": "Keyword alphabet",
+     "definition": "a cipher alphabet made from a keyword (repeats removed) followed by the rest of the alphabet in order."
+    },
+    {
+     "term": "Crib dragging",
+     "definition": "sliding a crib along a ciphertext, subtracting at each position, and looking for a readable piece of key."
+    },
+    {
+     "term": "Key fragment",
+     "definition": "the piece of key you get by subtracting a crib from the ciphertext."
+    },
+    {
+     "term": "Modulo 26 ($\\bmod 26$)",
+     "definition": "wrapping round the alphabet, so that 26 counts as 0 again."
+    },
+    {
+     "term": "Bombe",
+     "definition": "the machine designed by Alan Turing at Bletchley Park that used cribs to find Enigma settings."
+    }
+   ]
+  },
+  {
+   "id": "07-transposition-detective-work",
+   "number": 7,
+   "title": "Transposition detective work",
+   "subtitle": "All the right letters, in all the wrong places",
+   "pdf": "pdf/07-transposition-detective-work.pdf",
+   "sections": [
+    {
+     "id": "the-big-idea",
+     "heading": "The big idea"
+    },
+    {
+     "id": "which-ciphers-it-breaks",
+     "heading": "Which ciphers it breaks"
+    },
+    {
+     "id": "why-it-works",
+     "heading": "Why it works"
+    },
+    {
+     "id": "the-grown-up-version",
+     "heading": "The grown-up version"
+    },
+    {
+     "id": "a-worked-example",
+     "heading": "A worked example"
+    },
+    {
+     "id": "double-transposition-a-harder-note",
+     "heading": "Double transposition: a harder note"
+    },
+    {
+     "id": "when-to-try-it",
+     "heading": "When to try it"
+    },
+    {
+     "id": "traps-and-tips",
+     "heading": "Traps and tips"
+    },
+    {
+     "id": "try-it-yourself",
+     "heading": "Try it yourself"
+    },
+    {
+     "id": "answers",
+     "heading": "Answers"
+    },
+    {
+     "id": "words-to-know",
+     "heading": "Words to know"
+    },
+    {
+     "id": "going-further",
+     "heading": "Going further"
+    }
+   ],
+   "words": [
+    {
+     "term": "Transposition",
+     "definition": "a cipher that keeps the letters but changes their order."
+    },
+    {
+     "term": "Substitution",
+     "definition": "a cipher that changes the letters but keeps their order."
+    },
+    {
+     "term": "Reversal",
+     "definition": "writing the message backward."
+    },
+    {
+     "term": "Rail fence",
+     "definition": "writing the message in a zigzag across rails and reading each rail."
+    },
+    {
+     "term": "Columnar transposition",
+     "definition": "writing in rows under a keyword and reading the columns in keyword order."
+    },
+    {
+     "term": "Block (permutation) transposition",
+     "definition": "shuffling the letters inside each block of fixed size the same way."
+    },
+    {
+     "term": "Width (period)",
+     "definition": "the number of columns in the grid, or the size of each block."
+    },
+    {
+     "term": "Factor (divisor)",
+     "definition": "a number that divides another with nothing left over."
+    },
+    {
+     "term": "Contact",
+     "definition": "two letters that sit next to each other in the text."
+    },
+    {
+     "term": "Digraph",
+     "definition": "a pair of letters, such as TH."
+    },
+    {
+     "term": "Anagramming",
+     "definition": "rearranging letters (or columns) until words appear."
+    },
+    {
+     "term": "Null (padding)",
+     "definition": "a meaningless letter added to fill a grid."
+    },
+    {
+     "term": "Double transposition",
+     "definition": "two transpositions, one after the other."
+    }
+   ]
+  },
+  {
+   "id": "08-scoring-and-hill-climbing",
+   "number": 8,
+   "title": "Scoring and hill climbing",
+   "subtitle": "Teaching a computer to ask: how English is this?",
+   "pdf": "pdf/08-scoring-and-hill-climbing.pdf",
+   "sections": [
+    {
+     "id": "the-big-idea",
+     "heading": "The big idea"
+    },
+    {
+     "id": "which-ciphers-it-breaks",
+     "heading": "Which ciphers it breaks"
+    },
+    {
+     "id": "why-it-works",
+     "heading": "Why it works"
+    },
+    {
+     "id": "the-grown-up-version",
+     "heading": "The grown-up version"
+    },
+    {
+     "id": "a-worked-example",
+     "heading": "A worked example"
+    },
+    {
+     "id": "how-it-extends-to-other-ciphers",
+     "heading": "How it extends to other ciphers"
+    },
+    {
+     "id": "when-to-try-it",
+     "heading": "When to try it"
+    },
+    {
+     "id": "traps-and-tips",
+     "heading": "Traps and tips"
+    },
+    {
+     "id": "try-it-yourself",
+     "heading": "Try it yourself"
+    },
+    {
+     "id": "answers",
+     "heading": "Answers"
+    },
+    {
+     "id": "words-to-know",
+     "heading": "Words to know"
+    },
+    {
+     "id": "going-further",
+     "heading": "Going further"
+    }
+   ],
+   "words": [
+    {
+     "term": "Quadgram",
+     "definition": "a group of four letters in a row, such as TION."
+    },
+    {
+     "term": "Fitness (score)",
+     "definition": "a number saying how English a text looks; here, the sum of the logs of its quadgram probabilities. Closer to zero is better."
+    },
+    {
+     "term": "Probability",
+     "definition": "how often something happens, as a fraction of all the times it could."
+    },
+    {
+     "term": "Logarithm ($\\log_{10}$)",
+     "definition": "how many times you multiply (or, if negative, divide) by 10 to get a number."
+    },
+    {
+     "term": "Key space (search space)",
+     "definition": "the set of all possible keys."
+    },
+    {
+     "term": "Move",
+     "definition": "a small change to a key, such as swapping two letters."
+    },
+    {
+     "term": "Hill climbing",
+     "definition": "keep making moves, keeping only the ones that raise the score."
+    },
+    {
+     "term": "Local maximum",
+     "definition": "a key that no single move can improve, but that is not the best key."
+    },
+    {
+     "term": "Random restart",
+     "definition": "starting the climb again from a new random key."
+    },
+    {
+     "term": "Simulated annealing",
+     "definition": "hill climbing that sometimes keeps worse keys, more often while the \"temperature\" is high."
+    },
+    {
+     "term": "Temperature",
+     "definition": "the number in simulated annealing that controls how often worse moves are accepted. It starts high and falls."
+    }
+   ]
+  },
+  {
+   "id": "09-two-letters-at-a-time",
+   "number": 9,
+   "title": "Two letters at a time",
+   "subtitle": "Polybius, Playfair and Hill: ciphers that work on pairs",
+   "pdf": "pdf/09-two-letters-at-a-time.pdf",
+   "sections": [
+    {
+     "id": "the-big-idea",
+     "heading": "The big idea"
+    },
+    {
+     "id": "which-ciphers-it-breaks",
+     "heading": "Which ciphers it breaks"
+    },
+    {
+     "id": "why-it-works",
+     "heading": "Why it works"
+    },
+    {
+     "id": "the-grown-up-version-the-hill-cipher",
+     "heading": "The grown-up version: the Hill cipher"
+    },
+    {
+     "id": "a-worked-example-breaking-hill-with-a-crib",
+     "heading": "A worked example: breaking Hill with a crib"
+    },
+    {
+     "id": "when-to-try-it",
+     "heading": "When to try it"
+    },
+    {
+     "id": "traps-and-tips",
+     "heading": "Traps and tips"
+    },
+    {
+     "id": "try-it-yourself",
+     "heading": "Try it yourself"
+    },
+    {
+     "id": "answers",
+     "heading": "Answers"
+    },
+    {
+     "id": "words-to-know",
+     "heading": "Words to know"
+    },
+    {
+     "id": "going-further",
+     "heading": "Going further"
+    }
+   ],
+   "words": [
+    {
+     "term": "Polygraphic cipher",
+     "definition": "a cipher that encrypts groups of letters (usually pairs) together."
+    },
+    {
+     "term": "Digraph",
+     "definition": "a pair of letters, such as TH."
+    },
+    {
+     "term": "Polybius square",
+     "definition": "a 5x5 grid that turns each letter into a row number and a column number."
+    },
+    {
+     "term": "ADFGVX",
+     "definition": "a 6x6 Polybius square labeled A, D, F, G, V, X, followed by a columnar transposition."
+    },
+    {
+     "term": "Playfair",
+     "definition": "a cipher that encrypts pairs with a keyword square, using the rectangle, row and column rules."
+    },
+    {
+     "term": "Hill cipher",
+     "definition": "a cipher that multiplies pairs of letter numbers by a matrix, mod 26."
+    },
+    {
+     "term": "Matrix",
+     "definition": "a rectangular box of numbers."
+    },
+    {
+     "term": "Mod 26 (modular arithmetic)",
+     "definition": "arithmetic on a 26-hour clock: keep only the remainder after dividing by 26."
+    },
+    {
+     "term": "Congruent ($\\equiv$)",
+     "definition": "landing on the same place on the clock."
+    },
+    {
+     "term": "Inverse (mod 26)",
+     "definition": "the number you multiply by to get 1 on the clock."
+    },
+    {
+     "term": "Determinant",
+     "definition": "for a 2x2 matrix, $ad - bc$; the key can be undone only if this has an inverse mod 26."
+    },
+    {
+     "term": "Crib",
+     "definition": "a word you guess is in the plaintext."
+    },
+    {
+     "term": "Tell",
+     "definition": "a pattern a cipher always or never produces, which helps you recognize it."
+    }
+   ]
+  }
+ ]
+}

@@ -96,6 +96,8 @@ Playfair cannot encrypt a pair of identical letters, so the setter splits double
 
 If the ciphertext keeps its word breaks, you have a gift. One-letter words are almost always A or I. The commonest three-letter word is THE. A word like `XYZZX` has the same letter pattern as a real word you can search for. Most competition ciphers remove the spaces or group the letters in fives, precisely to hide these clues. When they are left in, start there (Guide 02, Frequency analysis, and Guide 06, Cribs and patterns, show how).
 
+> **In the app:** [Counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts) measures a ciphertext for you: its length, every letter's count beside English's, the commonest letters and the IoC. [The method, step by step](https://apps.thorwhalen.com/cryptology/#/guide) asks the same questions one at a time and says where each answer leads.
+
 ## The grown-up version
 
 Codebreakers have names for these measurements.
@@ -174,6 +176,8 @@ Here is the whole routine on one page. Start at the top and answer each question
 
 ![A flowchart. Questions on the left, in order: only two or three symbols? digits or only A D F G V X? bars like English? IoC near 0.067? even length with no J and no doubled pair? do slices look like English? Each yes leads right to a suspect: an encoding, Polybius or ADFGVX, transposition, a one-alphabet cipher, Playfair, the Vigenère family. The last no leads to Hill, autokey, or a hidden extra layer.](figures/01-decision-flowchart.png)
 
+> **In the app:** The [family tree](https://apps.thorwhalen.com/cryptology/#/tree) shows every family of cipher, how they are related, and the clues each one leaves.
+
 ## When to use it, and when not to
 
 **Always use it first.** Every time you meet a new ciphertext, before you guess anything. It takes five minutes and points you at the right attack.
@@ -195,6 +199,8 @@ Here is the whole routine on one page. Start at the top and answer each question
 1. A ciphertext uses only the letters A, D, F, G, V and X, always an even number of them. What is your first suspect?
 2. A ciphertext of 120 letters has an IoC of 0.066, and its four commonest letters are E, T, O and A. Which family is it, and which grid widths would you try first?
 3. A ciphertext's commonest letter is H, and the letters A, C and M never appear. Assuming it is a Caesar cipher, what is the shift? (Hint: which English letter is commonest, and how far is it from H?)
+
+> **In the app:** [Spot the cipher](https://apps.thorwhalen.com/cryptology/#/ex/spot/1) gives you texts to diagnose from their counts and IoC. The [Family tree quiz](https://apps.thorwhalen.com/cryptology/#/ex/family-quiz/1) and the [Strategy quiz](https://apps.thorwhalen.com/cryptology/#/ex/strategy-quiz/1) check the order of the clues.
 
 ## Answers
 

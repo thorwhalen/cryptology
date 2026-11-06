@@ -74,6 +74,8 @@ So a ciphertext word with pattern ABBCBD has only five common candidates. Once y
 
 ![The ciphertext word SDDYDB, with e, e, e and r already known. Its pattern ABBCBD has five common words. Seemed, assist and peered have the wrong letters, deeper needs a d that is already used, and keeper fits.](figures/06-pattern-lookup.png)
 
+> **In the app:** [Pattern words](https://apps.thorwhalen.com/cryptology/#/ex/patterns/1) trains you to recognize a word from the shape of its repeated letters.
+
 ## A worked example: a keyword substitution
 
 Here is a message, with its word breaks kept. In the previous puzzle, a girl called Eleanor wrote to her friend Tom.
@@ -145,6 +147,8 @@ So the gaps fill themselves. Between P and S the only unused letter is Q, so j =
 ![The plain alphabet, the 21 cipher letters found from cribs (with five question marks), and the rebuilt alphabet: the keyword part GUARDIN in pink, then the rest of the alphabet in order, with the five never-seen letters Q, Z, J, K and M filled in orange.](figures/06-keyword-alphabet.png)
 
 This works even if you only see the tail. The letters missing from the alphabetical run (here R, U, D, G, I, N and A) must be the keyword's letters. Unscramble them and you often have the keyword.
+
+> **In the app:** [Substitution](https://apps.thorwhalen.com/cryptology/#/workbench/substitution) shows your key as you fill it in, so a keyword alphabet's giveaway run, such as STUVWXYZ, stands out. More on the cipher: [keyword substitution](https://apps.thorwhalen.com/cryptology/#/tree/keyword).
 
 ## The grown-up version
 
@@ -287,6 +291,8 @@ In this made-up example, 5 of the 15 positions are ruled out at once. On real me
 plain:   a b c d e f g h i j k l m n o p q r s t u v w x y z
 cipher:  P U M ? I N O ? R S T V W X Y ? A B C D E F ? ? J L
 ```
+
+> **In the app:** [Substitution with word breaks](https://apps.thorwhalen.com/cryptology/#/ex/substitution-spaces/1) is a keyword cipher to crack by hand: start from a crib and the common words.
 
 ## Words to know
 

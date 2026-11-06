@@ -1,0 +1,609 @@
+<section id="reading-the-clues" class="level1">
+<h1>Reading the clues</h1>
+<p><em>What a ciphertext tells you before you try a single key</em></p>
+<p><strong>By the end you can look at a ciphertext, take six quick
+measurements, and say which family of cipher made it, before you try a
+single key.</strong></p>
+<section id="the-big-idea" class="level2">
+<h2>The big idea</h2>
+<p>A detective does not arrest the first person they meet. They look at
+the footprints, the mud on the boots, the time on the stopped clock, and
+only then do they name a suspect. Codebreakers work the same way. Every
+cipher changes a message, but no cipher changes everything. Some keep
+the letters and only move them. Some keep the shape of English but
+rename every letter. Some need the message to have an even number of
+letters. Some never use the letter J. These leftovers are clues, and you
+can read them without knowing the key. Taking five minutes to read them
+saves you hours of trying the wrong attack.</p>
+<figure>
+<img src="figures/01-clue-board.png"
+alt="A mystery ciphertext at the top, with an arrow down to six colored cards: which symbols appear, how long the message is, the shape of the letter counts, the index of coincidence, doubled letters, and whether spaces are kept." />
+<figcaption aria-hidden="true">A mystery ciphertext at the top, with an
+arrow down to six colored cards: which symbols appear, how long the
+message is, the shape of the letter counts, the index of coincidence,
+doubled letters, and whether spaces are kept.</figcaption>
+</figure>
+</section>
+<section id="which-ciphers-it-helps-with" class="level2">
+<h2>Which ciphers it helps with</h2>
+<p>Reading the clues does not break any cipher by itself. It tells you
+which attack to use next, so it helps with every cipher.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Cipher family</th>
+<th>What the clues tell you</th>
+<th>Which clue gives it away</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Morse, binary, Baconian</td>
+<td>It is an encoding, not a cipher: decode it, then start again</td>
+<td>Only two or three different symbols</td>
+</tr>
+<tr>
+<td>Polybius, Nihilist, ADFGVX</td>
+<td>Letters were turned into pairs of symbols</td>
+<td>Digits, or only the letters A D F G V X</td>
+</tr>
+<tr>
+<td>Transposition (rail fence, columns)</td>
+<td>Letters kept, only their order changed</td>
+<td>Letter counts look exactly like English</td>
+</tr>
+<tr>
+<td>Caesar</td>
+<td>One alphabet, slid along</td>
+<td>Counts look like English moved sideways</td>
+</tr>
+<tr>
+<td>Affine, keyword substitution</td>
+<td>One alphabet, scrambled</td>
+<td>Counts as bumpy as English, but on the wrong letters</td>
+</tr>
+<tr>
+<td>Vigenère, Beaufort</td>
+<td>Several alphabets taking turns</td>
+<td>Counts flatter than English; all 26 letters appear</td>
+</tr>
+<tr>
+<td>Playfair and other 5 x 5 squares</td>
+<td>Letters encrypted two at a time</td>
+<td>Even length, J never appears, no pair is a double</td>
+</tr>
+<tr>
+<td>Hill</td>
+<td>Letters mixed in blocks</td>
+<td>Even length (or a multiple of 3), very flat counts</td>
+</tr>
+</tbody>
+</table>
+<p>What the clues cannot do: tell you the key, or tell apart two ciphers
+that leave the same leftovers (an affine cipher and a keyword
+substitution look the same from the outside). For that you need the
+attacks in the later guides.</p>
+</section>
+<section id="why-it-works" class="level2">
+<h2>Why it works</h2>
+<p>Think about what each kind of cipher actually does to a message.</p>
+<p>A <strong>transposition</strong> shuffles the letters, like shaking
+the tiles of a word game in a bag. The tiles are still the same tiles.
+If the message had 24 copies of E before, it still has 24 copies of E
+after.</p>
+<p>A <strong>substitution</strong> keeps every letter in its place but
+gives it a new name. Every E becomes, say, L. So the ciphertext has 24
+copies of L. The pattern of “one letter very common, a few fairly
+common, some rare” survives, only on different letters.</p>
+<p>A <strong>polyalphabetic</strong> cipher like Vigenère uses several
+alphabets in turn. The first E might become L, the next E might become
+S, the next one K. The 24 copies of E get spread over several letters,
+and the tall bars get flattened.</p>
+<p>Here is a pencil-and-paper experiment. Take any paragraph from a book
+and count how many times each letter appears. You will find E near the
+top, then T, A, O, I, N, and you will find almost no J, Q, X or Z. That
+pattern is a fingerprint of English. Ciphers smudge the fingerprint in
+different ways, and the way it is smudged tells you which cipher did
+it.</p>
+<figure>
+<img src="figures/01-frequency-shapes.png"
+alt="Six bar charts of letter counts. The hidden English message and message B have identical bars. Message A has the same bars moved seven letters to the right. Message F has bumpy bars on the wrong letters. Message C is flatter, with all 26 letters. Message E is fairly flat with no J." />
+<figcaption aria-hidden="true">Six bar charts of letter counts. The
+hidden English message and message B have identical bars. Message A has
+the same bars moved seven letters to the right. Message F has bumpy bars
+on the wrong letters. Message C is flatter, with all 26 letters. Message
+E is fairly flat with no J.</figcaption>
+</figure>
+</section>
+<section id="the-six-clues-one-by-one" class="level2">
+<h2>The six clues, one by one</h2>
+<section id="clue-1-which-symbols-appear" class="level3">
+<h3>Clue 1: which symbols appear?</h3>
+<p>Look before you count. Write down every different symbol the
+ciphertext uses.</p>
+<ul>
+<li><strong>Two or three symbols</strong> (dots and dashes, zeros and
+ones, A and B in groups of five) mean an <strong>encoding</strong> such
+as Morse code, binary or the Baconian code. An encoding has no secret
+key. Decode it, and then start the clue-reading again on what comes out,
+because a setter often hides a real cipher under an encoding.</li>
+<li><strong>Digits 1 to 5 in pairs</strong> mean a <strong>Polybius
+square</strong>: a 5 x 5 grid where each letter is named by its row and
+column. The pair <code>15</code> means row 1, column 5.</li>
+<li><strong>Larger two-digit numbers</strong>, often above 55, suggest
+the <strong>Nihilist cipher</strong>, which adds a key to Polybius
+numbers.</li>
+<li><strong>Only A, D, F, G and X</strong> (or A, D, F, G, V and X) is
+the famous signature of the <strong>ADFGX</strong> and
+<strong>ADFGVX</strong> ciphers from World War I.</li>
+<li><strong>25 letters, with J never appearing</strong> suggests a
+cipher built on a 5 x 5 square, which only has room for 25 letters
+(usually I and J share a cell). Playfair, bifid and four-square all do
+this.</li>
+<li><strong>More than 26 different symbols</strong> suggests a
+<strong>homophonic</strong> cipher, where common letters get several
+symbols each.</li>
+<li><strong>Pictures or odd marks</strong> are usually a plain
+substitution in disguise: give each symbol a letter of your own and
+solve it as a substitution.</li>
+<li><strong>Ordinary letters A to Z</strong>: keep measuring.</li>
+</ul>
+<figure>
+<img src="figures/01-symbol-sets.png"
+alt="A table drawn as colored rows. Left column: samples such as dots and dashes, groups of zeros and ones, digit pairs, only A D F G V X, and letters with no J. Middle column: the clue. Right column: the suspected cipher." />
+<figcaption aria-hidden="true">A table drawn as colored rows. Left
+column: samples such as dots and dashes, groups of zeros and ones, digit
+pairs, only A D F G V X, and letters with no J. Middle column: the clue.
+Right column: the suspected cipher.</figcaption>
+</figure>
+</section>
+<section id="clue-2-how-long-is-it" class="level3">
+<h3>Clue 2: how long is it?</h3>
+<p>Count the letters, then break the count into its
+<strong>factors</strong> (the whole numbers that divide it exactly).</p>
+<ul>
+<li>An <strong>odd</strong> length rules out Playfair, four-square and
+the 2 x 2 Hill cipher. All three work on pairs of letters, so their
+ciphertexts always have an even length.</li>
+<li>A length that divides neatly into a rectangle is a hint for a
+<strong>columnar transposition</strong>, which writes the message into a
+grid. If the length is 165, the grid might be 5 by 33, 11 by 15 or 15 by
+11.</li>
+<li>A length that is a multiple of 3 allows a 3 x 3 Hill cipher. A
+multiple of 25 suggests a cipher called Cadenus.</li>
+</ul>
+<figure>
+<img src="figures/01-length-factors.png"
+alt="The number 165 broken into 3 times 5 times 11, with three grids of squares that hold exactly 165 letters: 5 rows of 33, 11 rows of 15 and 15 rows of 11. A red note says an odd length rules out Playfair and the 2 by 2 Hill cipher." />
+<figcaption aria-hidden="true">The number 165 broken into 3 times 5
+times 11, with three grids of squares that hold exactly 165 letters: 5
+rows of 33, 11 rows of 15 and 15 rows of 11. A red note says an odd
+length rules out Playfair and the 2 by 2 Hill cipher.</figcaption>
+</figure>
+</section>
+<section id="clue-3-the-shape-of-the-letter-counts" class="level3">
+<h3>Clue 3: the shape of the letter counts</h3>
+<p>Draw a bar chart: one bar for each letter, as tall as the number of
+times it appears. Then ask which of these four shapes you see.</p>
+<ol type="1">
+<li><strong>Exactly like English.</strong> E tallest, then T, A, O, I,
+N; J, Q, X, Z almost absent. The letters are real; only their order
+changed. Suspect a <strong>transposition</strong>.</li>
+<li><strong>English slid sideways.</strong> The same skyline of tall and
+short bars, but moved along the alphabet. Suspect a
+<strong>Caesar</strong> cipher. A good landmark: English has a run of
+rare letters at the end, V W X Y Z. In a Caesar ciphertext, that run of
+near-empty bars appears somewhere else.</li>
+<li><strong>Bumpy, but on the wrong letters.</strong> A few very tall
+bars and several empty ones, like English, but the tall bars sit on
+letters such as B or U, and no slid pattern fits. Suspect an
+<strong>affine</strong> or <strong>keyword substitution</strong>.</li>
+<li><strong>Flattened.</strong> No tower stands far above the rest, and
+almost every letter appears. Suspect <strong>several alphabets</strong>
+(Vigenère and its cousins) or a cipher that works on pairs.</li>
+</ol>
+</section>
+<section id="clue-4-the-index-of-coincidence" class="level3">
+<h3>Clue 4: the index of coincidence</h3>
+<p>Shape is easy to see but hard to compare. The <strong>index of
+coincidence</strong> (IoC) turns the shape into one number. It answers a
+simple question: if you pick two letters from the text at random, what
+is the chance they are the same letter?</p>
+<p>In English, letters repeat a lot (so many E’s and T’s), so the chance
+is about 0.067, roughly 1 in 15. If every letter were equally likely,
+the chance would be 1 in 26, about 0.038. A substitution or a
+transposition does not change how often letters repeat, so they keep the
+English value. Several alphabets spread the repeats out, so the IoC
+drops toward 0.038. Guide 04, The index of coincidence, explains how to
+use this number to find a Vigenère key’s length.</p>
+</section>
+<section id="clue-5-doubled-letters" class="level3">
+<h3>Clue 5: doubled letters</h3>
+<p>English is full of doubled letters: LL, EE, SS, OO, TT. A
+substitution keeps them (LL becomes ZZ). A transposition breaks most of
+them up but makes new ones by chance. The interesting clue is a double
+that <strong>never</strong> appears where you would expect it.</p>
+<p>Playfair cannot encrypt a pair of identical letters, so the setter
+splits doubles with an X before encrypting. The result: if you cut a
+Playfair ciphertext into pairs (letters 1 and 2, letters 3 and 4, and so
+on), <strong>no pair is ever two copies of the same letter</strong>.
+Doubles can still appear across the boundary between two pairs. In a
+long text with no in-pair doubles at all, Playfair is the prime
+suspect.</p>
+</section>
+<section id="clue-6-are-the-spaces-kept" class="level3">
+<h3>Clue 6: are the spaces kept?</h3>
+<p>If the ciphertext keeps its word breaks, you have a gift. One-letter
+words are almost always A or I. The commonest three-letter word is THE.
+A word like <code>XYZZX</code> has the same letter pattern as a real
+word you can search for. Most competition ciphers remove the spaces or
+group the letters in fives, precisely to hide these clues. When they are
+left in, start there (Guide 02, Frequency analysis, and Guide 06, Cribs
+and patterns, show how).</p>
+<div class="in-app">
+<p><strong>In the app:</strong> <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/counts">Counts</a>
+measures a ciphertext for you: its length, every letter’s count beside
+English’s, the commonest letters and the IoC. <a
+href="https://apps.thorwhalen.com/cryptology/#/guide">The method, step
+by step</a> asks the same questions one at a time and says where each
+answer leads.</p>
+</div>
+</section>
+</section>
+<section id="the-grown-up-version" class="level2">
+<h2>The grown-up version</h2>
+<p>Codebreakers have names for these measurements.</p>
+<p><strong>Letter frequency.</strong> The frequency of a letter is how
+often it appears, usually as a fraction or percentage of all letters. If
+E appears 24 times in 165 letters, its frequency is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>24</mn><mi>/</mi><mn>165</mn><mo>≈</mo><mn>0.145</mn></mrow><annotation encoding="application/x-tex">24/165 \approx 0.145</annotation></semantics></math>,
+or 14.5%. The sign
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≈</mo><annotation encoding="application/x-tex">\approx</annotation></semantics></math>
+means “is approximately equal to”.</p>
+<p><strong>Factorization.</strong> Writing a number as a product of
+primes, such as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>165</mn><mo>=</mo><mn>3</mn><mo>×</mo><mn>5</mn><mo>×</mo><mn>11</mn></mrow><annotation encoding="application/x-tex">165 = 3 \times 5 \times 11</annotation></semantics></math>
+or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>168</mn><mo>=</mo><mn>2</mn><mo>×</mo><mn>2</mn><mo>×</mo><mn>2</mn><mo>×</mo><mn>3</mn><mo>×</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">168 = 2 \times 2 \times 2 \times 3 \times 7</annotation></semantics></math>.
+Every rectangle that holds the text exactly has sides made from these
+factors.</p>
+<p><strong>Index of coincidence.</strong> If a text has
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+letters, and a particular letter appears
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+times, then the number of ways to pick two copies of that letter is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">f(f-1)/2</annotation></semantics></math>,
+and the number of ways to pick any two letters is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">N(N-1)/2</annotation></semantics></math>.
+Add up the first count over all 26 letters and divide by the second (the
+halves cancel):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">IoC</mtext><mo>=</mo><mfrac><mrow><mo>∑</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">\text{IoC} = \frac{\sum f(f-1)}{N(N-1)}</annotation></semantics></math></p>
+<p>The symbol
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>∑</mo><annotation encoding="application/x-tex">\sum</annotation></semantics></math>
+(the Greek capital letter sigma) means “add this up for every letter”.
+So for each letter you work out
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(f-1)</annotation></semantics></math>,
+add the 26 results, and divide by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(N-1)</annotation></semantics></math>.</p>
+<p>Here is a tiny example you can check in your head: the text
+<code>AABB</code> has
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">N = 4</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">f = 2</annotation></semantics></math>
+for A and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">f = 2</annotation></semantics></math>
+for B. So the IoC is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mn>2</mn><mo>×</mo><mn>1</mn><mo>+</mo><mn>2</mn><mo>×</mo><mn>1</mn></mrow><mrow><mn>4</mn><mo>×</mo><mn>3</mn></mrow></mfrac><mo>=</mo><mfrac><mn>4</mn><mn>12</mn></mfrac><mo>≈</mo><mn>0.333</mn></mrow><annotation encoding="application/x-tex">\frac{2 \times 1 + 2 \times 1}{4 \times 3} = \frac{4}{12} \approx 0.333</annotation></semantics></math>.
+One time in three, two letters picked from <code>AABB</code> match.</p>
+<p>The two numbers to remember:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>κ</mi><mtext mathvariant="normal">English</mtext></msub><mo>≈</mo><mn>0.067</mn><mspace width="2.0em"></mspace><msub><mi>κ</mi><mtext mathvariant="normal">random</mtext></msub><mo>=</mo><mfrac displaystyle="false"><mn>1</mn><mn>26</mn></mfrac><mo>≈</mo><mn>0.038</mn></mrow><annotation encoding="application/x-tex">\kappa_{\text{English}} \approx 0.067 \qquad \kappa_{\text{random}} = \tfrac{1}{26} \approx 0.038</annotation></semantics></math></p>
+<p>The Greek letter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>κ</mi><annotation encoding="application/x-tex">\kappa</annotation></semantics></math>
+(kappa) is the traditional name for these benchmark values. They are
+guides, not sharp lines: a short text wobbles. Below about 100 letters,
+trust the overall shape more than the third decimal place.</p>
+<p><strong>Monoalphabetic and polyalphabetic.</strong> A monoalphabetic
+cipher uses one cipher alphabet for the whole message (Caesar, affine,
+substitution). A polyalphabetic cipher switches between several
+(Vigenère, Beaufort). The IoC is the quickest way to tell them
+apart.</p>
+</section>
+<section id="worked-example-a-lineup-of-six-suspects" class="level2">
+<h2>Worked example: a lineup of six suspects</h2>
+<p>Here is an original message, written for this guide:</p>
+<p><code>the lighthouse keeper counted the ships every evening and wrote their names in a small green book one night a ship with no name and no lights slipped past the rocks and vanished into the fog before dawn</code></p>
+<p>It has 165 letters. I encrypted it six different ways. Pretend you do
+not know which is which. Here are the first 50 symbols of each.</p>
+<pre class="text"><code>A: AOLSP NOAOV BZLRL LWLYJ VBUAL KAOLZ OPWZL CLYFL CLUPU NHUKD
+B: ETEEN HPRNN TIESG BNHIH MNHIP HKVHT FFALH KRTES YIDER SMROE
+C: YVKQW MMHNT IYJYK JDKWQ UZBZJ RZMSY MWVXS BJFEJ JKSWT LOTIK
+D: 44 23 15 31 24 22 23 44 23 34 45 43 15 25 15 15 35 15 42 13 34 45 33 44 15
+E: PBLSN CBPAH PTDLL RCSLE GHZUS FFQRC PRPVX LXCBX CXGLK IDOKG
+F: IUEYV SUIUC JHEXE EDEGN CJBIE TIUEH UVDHE KEGPE KEBVB SLBTM</code></pre>
+<p>Now take the measurements. These are the real counts for the whole of
+each message.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Symbols used</th>
+<th>Length</th>
+<th>Missing letters</th>
+<th>Commonest letters</th>
+<th>IoC</th>
+<th>Doubles inside pairs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>22 letters</td>
+<td>165</td>
+<td>E G Q X</td>
+<td>L 24, U 17, A 13, O 13</td>
+<td>0.067</td>
+<td>(odd length)</td>
+</tr>
+<tr>
+<td>B</td>
+<td>22 letters</td>
+<td>165</td>
+<td>J Q X Z</td>
+<td>E 24, N 17, T 13, H 13</td>
+<td>0.067</td>
+<td>(odd length)</td>
+</tr>
+<tr>
+<td>C</td>
+<td>all 26</td>
+<td>165</td>
+<td>none</td>
+<td>T 16, K 14</td>
+<td>0.046</td>
+<td>(odd length)</td>
+</tr>
+<tr>
+<td>D</td>
+<td>digits 1 to 5</td>
+<td>165 pairs</td>
+<td></td>
+<td><code>15</code> appears 24 times</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>E</td>
+<td>25 letters</td>
+<td>168</td>
+<td>J</td>
+<td>L 17, C 15</td>
+<td>0.050</td>
+<td>0 out of 84</td>
+</tr>
+<tr>
+<td>F</td>
+<td>22 letters</td>
+<td>165</td>
+<td>F O Q W</td>
+<td>E 24, B 17, I 13, U 13</td>
+<td>0.067</td>
+<td>(odd length)</td>
+</tr>
+</tbody>
+</table>
+<p>Now read the clues, one suspect at a time.</p>
+<p><strong>Message D</strong> is the easiest. It uses only the digits 1
+to 5, always in pairs. That is a Polybius square. Notice that the pair
+<code>15</code> appears 24 times, exactly as often as E appears in the
+plaintext: Polybius is really a substitution that writes each letter as
+two digits. Replace each pair with a letter of your choice and solve it
+as a substitution.</p>
+<p><strong>Message E</strong> has an even length (168, when the
+plaintext had 165: the setter added padding), uses 25 letters with no J,
+and has an IoC of 0.050, between English and random. Cut it into pairs
+and look for doubles: there are five doubled letters in the text
+(<code>LL</code>, <code>FF</code>, <code>EE</code>, <code>CC</code>,
+<code>CC</code>), but every one of them straddles the boundary between
+two pairs. Not one of the 84 pairs is a double. Prime suspect:
+<strong>Playfair</strong>.</p>
+<p><strong>Message C</strong> uses all 26 letters, its bars are flat (no
+letter appears more than 16 times in 165), and its IoC is 0.046, well
+below English. That points to <strong>several alphabets</strong>. As a
+test, take every third letter, then every third letter starting from the
+second, then from the third. The average IoC of these three slices jumps
+to 0.068, right at the English value. For slices of 2, 4, 5 and 7 it
+stays between 0.042 and 0.051. So this is a <strong>Vigenère-type cipher
+with a key of length 3</strong> (guides 04 and 05 show how to finish
+it).</p>
+<p>That leaves A, B and F. All three have an IoC of exactly 0.067: one
+alphabet each. So which is which?</p>
+<p><strong>Message B</strong>’s commonest letters are E, N, T, H, and J,
+Q, X, Z never appear. That is just what English looks like. Its bar
+chart is identical to the plaintext’s. The letters are all real; only
+the order is scrambled. Suspect: <strong>transposition</strong>. The
+length,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>165</mn><mo>=</mo><mn>3</mn><mo>×</mo><mn>5</mn><mo>×</mo><mn>11</mn></mrow><annotation encoding="application/x-tex">165 = 3 \times 5 \times 11</annotation></semantics></math>,
+says to try grids that are 3, 5, 11 or 15 columns wide. (It was, in
+fact, a 5-column transposition.)</p>
+<p><strong>Message A</strong>’s commonest letter is L, and E and G never
+appear. Compare its bar chart with English, slid along. English’s
+tallest bar is E. If E moved to L, that is a slide of 7 places: count
+them, F, G, H, I, J, K, L. Check the landmarks: under a slide of 7,
+English’s rare letters X and Z would move to E and G. Those are exactly
+the two letters missing from message A. English’s common T would move to
+A, and A has 13 copies, one of its tallest bars. The whole skyline fits.
+Suspect: <strong>Caesar, shift 7</strong>. Try it: moving every letter
+back 7 turns <code>AOLSP NOAOV</code> into <code>theli ghtho</code>.
+Solved.</p>
+<p><strong>Message F</strong>’s commonest letter happens to be E, but
+its second-tallest bar is B, and O, a very common English letter, never
+appears at all. No slide of the English skyline fits. Bumpy bars on the
+wrong letters: suspect a <strong>keyword substitution</strong> (or an
+affine cipher). Use frequency analysis and common words to finish (Guide
+02).</p>
+<p>Six suspects, six different ciphers, and you named every family
+without trying a single key.</p>
+<figure>
+<img src="figures/01-ioc-scale.png"
+alt="A number line for the index of coincidence, from 0.03 to 0.076. Random text is marked at 0.038 and English at 0.067. Messages A, B and F sit stacked at 0.067, message E at 0.050 and message C at 0.046." />
+<figcaption aria-hidden="true">A number line for the index of
+coincidence, from 0.03 to 0.076. Random text is marked at 0.038 and
+English at 0.067. Messages A, B and F sit stacked at 0.067, message E at
+0.050 and message C at 0.046.</figcaption>
+</figure>
+</section>
+<section id="a-decision-flowchart" class="level2">
+<h2>A decision flowchart</h2>
+<p>Here is the whole routine on one page. Start at the top and answer
+each question in order.</p>
+<figure>
+<img src="figures/01-decision-flowchart.png"
+alt="A flowchart. Questions on the left, in order: only two or three symbols? digits or only A D F G V X? bars like English? IoC near 0.067? even length with no J and no doubled pair? do slices look like English? Each yes leads right to a suspect: an encoding, Polybius or ADFGVX, transposition, a one-alphabet cipher, Playfair, the Vigenère family. The last no leads to Hill, autokey, or a hidden extra layer." />
+<figcaption aria-hidden="true">A flowchart. Questions on the left, in
+order: only two or three symbols? digits or only A D F G V X? bars like
+English? IoC near 0.067? even length with no J and no doubled pair? do
+slices look like English? Each yes leads right to a suspect: an
+encoding, Polybius or ADFGVX, transposition, a one-alphabet cipher,
+Playfair, the Vigenère family. The last no leads to Hill, autokey, or a
+hidden extra layer.</figcaption>
+</figure>
+<div class="in-app">
+<p><strong>In the app:</strong> The <a
+href="https://apps.thorwhalen.com/cryptology/#/tree">family tree</a>
+shows every family of cipher, how they are related, and the clues each
+one leaves.</p>
+</div>
+</section>
+<section id="when-to-use-it-and-when-not-to" class="level2">
+<h2>When to use it, and when not to</h2>
+<p><strong>Always use it first.</strong> Every time you meet a new
+ciphertext, before you guess anything. It takes five minutes and points
+you at the right attack.</p>
+<p><strong>Use it again when you are stuck.</strong> If you have been
+trying Vigenère keys for half an hour with no luck, go back and
+remeasure. Did you check that the IoC was actually low? Did you assume
+the length was even without counting?</p>
+<p><strong>Do not treat it as a verdict.</strong> The clues narrow down
+the suspects; they do not convict. A short message can fool any
+measurement, and a clever setter can add a twist (see below). If the
+clues say “Caesar” and none of the 26 shifts reads, the clues were not
+wrong about everything, but something else is going on.</p>
+</section>
+<section id="traps-and-tips" class="level2">
+<h2>Traps and tips</h2>
+<ul>
+<li><strong>Short texts wobble.</strong> With 50 letters, an English
+text might easily show T above E, or have an IoC of 0.055 instead of
+0.067. Lean on the shape and the missing letters more than on exact
+numbers.</li>
+<li><strong>Unusual texts.</strong> A message about “jazz quizzes” has
+lots of Z and Q. A list of names or a text written to avoid the letter E
+will throw off the counts. Read the story or context that comes with the
+cipher.</li>
+<li><strong>Padding.</strong> Setters often add X’s or random letters to
+fill the last row of a grid or to make the length even. A length one or
+two more than you expect is not a disaster.</li>
+<li><strong>Reversed text.</strong> Writing the message backwards does
+not change any count. If every clue says “transposition”, try reading it
+backwards before anything clever.</li>
+<li><strong>Layers.</strong> A message might be encoded in Morse and
+then enciphered, or substituted and then transposed. If you decode one
+layer and get gibberish, measure the gibberish: it is a new ciphertext
+with its own clues.</li>
+</ul>
+</section>
+<section id="try-it-yourself" class="level2">
+<h2>Try it yourself</h2>
+<ol type="1">
+<li>A ciphertext uses only the letters A, D, F, G, V and X, always an
+even number of them. What is your first suspect?</li>
+<li>A ciphertext of 120 letters has an IoC of 0.066, and its four
+commonest letters are E, T, O and A. Which family is it, and which grid
+widths would you try first?</li>
+<li>A ciphertext’s commonest letter is H, and the letters A, C and M
+never appear. Assuming it is a Caesar cipher, what is the shift? (Hint:
+which English letter is commonest, and how far is it from H?)</li>
+</ol>
+<div class="in-app">
+<p><strong>In the app:</strong> <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/spot/1">Spot the
+cipher</a> gives you texts to diagnose from their counts and IoC. The <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/family-quiz/1">Family
+tree quiz</a> and the <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/strategy-quiz/1">Strategy
+quiz</a> check the order of the clues.</p>
+</div>
+</section>
+<section id="answers" class="level2">
+<h2>Answers</h2>
+<ol type="1">
+<li>ADFGVX. The six letters are its signature. (It writes each letter as
+two of these symbols and then only rearranges them, so the length stays
+even.)</li>
+<li>A transposition: the IoC is English and so are the commonest
+letters.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>120</mn><mo>=</mo><mn>2</mn><mo>×</mo><mn>2</mn><mo>×</mo><mn>2</mn><mo>×</mo><mn>3</mn><mo>×</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">120 = 2 \times 2 \times 2 \times 3 \times 5</annotation></semantics></math>,
+so it fits many grids: try widths 4, 5, 6, 8, 10 and 12 first.</li>
+<li>If H stands for E, the shift is 3 (E to F, G, H). Check: a shift of
+3 sends English’s rare letters X, Z and J to A, C and M, which explains
+why exactly those three are missing. Now try the shift and see if words
+appear.</li>
+</ol>
+</section>
+<section id="words-to-know" class="level2">
+<h2>Words to know</h2>
+<ul>
+<li><strong>Ciphertext</strong>: the scrambled message.
+<strong>Plaintext</strong>: the original message.</li>
+<li><strong>Encoding</strong>: a fixed way of rewriting letters (Morse,
+binary) with no secret key.</li>
+<li><strong>Frequency</strong>: how often a letter appears, as a count
+or a percentage.</li>
+<li><strong>Factor</strong>: a whole number that divides another
+exactly; 5 is a factor of 165.</li>
+<li><strong>Index of coincidence (IoC)</strong>: the chance that two
+letters picked at random from a text are the same; about 0.067 for
+English and 0.038 for random letters.</li>
+<li><strong>Monoalphabetic</strong>: using one cipher alphabet
+throughout. <strong>Polyalphabetic</strong>: switching between
+several.</li>
+<li><strong>Transposition</strong>: a cipher that moves letters without
+changing them. <strong>Substitution</strong>: a cipher that changes
+letters without moving them.</li>
+<li><strong>Padding</strong>: extra letters added to make the length fit
+a grid.</li>
+</ul>
+</section>
+<section id="going-further" class="level2">
+<h2>Going further</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Index_of_coincidence">Index
+of coincidence</a> on Wikipedia.</li>
+<li><a href="https://en.wikipedia.org/wiki/Frequency_analysis">Frequency
+analysis</a> on Wikipedia.</li>
+<li><a
+href="http://practicalcryptography.com/cryptanalysis/letter-frequencies-various-languages/english-letter-frequencies/">Practical
+Cryptography: English letter frequencies</a>.</li>
+<li><a href="https://www.cipherchallenge.org/resources-media/">The
+National Cipher Challenge resources</a>, including the BOSS training
+lessons.</li>
+<li>Simon Singh, <em>The Code Book</em> (1999), and his <a
+href="https://simonsingh.net/The_Black_Chamber/">Black Chamber</a> site
+with interactive cipher tools.</li>
+</ul>
+</section>
+</section>

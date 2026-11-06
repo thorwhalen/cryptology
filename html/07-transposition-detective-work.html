@@ -1,0 +1,551 @@
+<section id="transposition-detective-work" class="level1">
+<h1>Transposition detective work</h1>
+<p><em>All the right letters, in all the wrong places</em></p>
+<p><strong>By the end you can tell, from counting letters, that a
+message has been scrambled rather than disguised, and you can unscramble
+the common kinds by hand: reversal, rail fence, columnar and block
+transposition.</strong></p>
+<section id="the-big-idea" class="level2">
+<h2>The big idea</h2>
+<p>There are two basic ways to hide a message. A
+<strong>substitution</strong> cipher swaps each letter for a different
+one, but leaves it in its place. A <strong>transposition</strong> cipher
+keeps every letter exactly as it is, but moves it somewhere else. It is
+an anagram of the whole message, made by following a rule. So a
+transposition leaves a giveaway fingerprint: the letter counts are
+exactly the counts of ordinary English. Lots of E and T, a few Z and Q.
+The ciphertext “looks English” letter by letter, but no words appear
+anywhere.</p>
+<figure>
+<img src="figures/07-frequencies.png"
+alt="Letter counts of a 274-letter ciphertext made by transposition follow the normal English line closely (E and T tall, J, Q, X and Z tiny), while the same message made by substitution has its bars shuffled: C, S and U tall, E and T almost empty." />
+<figcaption aria-hidden="true">Letter counts of a 274-letter ciphertext
+made by transposition follow the normal English line closely (E and T
+tall, J, Q, X and Z tiny), while the same message made by substitution
+has its bars shuffled: C, S and U tall, E and T almost
+empty.</figcaption>
+</figure>
+<p>Once you know it is a transposition, your job is detective work: work
+out the <strong>rule</strong> that moved the letters, and run it
+backward.</p>
+</section>
+<section id="which-ciphers-it-breaks" class="level2">
+<h2>Which ciphers it breaks</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Cipher</th>
+<th>Do these methods help?</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reversal</td>
+<td>Yes</td>
+<td>Read it backward.</td>
+</tr>
+<tr>
+<td>Rail fence</td>
+<td>Yes</td>
+<td>Try 2, 3, 4… rails; work out how many letters sit on each rail.</td>
+</tr>
+<tr>
+<td>Columnar transposition</td>
+<td>Yes</td>
+<td>Try widths that divide the length; cut into columns; slide them
+until rows read.</td>
+</tr>
+<tr>
+<td>Block (permutation) transposition</td>
+<td>Yes</td>
+<td>Same grid, but cut into rows instead of columns.</td>
+</tr>
+<tr>
+<td>Double transposition</td>
+<td>Partly</td>
+<td>Much harder: a computer search is usually needed.</td>
+</tr>
+<tr>
+<td>Substitution, Caesar, affine</td>
+<td>No</td>
+<td>The letter counts give them away as <em>not</em> transpositions
+(Guide 02, Frequency analysis).</td>
+</tr>
+<tr>
+<td>Vigenère, Playfair, Hill</td>
+<td>No</td>
+<td>Their letter counts are flatter than English (Guide 04 and Guide
+09).</td>
+</tr>
+<tr>
+<td>A substitution and a transposition together</td>
+<td>Partly</td>
+<td>Counts look like a substitution; solve that part with a computer
+search (Guide 08).</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="why-it-works" class="level2">
+<h2>Why it works</h2>
+<section id="spotting-a-transposition" class="level3">
+<h3>Spotting a transposition</h3>
+<p>Since a transposition only moves letters, anything you can measure by
+<strong>counting</strong> single letters stays exactly the same as in
+English. Here are the four tells.</p>
+<ol type="1">
+<li><strong>The letter counts match English.</strong> E is the most
+common, then T, A, O, I, N, S, H, R. J, Q, X and Z are rare or
+missing.</li>
+<li><strong>About 40 percent of the letters are vowels</strong> (A, E,
+I, O, U), as in English.</li>
+<li><strong>The index of coincidence</strong> (the chance that two
+letters picked at random from the text are the same) is about 0.067, the
+value for English. (Guide 04 explains it. A substitution also keeps this
+number, but a Vigenère cipher pushes it down toward 0.038.)</li>
+<li><strong>But nothing reads.</strong> No THE, no AND, no words at all.
+Or sometimes it reads backward.</li>
+</ol>
+<p>A neat extra clue: in English, Q is almost always followed by U. A
+transposition moves them apart, but it cannot remove the U. If the
+ciphertext has three Qs, it will have at least three Us.</p>
+</section>
+<section id="the-family-of-scrambles" class="level3">
+<h3>The family of scrambles</h3>
+<p><strong>Reversal.</strong> The simplest of all: write the message
+backward. <code>THGINOTSELDNACEROMDNES</code> is “send more candles
+tonight” backward. The tell: you see THE backward, as EHT, and common
+word endings such as ING appear as GNI.</p>
+<p><strong>Rail fence.</strong> Write the message in a zigzag across a
+few horizontal lines (the <strong>rails</strong>), then read each rail
+from left to right.</p>
+<figure>
+<img src="figures/07-rail-fence.png"
+alt="The plaintext THEOWLFLIESATMIDNIGHT written in a zigzag over three rails, colored by rail, and read off rail by rail to give TWITNT, HOLLEAMDIH and EFSIG." />
+<figcaption aria-hidden="true">The plaintext THEOWLFLIESATMIDNIGHT
+written in a zigzag over three rails, colored by rail, and read off rail
+by rail to give TWITNT, HOLLEAMDIH and EFSIG.</figcaption>
+</figure>
+<p>The key is just the number of rails, so there are only a handful to
+try. To undo it, you need to know how many letters landed on each rail.
+With 3 rails the zigzag repeats every 4 letters (down, down, up, up). Of
+our 21 letters, positions 1, 5, 9, 13, 17 and 21 are on rail 1 (6
+letters), positions 3, 7, 11, 15 and 19 are on rail 3 (5 letters), and
+the other 10 are on rail 2. So split the ciphertext
+<code>TWITNTHOLLEAMDIHEFSIG</code> into 6, 10 and 5 letters:
+<code>TWITNT</code>, <code>HOLLEAMDIH</code>, <code>EFSIG</code>. Write
+them back on their rails and read the zigzag.</p>
+<p><strong>Columnar transposition.</strong> Pick a keyword, such as
+TIGER. Write the message in rows under it, as many letters per row as
+the keyword has. Number the keyword’s letters in alphabetical order (E
+is 1, G is 2, I is 3, R is 4, T is 5). Then read down each column, in
+that number order.</p>
+<figure>
+<img src="figures/07-columnar-grid.png"
+alt="The message MEETTHEQUEEN… written in rows of five under the keyword TIGER, with column order 5 3 2 1 4; the columns are read in the order 1 to 5 to make the ciphertext TUTRANGA EQABEONM EENEGOIE TETITBTP MHEHDNRH." />
+<figcaption aria-hidden="true">The message MEETTHEQUEEN… written in rows
+of five under the keyword TIGER, with column order 5 3 2 1 4; the
+columns are read in the order 1 to 5 to make the ciphertext TUTRANGA
+EQABEONM EENEGOIE TETITBTP MHEHDNRH.</figcaption>
+</figure>
+<p><strong>Block transposition</strong> (also called a
+<strong>permutation cipher</strong>). Cut the message into blocks, say
+of 4 letters, and shuffle the letters inside every block the same way.
+With the shuffle “2nd, 4th, 1st, 3rd”,
+<code>LOOK UNDE RTHE BIGS TONE</code> becomes
+<code>OKLO NEUD TERH ISBG OETN</code>. Notice that this is really the
+same grid as columnar: write the message in rows of 4, and the shuffle
+moves whole columns. The only difference is that you read the result row
+by row instead of column by column.</p>
+<div class="in-app">
+<p><strong>In the app:</strong> The family tree shows the <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/transposition">transposition</a>
+family: <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/railfence">rail
+fence</a>, <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/columnar">columnar</a>,
+<a href="https://apps.thorwhalen.com/cryptology/#/tree/block">block</a>
+and <a
+href="https://apps.thorwhalen.com/cryptology/#/tree/reversal">reversal</a>.</p>
+</div>
+</section>
+</section>
+<section id="the-grown-up-version" class="level2">
+<h2>The grown-up version</h2>
+<section id="width-from-factors" class="level3">
+<h3>Width from factors</h3>
+<p>For a columnar or block transposition, the number of columns is
+called the <strong>width</strong> (or <strong>period</strong>). If the
+sender filled the grid completely (often adding filler letters such as X
+at the end), then the width times the number of rows equals the length
+of the message. So the width must be a <strong>factor</strong> (or
+<strong>divisor</strong>) of the length: a number that divides it with
+nothing left over.</p>
+<figure>
+<img src="figures/07-factors.png"
+alt="A 40-letter message can fill grids that are 2, 4, 5, 8 or 10 letters wide (2 by 20, 4 by 10, 5 by 8, 8 by 5, 10 by 4), because those are the factors of 40; the 5-wide grid is highlighted." />
+<figcaption aria-hidden="true">A 40-letter message can fill grids that
+are 2, 4, 5, 8 or 10 letters wide (2 by 20, 4 by 10, 5 by 8, 8 by 5, 10
+by 4), because those are the factors of 40; the 5-wide grid is
+highlighted.</figcaption>
+</figure>
+<p>Write the length
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+as a product of primes:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>40</mn><mo>=</mo><mn>2</mn><mo>×</mo><mn>2</mn><mo>×</mo><mn>2</mn><mo>×</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">40 = 2 \times 2 \times 2 \times 5</annotation></semantics></math>.
+Every factor is built from some of those primes: 2, 4, 5, 8, 10, 20.
+Widths of 1 or 40 would not scramble anything, and 20 would leave just
+two rows, so in practice you try 4, 5, 8 and 10 first. A prime length
+(such as 37 or 41) is a strong hint that the grid was
+<strong>not</strong> filled completely, and then the columns have two
+different heights (see Traps and tips).</p>
+</section>
+<section id="letter-contacts" class="level3">
+<h3>Letter contacts</h3>
+<p>Once the letters are in a grid of the right width, the columns are in
+the wrong order. Anagramming them uses <strong>contacts</strong>: pairs
+of letters that sit next to each other in English.</p>
+<ul>
+<li><strong>Q is followed by U.</strong> This is the strongest contact
+there is.</li>
+<li>Common pairs (<strong>digraphs</strong>): TH, HE, IN, ER, AN, RE,
+ON, AT, EN, ND, ST, ES.</li>
+<li>Impossible or very rare pairs: QX, JZ, HQ, any consonant
+tripled.</li>
+<li>Rare letters (J, K, Q, V, X, Z) are excellent anchors because they
+have very few partners.</li>
+</ul>
+</section>
+</section>
+<section id="a-worked-example" class="level2">
+<h2>A worked example</h2>
+<p>You receive this ciphertext (40 letters):</p>
+<pre><code>TUTRANGA EQABEONM EENEGOIE TETITBTP MHEHDNRH</code></pre>
+<p><strong>Step 1. Is it a transposition?</strong> Count the letters: E
+8, T 6, N 4, A 3, H 3, and B, G, I, M, O, R twice each, then D, P, Q and
+U once. E and T are the most common, as in English. There is no J, X or
+Z. The vowels are A (3), E (8), I (2), O (2), U (1): 16 of 40, exactly
+40 percent. The index of coincidence is 0.078, close to English’s 0.067
+(short texts wobble). And there is one Q and one U. Everything says
+English letters, but nothing reads. It is a transposition.</p>
+<p><strong>Step 2. Which widths?</strong> The length is 40, so try
+widths 4, 5, 8 and 10. Start with 5.</p>
+<p><strong>Step 3. Cut into strips.</strong> For a columnar
+transposition the ciphertext is the columns one after another. With
+width 5, there are 8 rows, so cut the ciphertext into 5 strips of 8
+letters. Call them A to E and stand them side by side.</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+<th>E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T</td>
+<td>E</td>
+<td>E</td>
+<td>T</td>
+<td>M</td>
+</tr>
+<tr>
+<td>U</td>
+<td>Q</td>
+<td>E</td>
+<td>E</td>
+<td>H</td>
+</tr>
+<tr>
+<td>T</td>
+<td>A</td>
+<td>N</td>
+<td>T</td>
+<td>E</td>
+</tr>
+<tr>
+<td>R</td>
+<td>B</td>
+<td>E</td>
+<td>I</td>
+<td>H</td>
+</tr>
+<tr>
+<td>A</td>
+<td>E</td>
+<td>G</td>
+<td>T</td>
+<td>D</td>
+</tr>
+<tr>
+<td>N</td>
+<td>O</td>
+<td>O</td>
+<td>B</td>
+<td>N</td>
+</tr>
+<tr>
+<td>G</td>
+<td>N</td>
+<td>I</td>
+<td>T</td>
+<td>R</td>
+</tr>
+<tr>
+<td>A</td>
+<td>M</td>
+<td>E</td>
+<td>P</td>
+<td>H</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 4. Use the Q.</strong> Strip B has Q in row 2. The only
+strip with U in row 2 is A. So strip A goes immediately to the right of
+strip B. Reading B then A down the rows gives the pairs ET, QU, AT, BR,
+EA, ON, NG, MA. Several of those are common English pairs. Good
+sign.</p>
+<p><strong>Step 5. Grow the chain to the right.</strong> What comes
+after A? Try each remaining strip:</p>
+<table>
+<thead>
+<tr>
+<th>B A + C</th>
+<th>B A + D</th>
+<th>B A + E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ETE</td>
+<td>ETT</td>
+<td>ETM</td>
+</tr>
+<tr>
+<td>QUE</td>
+<td>QUI</td>
+<td>QUH</td>
+</tr>
+<tr>
+<td>ATN</td>
+<td>ATT</td>
+<td>ATH</td>
+</tr>
+<tr>
+<td>BRE</td>
+<td>BRI</td>
+<td>BRH</td>
+</tr>
+<tr>
+<td>EAG</td>
+<td>EAT</td>
+<td>EAD</td>
+</tr>
+<tr>
+<td>ONO</td>
+<td>ONB</td>
+<td>ONN</td>
+</tr>
+<tr>
+<td>NGI</td>
+<td>NGT</td>
+<td>NGR</td>
+</tr>
+<tr>
+<td>MAE</td>
+<td>MAP</td>
+<td>MAH</td>
+</tr>
+</tbody>
+</table>
+<p>QUH is impossible, which rules out E. Between C and D, D gives QUI,
+BRI, EAT and MAP, which look like pieces of words, so try D.</p>
+<p><strong>Step 6. Place the last two.</strong> C and E are left, and
+they go on the left. Try E then C, then C then E:</p>
+<ul>
+<li>E C B A D: MEETT, HEQUE, ENATT, HEBRI, DGEAT, NOONB, RINGT,
+HEMAP</li>
+<li>C E B A D: EMETT, EHQUE, … which puts H before Q, impossible.</li>
+</ul>
+<p>So the order is E C B A D. Read the rows:
+<code>meett hequee natth ebrid geatn oonbr ingth emap</code>, which is
+“meet the queen at the bridge at noon bring the map”.</p>
+<figure>
+<img src="figures/07-strips.png"
+alt="On the left, the ciphertext cut into five strips of eight letters labeled A to E; on the right, the strips slid into the order E C B A D so the rows read MEETT HEQUE ENATT HEBRI…, with the row containing Q and U outlined." />
+<figcaption aria-hidden="true">On the left, the ciphertext cut into five
+strips of eight letters labeled A to E; on the right, the strips slid
+into the order E C B A D so the rows read MEETT HEQUE ENATT HEBRI…, with
+the row containing Q and U outlined.</figcaption>
+</figure>
+<p><strong>Step 7 (bonus). Recover the key.</strong> The strips were
+read in the order A, B, C, D, E, which were columns 4, 3, 2, 5, 1 of the
+plaintext grid. So the column numbers across the top were 5, 3, 2, 1, 4.
+A keyword with that alphabetical order is TIGER. You do not need the
+keyword to read the message, but finding it can help with the next
+message, which might use the same one.</p>
+<div class="in-app">
+<p><strong>In the app:</strong> <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/columns">Columns</a>
+writes your text into a grid of the width you choose; tap one column,
+then another, to swap them. <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/blocks">Blocks</a>
+does the same for short blocks, and <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/rail">Rail
+fence</a> reads the text along a zigzag of the rails you choose.</p>
+</div>
+</section>
+<section id="double-transposition-a-harder-note" class="level2">
+<h2>Double transposition: a harder note</h2>
+<p>A <strong>double transposition</strong> does a columnar transposition
+and then another one on the result, often with a second keyword. The
+letter counts still match English, so the tells are the same. But after
+two scrambles, the strips no longer line up into simple rows, and
+anagramming by hand becomes very hard. Armies used it for exactly that
+reason, into the Second World War. To break it you usually need a long
+message and a computer search over both keys at once, scored the way
+Guide 08 (Scoring and hill climbing) explains.</p>
+</section>
+<section id="when-to-try-it" class="level2">
+<h2>When to try it</h2>
+<ul>
+<li>The letter counts look like English, but nothing reads.</li>
+<li>The ciphertext has a Q with no U next to it, or THE appears backward
+as EHT.</li>
+<li>The length has handy factors (40, 48, 60, 72…), especially if it
+ends in a few Xs.</li>
+<li>Reach for the rail fence first (only a few keys), then reversal,
+then columnar widths in order.</li>
+</ul>
+<p><strong>When not to:</strong> if E and T are not near the top of your
+counts, or Z or Q are suspiciously common, it is not a pure
+transposition. Try substitution first.</p>
+</section>
+<section id="traps-and-tips" class="level2">
+<h2>Traps and tips</h2>
+<ul>
+<li><strong>Short texts wobble.</strong> In 40 letters, E might come
+third instead of first. Look at the overall shape (common letters
+common, rare letters rare), not the exact order.</li>
+<li><strong>Incomplete grids.</strong> If the last row was not filled,
+the leftmost columns of the plaintext grid are one letter longer than
+the rest. Then the strips are not all the same length. With 42 letters
+in width 5, two columns have 9 letters and three have 8: you must guess
+which strips are the long ones.</li>
+<li><strong>Filler letters.</strong> Senders often pad the last row with
+X or other nulls. A few Xs in a row near the end of a decryption are
+padding, not a mistake.</li>
+<li><strong>Columnar or block?</strong> Try both: cut the ciphertext
+into columns (vertical strips) and also into rows of the same width.
+Only one will anagram into English.</li>
+<li><strong>Use squared paper and scissors.</strong> Write the strips on
+squared paper, cut them out and slide them around. It is much faster
+than rewriting.</li>
+<li><strong>Start from rare letters.</strong> Q, J, X, Z and V have few
+partners, so they pin down neighbors quickly.</li>
+<li><strong>Word spaces are gone.</strong> Real messages lose their
+spaces and punctuation before being scrambled, so read through the gaps:
+<code>MEETTHEQUEEN</code> is three words.</li>
+</ul>
+</section>
+<section id="try-it-yourself" class="level2">
+<h2>Try it yourself</h2>
+<ol type="1">
+<li>This message was written on 3 rails: <code>MMMIETETINGTEADH</code>
+(16 letters). How many letters are on each rail? What does it say?</li>
+<li>A transposition ciphertext has 36 letters. Which widths should you
+try?</li>
+<li>Is this a transposition?
+<code>TLLAA OLXBL LUHAA OLIYP KNLHA UVVUI YPUNA OLTHW</code>. (Hint:
+count E and L.)</li>
+<li>This columnar transposition has width 3:
+<code>OUEHAONRETLKDTM</code>. Cut it into 3 strips of 5 and find the
+order that reads.</li>
+</ol>
+<div class="in-app">
+<p><strong>In the app:</strong> Practice with <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/columnar/1">Columnar
+transposition</a>, <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/block/1">Block
+transposition</a> and <a
+href="https://apps.thorwhalen.com/cryptology/#/ex/rail/1">Rail
+fence</a>.</p>
+</div>
+</section>
+<section id="answers" class="level2">
+<h2>Answers</h2>
+<ol type="1">
+<li>The zigzag repeats every 4 letters. Rail 1 gets positions 1, 5, 9,
+13 (4 letters), rail 3 gets positions 3, 7, 11, 15 (4 letters), and rail
+2 the other 8. Split: <code>MMMI</code>, <code>ETETINGT</code>,
+<code>EADH</code>. Read the zigzag: “meet me at midnight”.</li>
+<li>The factors of 36 are 2, 3, 4, 6, 9, 12 and 18. Try 4, 6 and 9
+first, then 3 and 12.</li>
+<li>No. There is no E at all, and L (rare-ish in English) appears 8
+times in 40 letters. The letters themselves have been changed, so it is
+a substitution. (It is a Caesar shift of 7: L stands for E. It is the
+worked example’s message again.)</li>
+<li>The strips are <code>OUEHA</code>, <code>ONRET</code> and
+<code>LKDTM</code>. Order 3, 1, 2 gives rows LOO, KUN, DER, THE, MAT:
+“look under the mat”.</li>
+</ol>
+</section>
+<section id="words-to-know" class="level2">
+<h2>Words to know</h2>
+<ul>
+<li><strong>Transposition</strong>: a cipher that keeps the letters but
+changes their order.</li>
+<li><strong>Substitution</strong>: a cipher that changes the letters but
+keeps their order.</li>
+<li><strong>Reversal</strong>: writing the message backward.</li>
+<li><strong>Rail fence</strong>: writing the message in a zigzag across
+rails and reading each rail.</li>
+<li><strong>Columnar transposition</strong>: writing in rows under a
+keyword and reading the columns in keyword order.</li>
+<li><strong>Block (permutation) transposition</strong>: shuffling the
+letters inside each block of fixed size the same way.</li>
+<li><strong>Width (period)</strong>: the number of columns in the grid,
+or the size of each block.</li>
+<li><strong>Factor (divisor)</strong>: a number that divides another
+with nothing left over.</li>
+<li><strong>Contact</strong>: two letters that sit next to each other in
+the text.</li>
+<li><strong>Digraph</strong>: a pair of letters, such as TH.</li>
+<li><strong>Anagramming</strong>: rearranging letters (or columns) until
+words appear.</li>
+<li><strong>Null (padding)</strong>: a meaningless letter added to fill
+a grid.</li>
+<li><strong>Double transposition</strong>: two transpositions, one after
+the other.</li>
+</ul>
+</section>
+<section id="going-further" class="level2">
+<h2>Going further</h2>
+<ul>
+<li><a
+href="http://practicalcryptography.com/ciphers/classical-era/rail-fence/">Practical
+Cryptography: Rail fence cipher</a></li>
+<li><a
+href="http://practicalcryptography.com/ciphers/classical-era/columnar-transposition/">Practical
+Cryptography: Columnar transposition cipher</a></li>
+<li><a
+href="https://en.wikipedia.org/wiki/Transposition_cipher">Wikipedia:
+Transposition cipher</a> (includes double transposition)</li>
+<li><a href="https://en.wikipedia.org/wiki/Rail_fence_cipher">Wikipedia:
+Rail fence cipher</a></li>
+<li>Simon Singh, <em>The Code Book</em> (1999), chapter 1, for
+transposition in history.</li>
+<li><a href="https://www.cipherchallenge.org/">The National Cipher
+Challenge</a> for practice ciphertexts.</li>
+</ul>
+</section>
+</section>
