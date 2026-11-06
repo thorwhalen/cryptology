@@ -301,7 +301,11 @@ def finish(page: Page) -> Workbook:
     ws.column_dimensions["B"].width = LINE_WIDTH + 10
     put(ws, "A1", "Result", bold=True, fill=FILL_HEAD)
     put(ws, "B1", f"Value (computed on the {page.name} tab)", bold=True, fill=FILL_HEAD)
-    for i, (label, ref) in enumerate(page.results, start=2):
+    def first_lines_first(item) -> int:
+        label = item[0]
+        return 0 if label.endswith("(line 1)") else 2 if "(line " in label else 1
+
+    for i, (label, ref) in enumerate(sorted(page.results, key=first_lines_first), start=2):
         put(ws, f"A{i}", label, size=SIZE_SMALL + 1)
         put(ws, f"B{i}", f"={q(page.name)}{ref}", size=SIZE_SMALL + 1, mono=True, align="left")
     return page.wb
