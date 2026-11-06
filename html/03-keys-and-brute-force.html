@@ -535,6 +535,70 @@ test it on a third common letter before decrypting everything. If that
 letter decrypts sensibly, you are on track.</li>
 </ul>
 </section>
+<section id="by-hand-or-by-computer" class="level2">
+<h2>By hand or by computer</h2>
+<p>Brute force is the clearest case of all: trying every key is exactly
+the job a machine does best. Do each job by hand once, on a short text,
+so you know what it involves; then hand it over (the chapter <em>Brain,
+pencil or computer?</em> explains why<a href="#fn1" class="footnote-ref"
+id="fnref1" role="doc-noteref"><sup>1</sup></a>). Times are rough, for a
+practiced reader and a ciphertext of about 300 letters.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Job</th>
+<th>By hand</th>
+<th>Learn with</th>
+<th>Just do it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Try all 26 Caesar shifts</td>
+<td>25 to 50 minutes</td>
+<td>Caesar<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>, Caesar sheet<a href="#fn3"
+class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a></td>
+<td>dCode<a href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a></td>
+</tr>
+<tr>
+<td>Try all 312 affine keys</td>
+<td>many hours</td>
+<td>Affine<a href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a>, affine sheet<a href="#fn6"
+class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a></td>
+<td>dCode<a href="#fn7" class="footnote-ref" id="fnref7"
+role="doc-noteref"><sup>7</sup></a></td>
+</tr>
+<tr>
+<td>Solve the two equations for an affine key</td>
+<td>5 to 10 minutes</td>
+<td>Affine<a href="#fn8" class="footnote-ref" id="fnref8"
+role="doc-noteref"><sup>8</sup></a>, affine sheet<a href="#fn9"
+class="footnote-ref" id="fnref9"
+role="doc-noteref"><sup>9</sup></a></td>
+<td>dCode<a href="#fn10" class="footnote-ref" id="fnref10"
+role="doc-noteref"><sup>10</sup></a></td>
+</tr>
+<tr>
+<td>Find an inverse mod 26</td>
+<td>2 to 5 minutes</td>
+<td>affine sheet<a href="#fn11" class="footnote-ref" id="fnref11"
+role="doc-noteref"><sup>11</sup></a></td>
+<td>n/a</td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="try-it-yourself" class="level2">
 <h2>Try it yourself</h2>
 <ol type="1">
@@ -661,4 +725,51 @@ lessons.</li>
 keys is not the same as a secure cipher.</li>
 </ul>
 </section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a
+href="https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer">Brain,
+pencil or computer?</a>, the chapter before Guide 1.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Caesar, in the cryptology app: <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/caesar">apps.thorwhalen.com/cryptology/#/workbench/caesar</a>.
+Its Scores view scores all 26 shifts at once.<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Caesar shifts and chi-squared, a spreadsheet: <a
+href="https://apps.thorwhalen.com/cryptology/#/tools/sheet-caesar">apps.thorwhalen.com/cryptology/#/tools/sheet-caesar</a>,
+to copy into Google Sheets or download for Excel.<a href="#fnref3"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>dCode’s Caesar solver: <a
+href="https://www.dcode.fr/caesar-cipher">dcode.fr/caesar-cipher</a>.<a
+href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Affine, in the cryptology app: <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/affine">apps.thorwhalen.com/cryptology/#/workbench/affine</a>.
+Dials for a and b, and the multiplier wheel.<a href="#fnref5"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Affine keys and inverses, a spreadsheet: <a
+href="https://apps.thorwhalen.com/cryptology/#/tools/sheet-affine">apps.thorwhalen.com/cryptology/#/tools/sheet-affine</a>,
+to copy into Google Sheets or download for Excel.<a href="#fnref6"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>dCode’s affine solver: <a
+href="https://www.dcode.fr/affine-cipher">dcode.fr/affine-cipher</a>.<a
+href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Affine, in the cryptology app: <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/affine">apps.thorwhalen.com/cryptology/#/workbench/affine</a>.
+Dials for a and b, and the multiplier wheel.<a href="#fnref8"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Affine keys and inverses, a spreadsheet: <a
+href="https://apps.thorwhalen.com/cryptology/#/tools/sheet-affine">apps.thorwhalen.com/cryptology/#/tools/sheet-affine</a>,
+to copy into Google Sheets or download for Excel.<a href="#fnref9"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>dCode’s affine solver: <a
+href="https://www.dcode.fr/affine-cipher">dcode.fr/affine-cipher</a>.<a
+href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Affine keys and inverses, a spreadsheet: <a
+href="https://apps.thorwhalen.com/cryptology/#/tools/sheet-affine">apps.thorwhalen.com/cryptology/#/tools/sheet-affine</a>,
+to copy into Google Sheets or download for Excel.<a href="#fnref11"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>

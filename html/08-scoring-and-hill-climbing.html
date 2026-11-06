@@ -452,6 +452,60 @@ everywhere.</li>
 not that you need more restarts.</li>
 </ul>
 </section>
+<section id="by-hand-or-by-computer" class="level2">
+<h2>By hand or by computer</h2>
+<p>This guide is about the methods computers use, so the honest answer
+is: do one or two steps by hand to see the idea, then let the program
+run thousands. Do each job by hand once, on a short text, so you know
+what it involves; then hand it over (the chapter <em>Brain, pencil or
+computer?</em> explains why<a href="#fn1" class="footnote-ref"
+id="fnref1" role="doc-noteref"><sup>1</sup></a>). Times are rough, for a
+practiced reader and a ciphertext of about 300 letters.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Job</th>
+<th>By hand</th>
+<th>Learn with</th>
+<th>Just do it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Score one text with quadgrams</td>
+<td>20 minutes or more</td>
+<td>n/a</td>
+<td>CrypTool 2<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a></td>
+</tr>
+<tr>
+<td>One hill-climbing step: swap two letters and rescore</td>
+<td>5 to 10 minutes</td>
+<td>Substitution<a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a>, substitution sheet<a href="#fn4"
+class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a></td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>A full hill climb or simulated annealing</td>
+<td>thousands of steps: impossible by hand</td>
+<td>n/a</td>
+<td>quipqiup<a href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a>, Guballa<a href="#fn6"
+class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>,
+CrypTool 2<a href="#fn7" class="footnote-ref" id="fnref7"
+role="doc-noteref"><sup>7</sup></a></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="try-it-yourself" class="level2">
 <h2>Try it yourself</h2>
 <ol type="1">
@@ -553,6 +607,12 @@ falls.</li>
 <section id="going-further" class="level2">
 <h2>Going further</h2>
 <ul>
+<li>Video: <a href="https://www.youtube.com/watch?v=oSdPmxRCWws">Hill
+Climbing Algorithm &amp; Artificial Intelligence</a>, Computerphile, 7
+minutes (the idea in general).</li>
+<li>Video: <a href="https://www.youtube.com/watch?v=RB5rDdEAF7U">Basics
+of Cryptology, Part 8: Hill Climbing</a>, Cryptography for Everybody
+(CrypTool), 22 minutes (for strong readers and adults).</li>
 <li><a
 href="http://practicalcryptography.com/cryptanalysis/text-characterisation/quadgrams/">Practical
 Cryptography: quadgram statistics as a fitness measure</a> (with a
@@ -573,4 +633,36 @@ ciphers these methods break.</li>
 Challenge</a> for practice ciphertexts of every kind.</li>
 </ul>
 </section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a
+href="https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer">Brain,
+pencil or computer?</a>, the chapter before Guide 1.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>CrypTool 2, a free learning environment with real
+attacks (Windows): <a
+href="https://www.cryptool.org/en/ct2/">cryptool.org/en/ct2</a>.<a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Substitution, in the cryptology app: <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/substitution">apps.thorwhalen.com/cryptology/#/workbench/substitution</a>.
+You choose the letters; it fills in the text.<a href="#fnref3"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Substitution key and partial decrypt, a spreadsheet: <a
+href="https://apps.thorwhalen.com/cryptology/#/tools/sheet-substitution">apps.thorwhalen.com/cryptology/#/tools/sheet-substitution</a>,
+to copy into Google Sheets or download for Excel.<a href="#fnref4"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>quipqiup, a substitution solver: <a
+href="https://quipqiup.com/">quipqiup.com</a>.<a href="#fnref5"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Guballa’s substitution solver: <a
+href="https://www.guballa.de/substitution-solver">guballa.de/substitution-solver</a>.<a
+href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>CrypTool 2, a free learning environment with real
+attacks (Windows): <a
+href="https://www.cryptool.org/en/ct2/">cryptool.org/en/ct2</a>.<a
+href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>

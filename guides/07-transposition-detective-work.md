@@ -154,6 +154,27 @@ A **double transposition** does a columnar transposition and then another one on
 - **Start from rare letters.** Q, J, X, Z and V have few partners, so they pin down neighbors quickly.
 - **Word spaces are gone.** Real messages lose their spaces and punctuation before being scrambled, so read through the gaps: `MEETTHEQUEEN` is three words.
 
+## By hand or by computer
+
+With transposition, the counts say what you face in seconds; the rearranging is where the hours go. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g07-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters.
+
+| Job | By hand | Learn with | Just do it |
+|---|---|---|---|
+| List the possible widths from the length | 2 minutes | Counts[^g07-counts] | n/a |
+| Write the text in a grid and move the columns | 10 to 20 minutes a width | Columns[^g07-columns], grid sheet[^g07-sheet-columnar] | dCode[^g07-dcode-columnar] |
+| Try rail fences of 2 to 6 rails | about 5 minutes a rail count | Rail fence[^g07-rail] | dCode[^g07-dcode-rail] |
+| Try every order of a block of 5 | 120 orders: hours | Blocks[^g07-blocks] | dCode[^g07-dcode-transposition] |
+
+[^g07-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
+[^g07-counts]: Counts, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts). Letter counts beside English's, the IoC, the length and its factors.
+[^g07-columns]: Columns, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/columns](https://apps.thorwhalen.com/cryptology/#/workbench/columns). Any width; tap two columns to swap them.
+[^g07-sheet-columnar]: Columnar grid, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-columnar](https://apps.thorwhalen.com/cryptology/#/tools/sheet-columnar), to copy into Google Sheets or download for Excel.
+[^g07-dcode-columnar]: dCode's columnar transposition solver: [dcode.fr/columnar-transposition-cipher](https://www.dcode.fr/columnar-transposition-cipher).
+[^g07-rail]: Rail fence, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/rail](https://apps.thorwhalen.com/cryptology/#/workbench/rail).
+[^g07-dcode-rail]: dCode's rail fence solver: [dcode.fr/rail-fence-cipher](https://www.dcode.fr/rail-fence-cipher).
+[^g07-blocks]: Blocks, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/blocks](https://apps.thorwhalen.com/cryptology/#/workbench/blocks). Rearranges every block the same way.
+[^g07-dcode-transposition]: dCode's transposition solver: [dcode.fr/transposition-cipher](https://www.dcode.fr/transposition-cipher).
+
 ## Try it yourself
 
 1. This message was written on 3 rails: `MMMIETETINGTEADH` (16 letters). How many letters are on each rail? What does it say?

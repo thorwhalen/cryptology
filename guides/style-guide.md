@@ -19,9 +19,14 @@ These guides teach cryptanalysis (breaking ciphers) to very smart 11 to 13 year 
 6. **A worked example**, start to finish, on a short ciphertext you make up yourself (original text only; never copy a competition's text). Show every number the reader would compute. Check your arithmetic with code before you write it down.
 7. **When to try it** (the signals that say "reach for this now") and **when not to**.
 8. **Traps and tips**: what goes wrong with short texts, unusual texts, names, missing spaces.
-9. **Try it yourself**: two or three small exercises, with answers at the end of the guide.
-10. **Words to know**: a small glossary of the terms the guide introduced (one line each).
-11. **Going further**: a few links (Wikipedia, Practical Cryptography, Simon Singh's The Code Book, Cipher Challenge resources), as `[name](url)` links.
+9. **By hand or by computer**: a table of the method's mechanical jobs (job, rough time by hand for a practiced reader and about 300 letters, tools to learn with, tools that just do it). Learn-with tools are the app's tools and exercises and the spreadsheets in `sheets/`; just-do-it tools are solvers. Every tool is a footnote (`[^gNN-key]`, labels unique across the book), never an inline link, so the prose keeps its flow. Open with one sentence on which part of this method is judgement worth keeping, and point to the chapter *Brain, pencil or computer?*.
+10. **Try it yourself**: two or three small exercises, with answers at the end of the guide.
+11. **Words to know**: a small glossary of the terms the guide introduced (one line each).
+12. **Going further**: a few links (Wikipedia, Practical Cryptography, Simon Singh's The Code Book, Cipher Challenge resources), as `[name](url)` links.
+
+## The stance on tools
+
+The author's view, which every guide follows: do each mechanical job by hand once, so the reader knows what the machine does; after that, hand it to the machine and spend the time on judgement and the bird's-eye view. Teach the method the classical way, and always say which tool relieves the reader of the low bang-for-the-buck part. Deskilling is a real cost, and so is refusing a tool. The full argument is `book/brain-pencil-or-computer.md`. The guides are about learning cryptanalysis, not about any one competition: never put a competition's tool rules in a guide (they belong on that competition's page in the app).
 
 Aim for 1,800 to 3,500 words. A video narrator should be able to read any section aloud and have it make sense.
 

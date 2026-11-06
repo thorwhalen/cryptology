@@ -28,6 +28,10 @@
      "heading": "How the book is built"
     },
     {
+     "id": "brain-pencil-or-computer",
+     "heading": "Brain, pencil or computer?"
+    },
+    {
      "id": "which-order-to-read-them-in",
      "heading": "Which order to read them in"
     },
@@ -36,15 +40,78 @@
      "heading": "The app that goes with it"
     },
     {
-     "id": "a-word-about-competitions",
-     "heading": "A word about competitions"
-    },
-    {
      "id": "for-the-adult-helping",
      "heading": "For the adult helping"
     }
    ],
    "words": []
+  },
+  {
+   "id": "00-brain-pencil-or-computer",
+   "number": 0,
+   "title": "Brain, pencil or computer?",
+   "subtitle": "Which parts of codebreaking to do by hand, which to hand over, and what each choice costs",
+   "pdf": null,
+   "sections": [
+    {
+     "id": "long-division",
+     "heading": "Long division"
+    },
+    {
+     "id": "every-old-way-was-once-a-new-technology",
+     "heading": "Every old way was once a new technology"
+    },
+    {
+     "id": "codebreakers-have-always-used-machines",
+     "heading": "Codebreakers have always used machines"
+    },
+    {
+     "id": "so-why-learn-any-of-it",
+     "heading": "So why learn any of it?"
+    },
+    {
+     "id": "what-a-tool-costs",
+     "heading": "What a tool costs"
+    },
+    {
+     "id": "how-this-book-helps-you-choose",
+     "heading": "How this book helps you choose"
+    },
+    {
+     "id": "for-the-adults",
+     "heading": "For the adults"
+    },
+    {
+     "id": "words-to-know",
+     "heading": "Words to know"
+    },
+    {
+     "id": "references",
+     "heading": "References"
+    }
+   ],
+   "words": [
+    {
+     "term": "Deskilling",
+     "definition": "losing a skill because a tool now does that job for you."
+    },
+    {
+     "term": "Upskilling",
+     "definition": "learning a new skill, often in the time a tool has freed."
+    },
+    {
+     "term": "Solver",
+     "definition": "a program that takes a ciphertext and returns the answer."
+    },
+    {
+     "term": "Bombe",
+     "definition": "the machine Alan Turing designed at Bletchley Park to find Enigma settings."
+    },
+    {
+     "term": "Colossus",
+     "definition": "one of the first electronic computers, built by Tommy Flowers at Bletchley Park to break the Lorenz cipher."
+    }
+   ]
   },
   {
    "id": "01-reading-the-clues",
@@ -88,6 +155,10 @@
     {
      "id": "traps-and-tips",
      "heading": "Traps and tips"
+    },
+    {
+     "id": "by-hand-or-by-computer",
+     "heading": "By hand or by computer"
     },
     {
      "id": "try-it-yourself",
@@ -181,6 +252,10 @@
      "heading": "Traps and tips"
     },
     {
+     "id": "by-hand-or-by-computer",
+     "heading": "By hand or by computer"
+    },
+    {
      "id": "try-it-yourself",
      "heading": "Try it yourself"
     },
@@ -262,6 +337,10 @@
     {
      "id": "traps-and-tips",
      "heading": "Traps and tips"
+    },
+    {
+     "id": "by-hand-or-by-computer",
+     "heading": "By hand or by computer"
     },
     {
      "id": "try-it-yourself",
@@ -357,6 +436,10 @@
     {
      "id": "traps-and-tips",
      "heading": "Traps and tips"
+    },
+    {
+     "id": "by-hand-or-by-computer",
+     "heading": "By hand or by computer"
     },
     {
      "id": "try-it-yourself",
@@ -456,6 +539,10 @@
     {
      "id": "traps-and-tips",
      "heading": "Traps and tips"
+    },
+    {
+     "id": "by-hand-or-by-computer",
+     "heading": "By hand or by computer"
     },
     {
      "id": "try-it-yourself",
@@ -577,6 +664,10 @@
      "heading": "Traps and tips"
     },
     {
+     "id": "by-hand-or-by-computer",
+     "heading": "By hand or by computer"
+    },
+    {
      "id": "try-it-yourself",
      "heading": "Try it yourself"
     },
@@ -666,6 +757,10 @@
     {
      "id": "traps-and-tips",
      "heading": "Traps and tips"
+    },
+    {
+     "id": "by-hand-or-by-computer",
+     "heading": "By hand or by computer"
     },
     {
      "id": "try-it-yourself",
@@ -779,6 +874,10 @@
      "heading": "Traps and tips"
     },
     {
+     "id": "by-hand-or-by-computer",
+     "heading": "By hand or by computer"
+    },
+    {
      "id": "try-it-yourself",
      "heading": "Try it yourself"
     },
@@ -876,6 +975,10 @@
     {
      "id": "traps-and-tips",
      "heading": "Traps and tips"
+    },
+    {
+     "id": "by-hand-or-by-computer",
+     "heading": "By hand or by computer"
     },
     {
      "id": "try-it-yourself",

@@ -208,6 +208,27 @@ AG. The fourth pair UD, $(20, 3)$, gives $186 \equiv 4$ (E) and $65 \equiv 13$ (
 - **Even determinants are impossible.** If your Hill key comes out with an even determinant (or 13), it cannot be a real key: the crib or its position is wrong.
 - **Choose cribs with an A.** Since A = 0, a crib containing A makes some equations very simple, as in the worked example.
 
+## By hand or by computer
+
+The tells of a pair cipher take minutes to check; breaking one without a crib is a job for a program. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g09-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters.
+
+| Job | By hand | Learn with | Just do it |
+|---|---|---|---|
+| Check the tells: even length, no doubled pair, no J | 5 minutes | Counts[^g09-counts], pairs sheet[^g09-sheet-digraphs] | Boxentriq[^g09-boxentriq] |
+| Count the letter pairs | 30 minutes or more | pairs sheet[^g09-sheet-digraphs] | dCode[^g09-dcode-freq] |
+| Solve a 2 x 2 Hill cipher from a crib | 15 to 20 minutes, with care | Hill sheet[^g09-sheet-hill] | dCode[^g09-dcode-hill] |
+| Break a Playfair with no crib | hours, if at all | n/a | dCode[^g09-dcode-playfair], CrypTool 2[^g09-cryptool2] |
+
+[^g09-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
+[^g09-counts]: Counts, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts). Letter counts beside English's, the IoC, the length and its factors.
+[^g09-sheet-digraphs]: Letter pairs and the Playfair tells, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-digraphs](https://apps.thorwhalen.com/cryptology/#/tools/sheet-digraphs), to copy into Google Sheets or download for Excel.
+[^g09-boxentriq]: Boxentriq's cipher identifier: [boxentriq.com/code-breaking/cipher-identifier](https://www.boxentriq.com/code-breaking/cipher-identifier).
+[^g09-dcode-freq]: dCode's frequency analysis: [dcode.fr/frequency-analysis](https://www.dcode.fr/frequency-analysis).
+[^g09-sheet-hill]: Hill 2 x 2: determinant, inverse and decryption mod 26, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-hill](https://apps.thorwhalen.com/cryptology/#/tools/sheet-hill), to copy into Google Sheets or download for Excel.
+[^g09-dcode-hill]: dCode's Hill solver: [dcode.fr/hill-cipher](https://www.dcode.fr/hill-cipher).
+[^g09-dcode-playfair]: dCode's Playfair solver: [dcode.fr/playfair-cipher](https://www.dcode.fr/playfair-cipher).
+[^g09-cryptool2]: CrypTool 2, a free learning environment with real attacks (Windows): [cryptool.org/en/ct2](https://www.cryptool.org/en/ct2/).
+
 ## Try it yourself
 
 1. Decode this Polybius message (standard square, as in the picture): `22 34 34 14 31 45 13 25`.
@@ -242,6 +263,7 @@ AG. The fourth pair UD, $(20, 3)$, gives $186 \equiv 4$ (E) and $65 \equiv 13$ (
 
 ## Going further
 
+- Video: [Break a Playfair Cipher](https://www.youtube.com/watch?v=g6KlCvrcIys), Cryptography for Everybody (CrypTool), 14 minutes.
 - [Practical Cryptography: Playfair cipher](http://practicalcryptography.com/ciphers/classical-era/playfair/)
 - [Practical Cryptography: Hill cipher](http://practicalcryptography.com/ciphers/classical-era/hill/)
 - [Practical Cryptography: ADFGVX cipher](http://practicalcryptography.com/ciphers/classical-era/adfgvx/)

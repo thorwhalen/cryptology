@@ -173,6 +173,23 @@ The beautiful part is that only two things change from cipher to cipher: **what 
 - **Strip everything but letters** before scoring, or make sure spaces and punctuation are handled the same way everywhere.
 - **A score that never gets near English** (stuck around -6 per quadgram whatever you do) usually means the cipher type is wrong, not that you need more restarts.
 
+## By hand or by computer
+
+This guide is about the methods computers use, so the honest answer is: do one or two steps by hand to see the idea, then let the program run thousands. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g08-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters.
+
+| Job | By hand | Learn with | Just do it |
+|---|---|---|---|
+| Score one text with quadgrams | 20 minutes or more | n/a | CrypTool 2[^g08-cryptool2] |
+| One hill-climbing step: swap two letters and rescore | 5 to 10 minutes | Substitution[^g08-substitution], substitution sheet[^g08-sheet-substitution] | n/a |
+| A full hill climb or simulated annealing | thousands of steps: impossible by hand | n/a | quipqiup[^g08-quipqiup], Guballa[^g08-guballa-sub], CrypTool 2[^g08-cryptool2] |
+
+[^g08-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
+[^g08-cryptool2]: CrypTool 2, a free learning environment with real attacks (Windows): [cryptool.org/en/ct2](https://www.cryptool.org/en/ct2/).
+[^g08-substitution]: Substitution, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/substitution](https://apps.thorwhalen.com/cryptology/#/workbench/substitution). You choose the letters; it fills in the text.
+[^g08-sheet-substitution]: Substitution key and partial decrypt, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-substitution](https://apps.thorwhalen.com/cryptology/#/tools/sheet-substitution), to copy into Google Sheets or download for Excel.
+[^g08-quipqiup]: quipqiup, a substitution solver: [quipqiup.com](https://quipqiup.com/).
+[^g08-guballa-sub]: Guballa's substitution solver: [guballa.de/substitution-solver](https://www.guballa.de/substitution-solver).
+
 ## Try it yourself
 
 1. Using the idea "count the tens": what is $\log_{10} 100$? What is $\log_{10} 0.0001$? Use logs to find $0.01 \times 0.001 \times 0.1$.
@@ -205,6 +222,8 @@ The beautiful part is that only two things change from cipher to cipher: **what 
 
 ## Going further
 
+- Video: [Hill Climbing Algorithm & Artificial Intelligence](https://www.youtube.com/watch?v=oSdPmxRCWws), Computerphile, 7 minutes (the idea in general).
+- Video: [Basics of Cryptology, Part 8: Hill Climbing](https://www.youtube.com/watch?v=RB5rDdEAF7U), Cryptography for Everybody (CrypTool), 22 minutes (for strong readers and adults).
 - [Practical Cryptography: quadgram statistics as a fitness measure](http://practicalcryptography.com/cryptanalysis/text-characterisation/quadgrams/) (with a downloadable quadgram table)
 - [Practical Cryptography: breaking a substitution cipher by hill climbing](http://practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-simple-substitution-cipher/)
 - [Wikipedia: Hill climbing](https://en.wikipedia.org/wiki/Hill_climbing)

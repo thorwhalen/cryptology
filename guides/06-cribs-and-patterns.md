@@ -280,6 +280,25 @@ In this made-up example, 5 of the 15 positions are ruled out at once. On real me
 - **Which way round?** Some puzzles write the keyword alphabet as the *plain* row instead of the cipher row. If no keyword appears in the cipher row, look in the other direction.
 - **Padding in transpositions.** Extra letters like `X` at the end can create stray pairs. Do not let a single pair decide the width.
 
+## By hand or by computer
+
+A good crib comes from thinking about the message; checking it at every position is mechanical. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g06-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters.
+
+| Job | By hand | Learn with | Just do it |
+|---|---|---|---|
+| Look up a word's letter pattern | 5 to 15 minutes a word, with a word list | Pattern words[^g06-patterns] | quipqiup[^g06-quipqiup] |
+| Drag a crib along a Vigenère text | about a minute a position, for hundreds of positions | Vigenère[^g06-vigenere] | dCode[^g06-dcode-vigenere] |
+| Rebuild a keyword alphabet from the key | 10 minutes | Substitution[^g06-substitution], substitution sheet[^g06-sheet-substitution] | dCode[^g06-dcode-sub] |
+
+[^g06-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
+[^g06-patterns]: Pattern words, an exercise in the cryptology app: [apps.thorwhalen.com/cryptology/#/ex/patterns/1](https://apps.thorwhalen.com/cryptology/#/ex/patterns/1).
+[^g06-quipqiup]: quipqiup, a substitution solver: [quipqiup.com](https://quipqiup.com/).
+[^g06-vigenere]: Vigenère, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/vigenere](https://apps.thorwhalen.com/cryptology/#/workbench/vigenere). Slices for any key length, with each slice's IoC.
+[^g06-dcode-vigenere]: dCode's Vigenère solver: [dcode.fr/vigenere-cipher](https://www.dcode.fr/vigenere-cipher).
+[^g06-substitution]: Substitution, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/substitution](https://apps.thorwhalen.com/cryptology/#/workbench/substitution). You choose the letters; it fills in the text.
+[^g06-sheet-substitution]: Substitution key and partial decrypt, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-substitution](https://apps.thorwhalen.com/cryptology/#/tools/sheet-substitution), to copy into Google Sheets or download for Excel.
+[^g06-dcode-sub]: dCode's substitution solver: [dcode.fr/monoalphabetic-substitution](https://www.dcode.fr/monoalphabetic-substitution).
+
 ## Try it yourself
 
 1. Write the pattern of `bookkeeper`. Then find the odd one out: `moon`, `seen`, `took`, `noon`, `look`.
@@ -307,6 +326,7 @@ cipher:  P U M ? I N O ? R S T V W X Y ? A B C D E F ? ? J L
 
 ## Going further
 
+- Video: [Flaw in the Enigma Code](https://www.youtube.com/watch?v=V4V2bpZlqx8), Numberphile, 11 minutes: why a crib can only sit where no letter matches.
 - [Known-plaintext attack (Wikipedia)](https://en.wikipedia.org/wiki/Known-plaintext_attack)
 - [Cryptanalysis of the Enigma: cribs (Wikipedia)](https://en.wikipedia.org/wiki/Cryptanalysis_of_the_Enigma)
 - [Bombe (Wikipedia)](https://en.wikipedia.org/wiki/Bombe)

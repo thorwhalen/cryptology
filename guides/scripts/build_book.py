@@ -5,7 +5,8 @@
     python guides/scripts/build_book.py --only web  # html/*.html and html/index.json
 
 The book is the nine guides (guides/NN-*.md) as chapters, between front matter (a cover from
-book/cover.jpg, a title page, a copyright page, the dedication in book/dedication.md, the contents, book/before-you-start.md) and back
+book/cover.jpg, a title page, a copyright page, the dedication in book/dedication.md, the contents, then the unnumbered chapters in FRONT_CHAPTERS: book/before-you-start.md and
+book/brain-pencil-or-computer.md) and back
 matter (every guide's "Words to know", merged A to Z, then where to go next and about the book).
 
 The web edition is one HTML fragment per guide (no <html> or <head>: the cryptology app wraps
@@ -88,6 +89,20 @@ def read_guide(path: Path) -> Guide:
         body=body,
         words=[(term + (f" ({extra})" if extra else ""), definition) for term, extra, definition in words],
     )
+
+
+# Unnumbered chapters before the guides, in order: (file in book/, id in the web edition).
+FRONT_CHAPTERS = [("before-you-start.md", "00-before-you-start"), ("brain-pencil-or-computer.md", "00-brain-pencil-or-computer")]
+
+
+def front_chapters() -> list[Guide]:
+    """The front matter's chapters, each with its web id (00-..., numbered 0, so never "Guide N")."""
+    out = []
+    for name, web_id in FRONT_CHAPTERS:
+        g = read_guide(BOOK / name)
+        g.path = BOOK / f"{web_id}.md"
+        out.append(g)
+    return out
 
 
 def guides() -> list[Guide]:
@@ -291,8 +306,7 @@ def build_pdf(all_guides: list[Guide]) -> Path:
         cover = cover_pdf(work)
         (work / "copyright.tex").write_text(copyright_page() + dedication_page(), encoding="utf-8")
         (work / "titlepage.tex").write_text(title_page(cover), encoding="utf-8")
-        front = read_guide(BOOK / "before-you-start.md")
-        parts = [as_chapter(front).replace("# Before you start", "# Before you start {.unnumbered}", 1)]
+        parts = [re.sub(r"^# (.+)$", r"# \1 {.unnumbered}", as_chapter(f), count=1, flags=re.M) for f in front_chapters()]
         parts += [as_chapter(g) for g in all_guides]
         parts.append("\\backmatter\n" + back_matter(all_guides))
         source = work / "book.md"
@@ -356,9 +370,7 @@ def build_web(all_guides: list[Guide]) -> Path:
     cover_icon()
     cover_with_author().save(HTML_DIR / "cover.jpg", quality=88, optimize=True, progressive=True)
     entries = []
-    front = read_guide(BOOK / "before-you-start.md")
-    front.path = BOOK / "00-before-you-start.md"
-    for g in [front, *all_guides]:
+    for g in [*front_chapters(), *all_guides]:
         html = _run(
             ["pandoc", "-f", "markdown", "-t", "html5", "--mathml", "--section-divs", f"--lua-filter={FILTER}"],
             input=as_chapter(g),
