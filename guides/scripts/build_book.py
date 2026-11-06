@@ -10,7 +10,7 @@ matter (every guide's "Words to know", merged A to Z, then where to go next and 
 
 The web edition is one HTML fragment per guide (no <html> or <head>: the cryptology app wraps
 it), with math as MathML, figures as relative `figures/...` paths, and "In the app" boxes as
-<div class="in-app">; plus html/index.json listing each guide's sections and words, which the
+<div class="in-app">; html/icon.png, the cover as a square favicon; plus html/index.json listing each guide's sections and words, which the
 app reads for its contents and search. Both use scripts/app_links.lua.
 
 Needs pandoc and, for the PDF, XeLaTeX with tcolorbox and pdfpages, and Pillow.
@@ -281,8 +281,22 @@ def sized_images(html: str) -> str:
     return re.sub(r'<img [^>]*src="([^"]+)"[^>]*>', size, html)
 
 
+def cover_icon(size: int = 256) -> Path:
+    """The cover as a square icon (a browser tab's favicon): the whole cover, centered on transparent."""
+    from PIL import Image
+
+    cover = Image.open(BOOK / "cover.jpg").convert("RGBA")
+    cover.thumbnail((size, size), Image.LANCZOS)
+    icon = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    icon.paste(cover, ((size - cover.width) // 2, (size - cover.height) // 2))
+    out = HTML_DIR / "icon.png"
+    icon.save(out, optimize=True)
+    return out
+
+
 def build_web(all_guides: list[Guide]) -> Path:
     HTML_DIR.mkdir(exist_ok=True)
+    cover_icon()
     entries = []
     front = read_guide(BOOK / "before-you-start.md")
     front.path = BOOK / "00-before-you-start.md"
@@ -299,7 +313,7 @@ def build_web(all_guides: list[Guide]) -> Path:
             "sections": sections_of(html),
             "words": [{"term": t, "definition": d} for t, d in g.words],
         })
-    index = {"title": TITLE, "subtitle": SUBTITLE, "edition": EDITION, "book": f"pdf/{BOOK_PDF.name}", "cover": "guides/book/cover.jpg", "guides": entries}
+    index = {"title": TITLE, "subtitle": SUBTITLE, "edition": EDITION, "book": f"pdf/{BOOK_PDF.name}", "cover": "guides/book/cover.jpg", "icon": "html/icon.png", "guides": entries}
     (HTML_DIR / "index.json").write_text(json.dumps(index, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return HTML_DIR
 
