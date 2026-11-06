@@ -17,7 +17,7 @@ cipher is: <strong>how many keys does it have?</strong> If the answer is
 26, you can try them all before lunch. If the answer has 27 digits, you
 cannot, and you need to be cleverer.</p>
 <figure>
-<img src="figures/03-key-space.png"
+<img width="2198" height="1192" src="figures/03-key-space.png"
 alt="A bar chart of how many digits the number of keys has. Caesar has 26 keys, a 2-digit number. Affine has 312, a 3-digit number. Substitution has 26 factorial, which is 403,291,461,126,605,635,584,000,000, a 27-digit number that would take about 12.8 billion years to try at a billion keys per second." />
 <figcaption aria-hidden="true">A bar chart of how many digits the number
 of keys has. Caesar has 26 keys, a 2-digit number. Affine has 312, a
@@ -126,7 +126,7 @@ again. So 28 should mean 2, which is C.</p>
 9 o’clock is 2 o’clock, not 14 o’clock. Our alphabet is a 26-hour clock:
 whenever you go past 25, you subtract 26.</p>
 <figure>
-<img src="figures/03-clock-26.png"
+<img width="1386" height="1409" src="figures/03-clock-26.png"
 alt="A clock face with 26 positions numbered 0 to 25, each labeled with a letter from A to Z. An orange arrow goes 5 steps forward from 23 (X) round past the top to 2 (C), with the sums 23 + 5 = 28 and 28 - 26 = 2 written in the middle." />
 <figcaption aria-hidden="true">A clock face with 26 positions numbered 0
 to 25, each labeled with a letter from A to Z. An orange arrow goes 5
@@ -224,7 +224,7 @@ Two different letters both encrypt to A! The person receiving the
 message would have no way to tell which was meant. A key that does this
 is useless.</p>
 <figure>
-<img src="figures/03-multiply-mod-26.png"
+<img width="2270" height="1208" src="figures/03-multiply-mod-26.png"
 alt="Three rows of 26 numbered boxes. The top row is 0 to 25. Multiplying by 2 gives only even numbers, each appearing twice, colored red. Multiplying by 13 gives only 0 and 13, also red. Multiplying by 3 gives every number from 0 to 25 exactly once, colored green." />
 <figcaption aria-hidden="true">Three rows of 26 numbered boxes. The top
 row is 0 to 25. Multiplying by 2 gives only even numbers, each appearing
@@ -294,7 +294,7 @@ For
 so
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>11</mn><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>≡</mo><mn>19</mn></mrow><annotation encoding="application/x-tex">11^{-1} \equiv 19</annotation></semantics></math>.</p>
 <figure>
-<img src="figures/03-inverses.png"
+<img width="2115" height="808" src="figures/03-inverses.png"
 alt="A table of the 12 allowed multipliers and their inverses mod 26: 1 and 1, 3 and 9, 5 and 21, 7 and 15, 9 and 3, 11 and 19, 15 and 7, 17 and 23, 19 and 11, 21 and 5, 23 and 17, 25 and 25. A third row shows each product, such as 27, 105, 209, 391 and 625, each one more than a multiple of 26." />
 <figcaption aria-hidden="true">A table of the 12 allowed multipliers and
 their inverses mod 26: 1 and 1, 3 and 9, 5 and 21, 7 and 15, 9 and 3, 11
@@ -332,7 +332,7 @@ Caesar cipher has only 26 keys, so just try them all. Write the
 ciphertext moved back by 0, 1, 2, … places, one per line, and read down
 the list.</p>
 <figure>
-<img src="figures/03-caesar-brute-force.png"
+<img width="1495" height="1795" src="figures/03-caesar-brute-force.png"
 alt="A table of 26 rows, one for each Caesar shift. Each row shows the ciphertext DVVKDVSPKYVFCUDZCC moved back by that many places. Every row is gibberish except row 17, highlighted in green, which reads “meetmebytheoldmill”." />
 <figcaption aria-hidden="true">A table of 26 rows, one for each Caesar
 shift. Each row shows the ciphertext DVVKDVSPKYVFCUDZCC moved back by
@@ -390,7 +390,7 @@ back into the first equation:</p>
 And 11 is on the list of allowed values, which is a good sign. (If you
 had got an even number or 13, your guess would have been wrong.)</p>
 <figure>
-<img src="figures/03-affine-two-equations.png"
+<img width="1960" height="2025" src="figures/03-affine-two-equations.png"
 alt="Six colored steps for solving an affine key. 1: guess the commonest cipher letter Y (24) is e (4) and H (7) is t (19). 2: write 4a + b = 24 and 19a + b = 7, mod 26. 3: subtract to get 15a = 9. 4: the inverse of 15 is 7, so a = 63 = 11. 5: b = 24 - 44 = -20 = 6. 6: check that a = 11 is allowed and the message decrypts. In the picture, = stands for “is congruent to”." />
 <figcaption aria-hidden="true">Six colored steps for solving an affine
 key. 1: guess the commonest cipher letter Y (24) is e (4) and H (7) is t

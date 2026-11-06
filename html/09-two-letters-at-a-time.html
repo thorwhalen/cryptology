@@ -15,7 +15,7 @@ are encrypted differently. Counting single letters stops working. But
 pairs of letters have their own fingerprint, because some pairs are far
 more common than others.</p>
 <figure>
-<img src="figures/09-digraphs.png"
+<img width="1723" height="1052" src="figures/09-digraphs.png"
 alt="The twelve commonest pairs of letters in English, from TH (3.56 percent of all pairs) and HE (3.07 percent) down to TI and ES (1.34 percent each), compared with 0.15 percent, the share each pair would have if all 676 pairs were equally likely." />
 <figcaption aria-hidden="true">The twelve commonest pairs of letters in
 English, from TH (3.56 percent of all pairs) and HE (3.07 percent) down
@@ -95,7 +95,7 @@ spaces, so I and J share a square (J is the rarest letter, and you can
 usually guess it back from the context). Number the rows and columns 1
 to 5. Now every letter has an address: row first, then column.</p>
 <figure>
-<img src="figures/09-polybius.png"
+<img width="1699" height="931" src="figures/09-polybius.png"
 alt="A 5x5 square of letters A to Z (I and J together) with rows numbered 1 to 5 in red and columns 1 to 5 in blue; HELLO becomes 23 15 31 31 34." />
 <figcaption aria-hidden="true">A 5x5 square of letters A to Z (I and J
 together) with rows numbered 1 to 5 in red and columns 1 to 5 in blue;
@@ -140,7 +140,7 @@ In “noon”, the double O gets an X.</p>
 <p><strong>Encrypting each pair.</strong> There are three rules,
 depending on where the two letters sit in the square.</p>
 <figure>
-<img src="figures/09-playfair-rules.png"
+<img width="1960" height="1253" src="figures/09-playfair-rules.png"
 alt="Three copies of the LANTERN square. Rectangle rule: T and H are corners of a rectangle, and each is replaced by the corner in its own row, giving AK. Same row rule: A and L each move one step right, giving NA. Same column rule: L and O each move one step down, giving RV." />
 <figcaption aria-hidden="true">Three copies of the LANTERN square.
 Rectangle rule: T and H are corners of a rectangle, and each is replaced
@@ -189,7 +189,7 @@ that two letters picked at random match, Guide 04) is lower than
 English’s 0.067, but higher than a Hill cipher’s.</li>
 </ul>
 <figure>
-<img src="figures/09-tells.png"
+<img width="1711" height="804" src="figures/09-tells.png"
 alt="The same 342-letter paragraph as English, as Playfair and as Hill. All three have an even length. Playfair has 0 doubled pairs, 0 Js and only 25 different letters. Hill has 6 doubled pairs, 11 Js, all 26 letters, and an index of coincidence of 0.041, against 0.057 for Playfair and 0.067 for English." />
 <figcaption aria-hidden="true">The same 342-letter paragraph as English,
 as Playfair and as Hill. All three have an even length. Playfair has 0
@@ -238,7 +238,7 @@ To multiply the matrix by the column, take each <strong>row</strong> of
 the matrix and the <strong>column</strong> of letters, multiply the
 matching numbers, and add.</p>
 <figure>
-<img src="figures/09-matrix-multiply.png"
+<img width="1711" height="1021" src="figures/09-matrix-multiply.png"
 alt="The key matrix with rows 5, 8 and 17, 3 times the column 3, 4 (the letters D and E). Top row: 5 times 3 plus 8 times 4 is 47, which leaves 21, the letter V. Bottom row: 17 times 3 plus 3 times 4 is 63, which leaves 11, the letter L." />
 <figcaption aria-hidden="true">The key matrix with rows 5, 8 and 17, 3
 times the column 3, 4 (the letters D and E). Top row: 5 times 3 plus 8
@@ -267,7 +267,7 @@ which is L. Negative numbers go backward round the clock:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>1</mn><mo>≡</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">-1 \equiv 25</annotation></semantics></math>,
 because one step back from 0 is 25.</p>
 <figure>
-<img src="figures/09-mod26-clock.png"
+<img width="1533" height="1390" src="figures/09-mod26-clock.png"
 alt="A clock face with 26 positions numbered 0 to 25 and labeled A to Z; an arrow points to 21, the letter V, showing that 47 is once round the clock and 21 more." />
 <figcaption aria-hidden="true">A clock face with 26 positions numbered 0
 to 25 and labeled A to Z; an arrow points to 21, the letter V, showing
@@ -442,7 +442,7 @@ Check:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>17</mn><mo>=</mo><mn>51</mn><mo>≡</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">3 \times 17 = 51 \equiv 25</annotation></semantics></math>.
 Yes.</p>
 <figure>
-<img src="figures/09-hill-crib.png"
+<img width="1774" height="1175" src="figures/09-hill-crib.png"
 alt="The crib DEAR, as the numbers (3, 4) and (0, 17), encrypted to VLGZ, the numbers (21, 11) and (6, 25). The top row’s two equations give b = 8 and then a = 5; the bottom row’s give d = 3 and then c = 17." />
 <figcaption aria-hidden="true">The crib DEAR, as the numbers (3, 4) and
 (0, 17), encrypted to VLGZ, the numbers (21, 11) and (6, 25). The top

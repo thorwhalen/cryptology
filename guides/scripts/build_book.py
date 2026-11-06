@@ -266,6 +266,21 @@ def sections_of(html: str) -> list[dict]:
     ]
 
 
+def sized_images(html: str) -> str:
+    """Give every figure its width and height, so a page that loads them lazily never jumps."""
+    from PIL import Image
+
+    def size(match: re.Match) -> str:
+        tag, src = match.group(0), match.group(1)
+        path = GUIDES / src
+        if " width=" in tag or not path.exists():
+            return tag
+        w, h = Image.open(path).size
+        return tag.replace("<img ", f'<img width="{w}" height="{h}" ', 1)
+
+    return re.sub(r'<img [^>]*src="([^"]+)"[^>]*>', size, html)
+
+
 def build_web(all_guides: list[Guide]) -> Path:
     HTML_DIR.mkdir(exist_ok=True)
     entries = []
@@ -276,6 +291,7 @@ def build_web(all_guides: list[Guide]) -> Path:
             ["pandoc", "-f", "markdown", "-t", "html5", "--mathml", "--section-divs", f"--lua-filter={FILTER}"],
             input=as_chapter(g),
         ).stdout
+        html = sized_images(html)
         (HTML_DIR / f"{g.id}.html").write_text(html, encoding="utf-8")
         entries.append({
             "id": g.id, "number": g.number, "title": g.title, "subtitle": g.subtitle,

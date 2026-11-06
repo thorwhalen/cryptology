@@ -20,7 +20,7 @@ was published by the Prussian army officer Friedrich Kasiski in 1863
 (Charles Babbage seems to have found it earlier but never published it),
 and it is called the <strong>Kasiski examination</strong>.</p>
 <figure>
-<img src="figures/05-why-repeats.png"
+<img width="1803" height="986" src="figures/05-why-repeats.png"
 alt="Three copies of the word “the” encrypted with the key BRIDGE. At letters 9 and 39 the word sits under the same key letters I, D, G, so both copies become BKK. At letter 30 it sits under E, B, R and becomes XIV. The gap 39 minus 9 is 30, which is 5 times 6, a multiple of the key length." />
 <figcaption aria-hidden="true">Three copies of the word “the” encrypted
 with the key BRIDGE. At letters 9 and 39 the word sits under the same
@@ -166,7 +166,7 @@ For example:</p>
 greatest is 6, so
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>gcd</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>18</mn><mo>,</mo><mn>30</mn><mo>,</mo><mn>102</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">\gcd(18, 30, 102) = 6</annotation></semantics></math>.</p>
 <figure>
-<img src="figures/05-divisors.png"
+<img width="1731" height="739" src="figures/05-divisors.png"
 alt="The divisors of 18, 30 and 102 laid out as rows of tiles. The divisors 1, 2 and 3 are yellow in every row, and 6 is pink in every row: the greatest number that divides all three." />
 <figcaption aria-hidden="true">The divisors of 18, 30 and 102 laid out
 as rows of tiles. The divisors 1, 2 and 3 are yellow in every row, and 6
@@ -218,7 +218,7 @@ letters, not groups.)</p>
 Three is a good minimum: pairs repeat by accident far too often. Number
 the letters from 1, and write down where each repeat starts.</p>
 <figure>
-<img src="figures/05-repeats-in-ciphertext.png"
+<img width="1562" height="986" src="figures/05-repeats-in-ciphertext.png"
 alt="The ciphertext written 30 letters per row. Each repeated group has its own color: BKK in red appears four times, EOUBK in yellow twice, XIV in orange twice, WNI in green twice, KPH in blue three times, UYM in purple three times, and YMUOZFI in pink twice." />
 <figcaption aria-hidden="true">The ciphertext written 30 letters per
 row. Each repeated group has its own color: BKK in red appears four
@@ -280,7 +280,7 @@ trustworthy: seven letters almost never match by accident.</p>
 <p>For each gap, check which of the numbers 2 to 10 divide it. A table
 makes the pattern jump out.</p>
 <figure>
-<img src="figures/05-factor-table.png"
+<img width="1650" height="1263" src="figures/05-factor-table.png"
 alt="A table with one row per gap (30, 18, 102, 162, 120, 60, 12, 132, 24, 54, 78) and one column per factor from 2 to 10. A cell says yes when the factor divides the gap. The column for 6 is pink and says yes in every row. Totals: 2 divides 11 gaps, 3 divides 11, 4 divides 5, 5 divides 3, 6 divides 11, 7 divides none, 8 divides 2, 9 divides 3, 10 divides 3." />
 <figcaption aria-hidden="true">A table with one row per gap (30, 18,
 102, 162, 120, 60, 12, 132, 24, 54, 78) and one column per factor from 2
@@ -318,7 +318,7 @@ its peaks line up with the column’s peaks.</p>
 <p>Here is column 2. Its most common letters are K (8 times), U (6) and
 V (5).</p>
 <figure>
-<img src="figures/05-column-fit.png"
+<img width="1613" height="1292" src="figures/05-column-fit.png"
 alt="Two bar charts of column 2’s letter counts in blue, with the English letter pattern drawn as an orange line. Top: the English pattern is not slid, and its peaks miss the blue bars. Bottom: the English pattern is slid by 17 places, for key letter R, and its peaks land on the blue bars: t becomes K, e becomes V, and a becomes R." />
 <figcaption aria-hidden="true">Two bar charts of column 2’s letter
 counts in blue, with the English letter pattern drawn as an orange line.
@@ -474,7 +474,7 @@ EIXNI HKMLA VNYIC CCX</code></pre>
 144, and <code>ELO</code> at 51 and 89. The gaps are 128, 59, 6, 63, 59,
 69 and 38. Their gcd is 1, and 6 divides only one of them.</p>
 <figure>
-<img src="figures/05-three-ciphers.png"
+<img width="1613" height="822" src="figures/05-three-ciphers.png"
 alt="Three bar charts, one per cipher, showing what share of the gaps each factor from 2 to 12 divides. Vigenère: 2, 3 and 6 divide every gap. Beaufort: 6 still divides about three quarters of the gaps. Autokey: no factor divides more than about 4 in 10, and 6 divides only one gap in seven." />
 <figcaption aria-hidden="true">Three bar charts, one per cipher, showing
 what share of the gaps each factor from 2 to 12 divides. Vigenère: 2, 3
