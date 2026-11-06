@@ -208,7 +208,7 @@ Reading the clues is mostly measuring, and measuring is what computers are for. 
 [^g01-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
 [^g01-counts]: Counts, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts). Letter counts beside English's, the IoC, the length and its factors.
 [^g01-dcode-id]: dCode's cipher identifier: [dcode.fr/cipher-identifier](https://www.dcode.fr/cipher-identifier).
-[^g01-sheet-letters]: Letter counts and IoC, a spreadsheet: SHEET:letters.
+[^g01-sheet-letters]: Letter counts and IoC, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-letter-counts](https://apps.thorwhalen.com/cryptology/#/tools/sheet-letter-counts), to copy into Google Sheets or download for Excel.
 [^g01-dcode-freq]: dCode's frequency analysis: [dcode.fr/frequency-analysis](https://www.dcode.fr/frequency-analysis).
 [^g01-dcode-ioc]: dCode's index of coincidence: [dcode.fr/index-coincidence](https://www.dcode.fr/index-coincidence).
 [^g01-boxentriq]: Boxentriq's cipher identifier: [boxentriq.com/code-breaking/cipher-identifier](https://www.boxentriq.com/code-breaking/cipher-identifier).

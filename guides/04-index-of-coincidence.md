@@ -218,10 +218,10 @@ The IoC is arithmetic on counts: a calculator's job, and a computer's when there
 
 [^g04-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
 [^g04-counts]: Counts, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts). Letter counts beside English's, the IoC, the length and its factors.
-[^g04-sheet-letters]: Letter counts and IoC, a spreadsheet: SHEET:letters.
+[^g04-sheet-letters]: Letter counts and IoC, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-letter-counts](https://apps.thorwhalen.com/cryptology/#/tools/sheet-letter-counts), to copy into Google Sheets or download for Excel.
 [^g04-dcode-ioc]: dCode's index of coincidence: [dcode.fr/index-coincidence](https://www.dcode.fr/index-coincidence).
 [^g04-vigenere]: Vigenère, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/vigenere](https://apps.thorwhalen.com/cryptology/#/workbench/vigenere). Slices for any key length, with each slice's IoC.
-[^g04-sheet-vigenere]: Vigenère slices and IoC by key length, a spreadsheet: SHEET:vigenere.
+[^g04-sheet-vigenere]: Vigenère slices and IoC by key length, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-vigenere-slices](https://apps.thorwhalen.com/cryptology/#/tools/sheet-vigenere-slices), to copy into Google Sheets or download for Excel.
 [^g04-guballa-vig]: Guballa's Vigenère solver: [guballa.de/vigenere-solver](https://www.guballa.de/vigenere-solver).
 [^g04-dcode-vigenere]: dCode's Vigenère solver: [dcode.fr/vigenere-cipher](https://www.dcode.fr/vigenere-cipher).
 

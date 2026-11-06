@@ -243,9 +243,9 @@ Finding repeats by eye is slow and easy to get wrong; a program finds every one.
 [^g05-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
 [^g05-repeats]: Repeats, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/repeats](https://apps.thorwhalen.com/cryptology/#/workbench/repeats). Repeated runs, their gaps, and the factor tally.
 [^g05-dcode-kasiski]: dCode's Kasiski test: [dcode.fr/kasiski-test](https://www.dcode.fr/kasiski-test).
-[^g05-sheet-kasiski]: Repeats and factors, a spreadsheet: SHEET:kasiski.
+[^g05-sheet-kasiski]: Repeats and factors, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-repeats-and-factors](https://apps.thorwhalen.com/cryptology/#/tools/sheet-repeats-and-factors), to copy into Google Sheets or download for Excel.
 [^g05-vigenere]: Vigenère, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/vigenere](https://apps.thorwhalen.com/cryptology/#/workbench/vigenere). Slices for any key length, with each slice's IoC.
-[^g05-sheet-vigenere]: Vigenère slices and IoC by key length, a spreadsheet: SHEET:vigenere.
+[^g05-sheet-vigenere]: Vigenère slices and IoC by key length, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-vigenere-slices](https://apps.thorwhalen.com/cryptology/#/tools/sheet-vigenere-slices), to copy into Google Sheets or download for Excel.
 [^g05-guballa-vig]: Guballa's Vigenère solver: [guballa.de/vigenere-solver](https://www.guballa.de/vigenere-solver).
 [^g05-dcode-vigenere]: dCode's Vigenère solver: [dcode.fr/vigenere-cipher](https://www.dcode.fr/vigenere-cipher).
 

@@ -213,10 +213,10 @@ Brute force is the clearest case of all: trying every key is exactly the job a m
 
 [^g03-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
 [^g03-caesar]: Caesar, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/caesar](https://apps.thorwhalen.com/cryptology/#/workbench/caesar). Its Scores view scores all 26 shifts at once.
-[^g03-sheet-caesar]: Caesar shifts and chi-squared, a spreadsheet: SHEET:caesar.
+[^g03-sheet-caesar]: Caesar shifts and chi-squared, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-caesar](https://apps.thorwhalen.com/cryptology/#/tools/sheet-caesar), to copy into Google Sheets or download for Excel.
 [^g03-dcode-caesar]: dCode's Caesar solver: [dcode.fr/caesar-cipher](https://www.dcode.fr/caesar-cipher).
 [^g03-affine]: Affine, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/affine](https://apps.thorwhalen.com/cryptology/#/workbench/affine). Dials for a and b, and the multiplier wheel.
-[^g03-sheet-affine]: Affine keys and inverses, a spreadsheet: SHEET:affine.
+[^g03-sheet-affine]: Affine keys and inverses, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-affine](https://apps.thorwhalen.com/cryptology/#/tools/sheet-affine), to copy into Google Sheets or download for Excel.
 [^g03-dcode-affine]: dCode's affine solver: [dcode.fr/affine-cipher](https://www.dcode.fr/affine-cipher).
 
 ## Try it yourself

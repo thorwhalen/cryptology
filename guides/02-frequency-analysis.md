@@ -217,13 +217,13 @@ Counting and scoring are chores; deciding what the counts mean is the skill. Do 
 
 [^g02-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
 [^g02-counts]: Counts, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts). Letter counts beside English's, the IoC, the length and its factors.
-[^g02-sheet-letters]: Letter counts and IoC, a spreadsheet: SHEET:letters.
+[^g02-sheet-letters]: Letter counts and IoC, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-letter-counts](https://apps.thorwhalen.com/cryptology/#/tools/sheet-letter-counts), to copy into Google Sheets or download for Excel.
 [^g02-dcode-freq]: dCode's frequency analysis: [dcode.fr/frequency-analysis](https://www.dcode.fr/frequency-analysis).
 [^g02-caesar]: Caesar, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/caesar](https://apps.thorwhalen.com/cryptology/#/workbench/caesar). Its Scores view scores all 26 shifts at once.
-[^g02-sheet-caesar]: Caesar shifts and chi-squared, a spreadsheet: SHEET:caesar.
+[^g02-sheet-caesar]: Caesar shifts and chi-squared, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-caesar](https://apps.thorwhalen.com/cryptology/#/tools/sheet-caesar), to copy into Google Sheets or download for Excel.
 [^g02-dcode-caesar]: dCode's Caesar solver: [dcode.fr/caesar-cipher](https://www.dcode.fr/caesar-cipher).
 [^g02-substitution]: Substitution, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/substitution](https://apps.thorwhalen.com/cryptology/#/workbench/substitution). You choose the letters; it fills in the text.
-[^g02-sheet-substitution]: Substitution key and partial decrypt, a spreadsheet: SHEET:substitution.
+[^g02-sheet-substitution]: Substitution key and partial decrypt, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-substitution](https://apps.thorwhalen.com/cryptology/#/tools/sheet-substitution), to copy into Google Sheets or download for Excel.
 [^g02-quipqiup]: quipqiup, a substitution solver: [quipqiup.com](https://quipqiup.com/).
 [^g02-guballa-sub]: Guballa's substitution solver: [guballa.de/substitution-solver](https://www.guballa.de/substitution-solver).
 

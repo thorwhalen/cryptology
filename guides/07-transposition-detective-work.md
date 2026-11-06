@@ -168,7 +168,7 @@ With transposition, the counts say what you face in seconds; the rearranging is 
 [^g07-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
 [^g07-counts]: Counts, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts). Letter counts beside English's, the IoC, the length and its factors.
 [^g07-columns]: Columns, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/columns](https://apps.thorwhalen.com/cryptology/#/workbench/columns). Any width; tap two columns to swap them.
-[^g07-sheet-columnar]: Columnar grid, a spreadsheet: SHEET:columnar.
+[^g07-sheet-columnar]: Columnar grid, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-columnar](https://apps.thorwhalen.com/cryptology/#/tools/sheet-columnar), to copy into Google Sheets or download for Excel.
 [^g07-dcode-columnar]: dCode's columnar transposition solver: [dcode.fr/columnar-transposition-cipher](https://www.dcode.fr/columnar-transposition-cipher).
 [^g07-rail]: Rail fence, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/rail](https://apps.thorwhalen.com/cryptology/#/workbench/rail).
 [^g07-dcode-rail]: dCode's rail fence solver: [dcode.fr/rail-fence-cipher](https://www.dcode.fr/rail-fence-cipher).

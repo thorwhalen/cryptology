@@ -221,10 +221,10 @@ The tells of a pair cipher take minutes to check; breaking one without a crib is
 
 [^g09-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
 [^g09-counts]: Counts, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts). Letter counts beside English's, the IoC, the length and its factors.
-[^g09-sheet-digraphs]: Letter pairs and the Playfair tells, a spreadsheet: SHEET:digraphs.
+[^g09-sheet-digraphs]: Letter pairs and the Playfair tells, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-digraphs](https://apps.thorwhalen.com/cryptology/#/tools/sheet-digraphs), to copy into Google Sheets or download for Excel.
 [^g09-boxentriq]: Boxentriq's cipher identifier: [boxentriq.com/code-breaking/cipher-identifier](https://www.boxentriq.com/code-breaking/cipher-identifier).
 [^g09-dcode-freq]: dCode's frequency analysis: [dcode.fr/frequency-analysis](https://www.dcode.fr/frequency-analysis).
-[^g09-sheet-hill]: Hill 2 x 2: determinant, inverse and decryption mod 26, a spreadsheet: SHEET:hill.
+[^g09-sheet-hill]: Hill 2 x 2: determinant, inverse and decryption mod 26, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-hill](https://apps.thorwhalen.com/cryptology/#/tools/sheet-hill), to copy into Google Sheets or download for Excel.
 [^g09-dcode-hill]: dCode's Hill solver: [dcode.fr/hill-cipher](https://www.dcode.fr/hill-cipher).
 [^g09-dcode-playfair]: dCode's Playfair solver: [dcode.fr/playfair-cipher](https://www.dcode.fr/playfair-cipher).
 [^g09-cryptool2]: CrypTool 2, a free learning environment with real attacks (Windows): [cryptool.org/en/ct2](https://www.cryptool.org/en/ct2/).

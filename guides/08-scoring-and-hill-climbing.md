@@ -186,7 +186,7 @@ This guide is about the methods computers use, so the honest answer is: do one o
 [^g08-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
 [^g08-cryptool2]: CrypTool 2, a free learning environment with real attacks (Windows): [cryptool.org/en/ct2](https://www.cryptool.org/en/ct2/).
 [^g08-substitution]: Substitution, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/substitution](https://apps.thorwhalen.com/cryptology/#/workbench/substitution). You choose the letters; it fills in the text.
-[^g08-sheet-substitution]: Substitution key and partial decrypt, a spreadsheet: SHEET:substitution.
+[^g08-sheet-substitution]: Substitution key and partial decrypt, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-substitution](https://apps.thorwhalen.com/cryptology/#/tools/sheet-substitution), to copy into Google Sheets or download for Excel.
 [^g08-quipqiup]: quipqiup, a substitution solver: [quipqiup.com](https://quipqiup.com/).
 [^g08-guballa-sub]: Guballa's substitution solver: [guballa.de/substitution-solver](https://www.guballa.de/substitution-solver).
 

@@ -296,7 +296,7 @@ A good crib comes from thinking about the message; checking it at every position
 [^g06-vigenere]: Vigenère, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/vigenere](https://apps.thorwhalen.com/cryptology/#/workbench/vigenere). Slices for any key length, with each slice's IoC.
 [^g06-dcode-vigenere]: dCode's Vigenère solver: [dcode.fr/vigenere-cipher](https://www.dcode.fr/vigenere-cipher).
 [^g06-substitution]: Substitution, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/substitution](https://apps.thorwhalen.com/cryptology/#/workbench/substitution). You choose the letters; it fills in the text.
-[^g06-sheet-substitution]: Substitution key and partial decrypt, a spreadsheet: SHEET:substitution.
+[^g06-sheet-substitution]: Substitution key and partial decrypt, a spreadsheet: [apps.thorwhalen.com/cryptology/#/tools/sheet-substitution](https://apps.thorwhalen.com/cryptology/#/tools/sheet-substitution), to copy into Google Sheets or download for Excel.
 [^g06-dcode-sub]: dCode's substitution solver: [dcode.fr/monoalphabetic-substitution](https://www.dcode.fr/monoalphabetic-substitution).
 
 ## Try it yourself
