@@ -200,6 +200,25 @@ So the key is $a = 11$, $b = 6$. And 11 is on the list of allowed values, which 
 - **Keep an inverse table handy.** 3 and 9, 5 and 21, 7 and 15, 11 and 19, 17 and 23, 25 and 25 (and 1 and 1). Memorizing these saves time.
 - **Check with a third letter.** Once you have a key, test it on a third common letter before decrypting everything. If that letter decrypts sensibly, you are on track.
 
+## By hand or by computer
+
+Brute force is the clearest case of all: trying every key is exactly the job a machine does best. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g03-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters. In a live competition round, its rules decide: the National Cipher Challenge bans online solvers and AI.
+
+| Job | By hand | Learn with | Just do it |
+|---|---|---|---|
+| Try all 26 Caesar shifts | 25 to 50 minutes | Caesar[^g03-caesar], Caesar sheet[^g03-sheet-caesar] | dCode[^g03-dcode-caesar] |
+| Try all 312 affine keys | many hours | Affine[^g03-affine], affine sheet[^g03-sheet-affine] | dCode[^g03-dcode-affine] |
+| Solve the two equations for an affine key | 5 to 10 minutes | Affine[^g03-affine], affine sheet[^g03-sheet-affine] | dCode[^g03-dcode-affine] |
+| Find an inverse mod 26 | 2 to 5 minutes | affine sheet[^g03-sheet-affine] | n/a |
+
+[^g03-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
+[^g03-caesar]: Caesar, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/caesar](https://apps.thorwhalen.com/cryptology/#/workbench/caesar). Its Scores view scores all 26 shifts at once.
+[^g03-sheet-caesar]: Caesar shifts and chi-squared, a spreadsheet: SHEET:caesar.
+[^g03-dcode-caesar]: dCode's Caesar solver: [dcode.fr/caesar-cipher](https://www.dcode.fr/caesar-cipher).
+[^g03-affine]: Affine, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/affine](https://apps.thorwhalen.com/cryptology/#/workbench/affine). Dials for a and b, and the multiplier wheel.
+[^g03-sheet-affine]: Affine keys and inverses, a spreadsheet: SHEET:affine.
+[^g03-dcode-affine]: dCode's affine solver: [dcode.fr/affine-cipher](https://www.dcode.fr/affine-cipher).
+
 ## Try it yourself
 
 1. Work out each of these mod 26: (a) $17 + 15$, (b) $7 \times 8$, (c) $5 - 9$.

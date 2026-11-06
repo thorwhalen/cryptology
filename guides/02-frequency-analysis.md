@@ -204,6 +204,29 @@ The full message: `it was a cold and quiet night when the old clock in the tower
 - **Write in pencil.** Every guess might be wrong. Keep a table of which cipher letter maps to which plaintext letter, and when a guess produces nonsense, undo it.
 - **Look for the keyword.** After a dozen letters, write the cipher alphabet out in order. A keyword substitution leaves a recognizable word at the start, and a long run of the alphabet in order after it. Spotting it fills in the rest.
 
+## By hand or by computer
+
+Counting and scoring are chores; deciding what the counts mean is the skill. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g02-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters. In a live competition round, its rules decide: the National Cipher Challenge bans online solvers and AI.
+
+| Job | By hand | Learn with | Just do it |
+|---|---|---|---|
+| Count every letter | 10 to 15 minutes | Counts[^g02-counts], letter-count sheet[^g02-sheet-letters] | dCode[^g02-dcode-freq] |
+| Slide English along the counts to fit a shift | 1 to 2 minutes a shift, up to 25 shifts | Caesar[^g02-caesar], Caesar sheet[^g02-sheet-caesar] | dCode[^g02-dcode-caesar] |
+| Chi-squared for every shift | about 5 minutes a shift with a calculator: over 2 hours for all 26 | Caesar[^g02-caesar], Caesar sheet[^g02-sheet-caesar] | dCode[^g02-dcode-caesar] |
+| Solve a full substitution | 30 to 90 minutes | Substitution[^g02-substitution], substitution sheet[^g02-sheet-substitution] | quipqiup[^g02-quipqiup], Guballa[^g02-guballa-sub] |
+
+[^g02-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
+[^g02-counts]: Counts, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts). Letter counts beside English's, the IoC, the length and its factors.
+[^g02-sheet-letters]: Letter counts and IoC, a spreadsheet: SHEET:letters.
+[^g02-dcode-freq]: dCode's frequency analysis: [dcode.fr/frequency-analysis](https://www.dcode.fr/frequency-analysis).
+[^g02-caesar]: Caesar, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/caesar](https://apps.thorwhalen.com/cryptology/#/workbench/caesar). Its Scores view scores all 26 shifts at once.
+[^g02-sheet-caesar]: Caesar shifts and chi-squared, a spreadsheet: SHEET:caesar.
+[^g02-dcode-caesar]: dCode's Caesar solver: [dcode.fr/caesar-cipher](https://www.dcode.fr/caesar-cipher).
+[^g02-substitution]: Substitution, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/substitution](https://apps.thorwhalen.com/cryptology/#/workbench/substitution). You choose the letters; it fills in the text.
+[^g02-sheet-substitution]: Substitution key and partial decrypt, a spreadsheet: SHEET:substitution.
+[^g02-quipqiup]: quipqiup, a substitution solver: [quipqiup.com](https://quipqiup.com/).
+[^g02-guballa-sub]: Guballa's substitution solver: [guballa.de/substitution-solver](https://www.guballa.de/substitution-solver).
+
 ## Try it yourself
 
 1. A long Caesar ciphertext has commonest letters X, M, T and H, in that order. What is the shift? Check your answer using all four letters.

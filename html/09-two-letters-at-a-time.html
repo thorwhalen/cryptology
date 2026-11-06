@@ -537,6 +537,70 @@ containing A makes some equations very simple, as in the worked
 example.</li>
 </ul>
 </section>
+<section id="by-hand-or-by-computer" class="level2">
+<h2>By hand or by computer</h2>
+<p>The tells of a pair cipher take minutes to check; breaking one
+without a crib is a job for a program. Do each job by hand once, on a
+short text, so you know what it involves; then hand it over (the chapter
+<em>Brain, pencil or computer?</em> explains why<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>).
+Times are rough, for a practiced reader and a ciphertext of about 300
+letters. In a live competition round, its rules decide: the National
+Cipher Challenge bans online solvers and AI.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Job</th>
+<th>By hand</th>
+<th>Learn with</th>
+<th>Just do it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Check the tells: even length, no doubled pair, no J</td>
+<td>5 minutes</td>
+<td>Counts<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>, pairs sheet<a href="#fn3"
+class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a></td>
+<td>Boxentriq<a href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a></td>
+</tr>
+<tr>
+<td>Count the letter pairs</td>
+<td>30 minutes or more</td>
+<td>pairs sheet<a href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a></td>
+<td>dCode<a href="#fn6" class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a></td>
+</tr>
+<tr>
+<td>Solve a 2 x 2 Hill cipher from a crib</td>
+<td>15 to 20 minutes, with care</td>
+<td>Hill sheet<a href="#fn7" class="footnote-ref" id="fnref7"
+role="doc-noteref"><sup>7</sup></a></td>
+<td>dCode<a href="#fn8" class="footnote-ref" id="fnref8"
+role="doc-noteref"><sup>8</sup></a></td>
+</tr>
+<tr>
+<td>Break a Playfair with no crib</td>
+<td>hours, if at all</td>
+<td>n/a</td>
+<td>dCode<a href="#fn9" class="footnote-ref" id="fnref9"
+role="doc-noteref"><sup>9</sup></a>, CrypTool 2<a href="#fn10"
+class="footnote-ref" id="fnref10"
+role="doc-noteref"><sup>10</sup></a></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="try-it-yourself" class="level2">
 <h2>Try it yourself</h2>
 <ol type="1">
@@ -636,4 +700,43 @@ in war.</li>
 Challenge</a> for practice ciphertexts.</li>
 </ul>
 </section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a
+href="https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer">Brain,
+pencil or computer?</a>, the chapter before Guide 1.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Counts, in the cryptology app: <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/counts">apps.thorwhalen.com/cryptology/#/workbench/counts</a>.
+Letter counts beside English’s, the IoC, the length and its factors.<a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Letter pairs and the Playfair tells, a spreadsheet:
+SHEET:digraphs.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Boxentriq’s cipher identifier: <a
+href="https://www.boxentriq.com/code-breaking/cipher-identifier">boxentriq.com/code-breaking/cipher-identifier</a>.<a
+href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Letter pairs and the Playfair tells, a spreadsheet:
+SHEET:digraphs.<a href="#fnref5" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>dCode’s frequency analysis: <a
+href="https://www.dcode.fr/frequency-analysis">dcode.fr/frequency-analysis</a>.<a
+href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Hill 2 x 2: determinant, inverse and decryption mod 26,
+a spreadsheet: SHEET:hill.<a href="#fnref7" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>dCode’s Hill solver: <a
+href="https://www.dcode.fr/hill-cipher">dcode.fr/hill-cipher</a>.<a
+href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>dCode’s Playfair solver: <a
+href="https://www.dcode.fr/playfair-cipher">dcode.fr/playfair-cipher</a>.<a
+href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>CrypTool 2, a free learning environment with real
+attacks (Windows): <a
+href="https://www.cryptool.org/en/ct2/">cryptool.org/en/ct2</a>.<a
+href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>

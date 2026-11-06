@@ -230,6 +230,25 @@ So when Kasiski gives gaps with no common factor, and splitting into columns nev
 - **Key letters that spell a word are your best check.** `BRIDGEBRIDGE` just means your length was double the true one.
 - **A column that will not fit** usually has too few letters. Use the neighboring columns and the half-decrypted text to guess it: if the message reads `meet me at the olX mill`, the X column is off.
 
+## By hand or by computer
+
+Finding repeats by eye is slow and easy to get wrong; a program finds every one. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g05-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters. In a live competition round, its rules decide: the National Cipher Challenge bans online solvers and AI.
+
+| Job | By hand | Learn with | Just do it |
+|---|---|---|---|
+| Find repeated runs of three or more letters | 20 to 40 minutes | Repeats[^g05-repeats] | dCode[^g05-dcode-kasiski] |
+| Factor the gaps and tally the factors | 5 to 10 minutes | Repeats[^g05-repeats], factors sheet[^g05-sheet-kasiski] | dCode[^g05-dcode-kasiski] |
+| Solve each slice as a Caesar | about 10 minutes a slice | Vigenère[^g05-vigenere], Vigenère sheet[^g05-sheet-vigenere] | Guballa[^g05-guballa-vig], dCode[^g05-dcode-vigenere] |
+
+[^g05-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
+[^g05-repeats]: Repeats, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/repeats](https://apps.thorwhalen.com/cryptology/#/workbench/repeats). Repeated runs, their gaps, and the factor tally.
+[^g05-dcode-kasiski]: dCode's Kasiski test: [dcode.fr/kasiski-test](https://www.dcode.fr/kasiski-test).
+[^g05-sheet-kasiski]: Repeats and factors, a spreadsheet: SHEET:kasiski.
+[^g05-vigenere]: Vigenère, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/vigenere](https://apps.thorwhalen.com/cryptology/#/workbench/vigenere). Slices for any key length, with each slice's IoC.
+[^g05-sheet-vigenere]: Vigenère slices and IoC by key length, a spreadsheet: SHEET:vigenere.
+[^g05-guballa-vig]: Guballa's Vigenère solver: [guballa.de/vigenere-solver](https://www.guballa.de/vigenere-solver).
+[^g05-dcode-vigenere]: dCode's Vigenère solver: [dcode.fr/vigenere-cipher](https://www.dcode.fr/vigenere-cipher).
+
 ## Try it yourself
 
 1. Find $\gcd(42, 70)$ using Euclid's method. Then find $\gcd(42, 70, 98)$.

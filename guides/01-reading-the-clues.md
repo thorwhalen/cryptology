@@ -194,6 +194,25 @@ Here is the whole routine on one page. Start at the top and answer each question
 - **Reversed text.** Writing the message backwards does not change any count. If every clue says "transposition", try reading it backwards before anything clever.
 - **Layers.** A message might be encoded in Morse and then enciphered, or substituted and then transposed. If you decode one layer and get gibberish, measure the gibberish: it is a new ciphertext with its own clues.
 
+## By hand or by computer
+
+Reading the clues is mostly measuring, and measuring is what computers are for. The judgement, which family the measurements point to, is the part worth keeping. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g01-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters. In a live competition round, its rules decide: the National Cipher Challenge bans online solvers and AI.
+
+| Job | By hand | Learn with | Just do it |
+|---|---|---|---|
+| Note the symbols, the length and its factors | 2 to 5 minutes | Counts[^g01-counts] | dCode identifier[^g01-dcode-id] |
+| Count every letter | 10 to 15 minutes | Counts[^g01-counts], letter-count sheet[^g01-sheet-letters] | dCode[^g01-dcode-freq] |
+| Work out the IoC from the counts | 10 to 15 minutes, with a calculator | Counts[^g01-counts], letter-count sheet[^g01-sheet-letters] | dCode[^g01-dcode-ioc] |
+| Name the likely cipher | a minute of thinking, once you have the numbers | n/a | dCode identifier[^g01-dcode-id], Boxentriq[^g01-boxentriq] |
+
+[^g01-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
+[^g01-counts]: Counts, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts). Letter counts beside English's, the IoC, the length and its factors.
+[^g01-dcode-id]: dCode's cipher identifier: [dcode.fr/cipher-identifier](https://www.dcode.fr/cipher-identifier).
+[^g01-sheet-letters]: Letter counts and IoC, a spreadsheet: SHEET:letters.
+[^g01-dcode-freq]: dCode's frequency analysis: [dcode.fr/frequency-analysis](https://www.dcode.fr/frequency-analysis).
+[^g01-dcode-ioc]: dCode's index of coincidence: [dcode.fr/index-coincidence](https://www.dcode.fr/index-coincidence).
+[^g01-boxentriq]: Boxentriq's cipher identifier: [boxentriq.com/code-breaking/cipher-identifier](https://www.boxentriq.com/code-breaking/cipher-identifier).
+
 ## Try it yourself
 
 1. A ciphertext uses only the letters A, D, F, G, V and X, always an even number of them. What is your first suspect?
@@ -221,6 +240,7 @@ Here is the whole routine on one page. Start at the top and answer each question
 
 ## Going further
 
+- Video: [How to Break an Unknown Cipher](https://www.youtube.com/watch?v=td-mS7jkOy8), Cryptography for Everybody (CrypTool), 15 minutes.
 - [Index of coincidence](https://en.wikipedia.org/wiki/Index_of_coincidence) on Wikipedia.
 - [Frequency analysis](https://en.wikipedia.org/wiki/Frequency_analysis) on Wikipedia.
 - [Practical Cryptography: English letter frequencies](http://practicalcryptography.com/cryptanalysis/letter-frequencies-various-languages/english-letter-frequencies/).

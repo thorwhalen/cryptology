@@ -22,14 +22,19 @@ There are nine guides. Each one teaches one method of attack, and each one stand
 5. **A worked example**, start to finish, with every number shown.
 6. **When to try it**, and when not to.
 7. **Traps and tips.**
-8. **Try it yourself**: a few exercises, with the answers at the end of the guide.
-9. **Words to know**, and **Going further**.
+8. **By hand or by computer**: the jobs the method involves, roughly how long each takes by hand, and the tool that does it for you.
+9. **Try it yourself**: a few exercises, with the answers at the end of the guide.
+10. **Words to know**, and **Going further**.
 
 All the words from every guide are collected again, A to Z, at the back of the book.
 
+## Brain, pencil or computer?
+
+This book teaches the methods the classical way, but it does not ask you to do everything by hand forever. Do each mechanical job by hand once, so you know what a machine does when it does it for you; after that, let the machine do it, and spend your time on the thinking. The next chapter, *Brain, pencil or computer?*, explains why, and what that choice costs.
+
 ## Which order to read them in
 
-Start with Guide 1, *Reading the clues*. It shows how to tell, before trying a single key, which family a cipher belongs to, and the other guides build on that habit. After that, follow what interests you:
+Read *Brain, pencil or computer?* first: it is short. Then start with Guide 1, *Reading the clues*. It shows how to tell, before trying a single key, which family a cipher belongs to, and the other guides build on that habit. After that, follow what interests you:
 
 | If you want to break | Read |
 |---|---|
@@ -44,7 +49,7 @@ The book has a companion website, the cryptology app, at **apps.thorwhalen.com/c
 
 > **In the app:** [The method, step by step](https://apps.thorwhalen.com/cryptology/#/guide) asks one question at a time about a ciphertext and leads you to its family, which is Guide 1 as a walk.
 
-In the PDF, the names in the boxes are links. On paper, type the address above and find the tool by its name.
+In the PDF, the names in the boxes are links. On paper, type the address above and find the tool by its name. Other tools (spreadsheets that do the arithmetic, and solvers that just give the answer) are in each guide's footnotes.
 
 ## A word about competitions
 

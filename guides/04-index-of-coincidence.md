@@ -206,6 +206,25 @@ The true answer is 5, so Friedman's guess is rough. Look at the bottom of that f
 - **Two layers of cipher.** A substitution followed by a transposition still has an English-like IoC, because neither step flattens the counts. If the IoC says "one alphabet" but nothing reads, suspect two steps.
 - **Do not round too early.** Keep at least four decimal places while you work. The differences that matter are in the third decimal place.
 
+## By hand or by computer
+
+The IoC is arithmetic on counts: a calculator's job, and a computer's when there are many of them. Do each job by hand once, on a short text, so you know what it involves; then hand it over (the chapter *Brain, pencil or computer?* explains why[^g04-why]). Times are rough, for a practiced reader and a ciphertext of about 300 letters. In a live competition round, its rules decide: the National Cipher Challenge bans online solvers and AI.
+
+| Job | By hand | Learn with | Just do it |
+|---|---|---|---|
+| The IoC of the whole text | 15 to 20 minutes | Counts[^g04-counts], letter-count sheet[^g04-sheet-letters] | dCode[^g04-dcode-ioc] |
+| Split into L columns and average their IoCs, for L from 1 to 10 | 2 to 3 hours | Vigenère[^g04-vigenere], Vigenère sheet[^g04-sheet-vigenere] | Guballa[^g04-guballa-vig], dCode[^g04-dcode-vigenere] |
+| Friedman's estimate of the key length | 2 minutes with a calculator | Vigenère sheet[^g04-sheet-vigenere] | n/a |
+
+[^g04-why]: [Brain, pencil or computer?](https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer), the chapter before Guide 1.
+[^g04-counts]: Counts, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/counts](https://apps.thorwhalen.com/cryptology/#/workbench/counts). Letter counts beside English's, the IoC, the length and its factors.
+[^g04-sheet-letters]: Letter counts and IoC, a spreadsheet: SHEET:letters.
+[^g04-dcode-ioc]: dCode's index of coincidence: [dcode.fr/index-coincidence](https://www.dcode.fr/index-coincidence).
+[^g04-vigenere]: Vigenère, in the cryptology app: [apps.thorwhalen.com/cryptology/#/workbench/vigenere](https://apps.thorwhalen.com/cryptology/#/workbench/vigenere). Slices for any key length, with each slice's IoC.
+[^g04-sheet-vigenere]: Vigenère slices and IoC by key length, a spreadsheet: SHEET:vigenere.
+[^g04-guballa-vig]: Guballa's Vigenère solver: [guballa.de/vigenere-solver](https://www.guballa.de/vigenere-solver).
+[^g04-dcode-vigenere]: dCode's Vigenère solver: [dcode.fr/vigenere-cipher](https://www.dcode.fr/vigenere-cipher).
+
 ## Try it yourself
 
 1. Work out the IoC of the word `LETTERS`. (Hint: $N = 7$.)

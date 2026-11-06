@@ -542,6 +542,65 @@ guess it: if the message reads <code>meet me at the olX mill</code>, the
 X column is off.</li>
 </ul>
 </section>
+<section id="by-hand-or-by-computer" class="level2">
+<h2>By hand or by computer</h2>
+<p>Finding repeats by eye is slow and easy to get wrong; a program finds
+every one. Do each job by hand once, on a short text, so you know what
+it involves; then hand it over (the chapter <em>Brain, pencil or
+computer?</em> explains why<a href="#fn1" class="footnote-ref"
+id="fnref1" role="doc-noteref"><sup>1</sup></a>). Times are rough, for a
+practiced reader and a ciphertext of about 300 letters. In a live
+competition round, its rules decide: the National Cipher Challenge bans
+online solvers and AI.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Job</th>
+<th>By hand</th>
+<th>Learn with</th>
+<th>Just do it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Find repeated runs of three or more letters</td>
+<td>20 to 40 minutes</td>
+<td>Repeats<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a></td>
+<td>dCode<a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a></td>
+</tr>
+<tr>
+<td>Factor the gaps and tally the factors</td>
+<td>5 to 10 minutes</td>
+<td>Repeats<a href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a>, factors sheet<a href="#fn5"
+class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a></td>
+<td>dCode<a href="#fn6" class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a></td>
+</tr>
+<tr>
+<td>Solve each slice as a Caesar</td>
+<td>about 10 minutes a slice</td>
+<td>Vigenère<a href="#fn7" class="footnote-ref" id="fnref7"
+role="doc-noteref"><sup>7</sup></a>, Vigenère sheet<a href="#fn8"
+class="footnote-ref" id="fnref8"
+role="doc-noteref"><sup>8</sup></a></td>
+<td>Guballa<a href="#fn9" class="footnote-ref" id="fnref9"
+role="doc-noteref"><sup>9</sup></a>, dCode<a href="#fn10"
+class="footnote-ref" id="fnref10"
+role="doc-noteref"><sup>10</sup></a></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="try-it-yourself" class="level2">
 <h2>Try it yourself</h2>
 <ol type="1">
@@ -646,4 +705,43 @@ which is a. Both r and a are common in English, so S is a good
 guess.</li>
 </ol>
 </section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a
+href="https://apps.thorwhalen.com/cryptology/#/guides/00-brain-pencil-or-computer">Brain,
+pencil or computer?</a>, the chapter before Guide 1.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Repeats, in the cryptology app: <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/repeats">apps.thorwhalen.com/cryptology/#/workbench/repeats</a>.
+Repeated runs, their gaps, and the factor tally.<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>dCode’s Kasiski test: <a
+href="https://www.dcode.fr/kasiski-test">dcode.fr/kasiski-test</a>.<a
+href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Repeats, in the cryptology app: <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/repeats">apps.thorwhalen.com/cryptology/#/workbench/repeats</a>.
+Repeated runs, their gaps, and the factor tally.<a href="#fnref4"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Repeats and factors, a spreadsheet: SHEET:kasiski.<a
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>dCode’s Kasiski test: <a
+href="https://www.dcode.fr/kasiski-test">dcode.fr/kasiski-test</a>.<a
+href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Vigenère, in the cryptology app: <a
+href="https://apps.thorwhalen.com/cryptology/#/workbench/vigenere">apps.thorwhalen.com/cryptology/#/workbench/vigenere</a>.
+Slices for any key length, with each slice’s IoC.<a href="#fnref7"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Vigenère slices and IoC by key length, a spreadsheet:
+SHEET:vigenere.<a href="#fnref8" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Guballa’s Vigenère solver: <a
+href="https://www.guballa.de/vigenere-solver">guballa.de/vigenere-solver</a>.<a
+href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>dCode’s Vigenère solver: <a
+href="https://www.dcode.fr/vigenere-cipher">dcode.fr/vigenere-cipher</a>.<a
+href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
