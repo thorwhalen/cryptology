@@ -1,0 +1,158 @@
+[
+  {
+    "id": "letter-counts",
+    "title": "Letter counts and IoC",
+    "does": "Counts every letter of a text beside English's percentages and works out the index of coincidence.",
+    "guides": [
+      "01-reading-the-clues",
+      "02-frequency-analysis",
+      "04-index-of-coincidence"
+    ],
+    "methods": [
+      "letter frequencies",
+      "index of coincidence",
+      "chi-squared"
+    ],
+    "google_id": null,
+    "view_url": null,
+    "copy_url": null,
+    "xlsx": "sheets/01-letter-counts.xlsx"
+  },
+  {
+    "id": "caesar",
+    "title": "Caesar: all 26 shifts",
+    "does": "Shows a text moved back by all 26 shifts and scores each with chi-squared, so the best shift stands out.",
+    "guides": [
+      "02-frequency-analysis",
+      "03-keys-and-brute-force"
+    ],
+    "methods": [
+      "brute force",
+      "chi-squared"
+    ],
+    "google_id": null,
+    "view_url": null,
+    "copy_url": null,
+    "xlsx": "sheets/02-caesar.xlsx"
+  },
+  {
+    "id": "affine",
+    "title": "Affine: decrypt and inverses",
+    "does": "Decrypts an affine cipher from a and b, lists the inverses mod 26, and solves the key from two guessed letters.",
+    "guides": [
+      "03-keys-and-brute-force"
+    ],
+    "methods": [
+      "modular arithmetic",
+      "multiplicative inverses",
+      "two equations"
+    ],
+    "google_id": null,
+    "view_url": null,
+    "copy_url": null,
+    "xlsx": "sheets/03-affine.xlsx"
+  },
+  {
+    "id": "substitution",
+    "title": "Substitution helper",
+    "does": "Lets you build a substitution key letter by letter and shows the partly decrypted message as you go.",
+    "guides": [
+      "02-frequency-analysis",
+      "06-cribs-and-patterns"
+    ],
+    "methods": [
+      "frequency analysis",
+      "cribs and patterns"
+    ],
+    "google_id": null,
+    "view_url": null,
+    "copy_url": null,
+    "xlsx": "sheets/04-substitution.xlsx"
+  },
+  {
+    "id": "vigenere-slices",
+    "title": "Vigenere slices",
+    "does": "Scans key lengths 1 to 20 by average slice IoC, then solves each slice as a Caesar shift to suggest the key.",
+    "guides": [
+      "04-index-of-coincidence",
+      "05-repeats-and-key-length"
+    ],
+    "methods": [
+      "index of coincidence",
+      "splitting into slices",
+      "chi-squared"
+    ],
+    "google_id": null,
+    "view_url": null,
+    "copy_url": null,
+    "xlsx": "sheets/05-vigenere-slices.xlsx"
+  },
+  {
+    "id": "repeats-and-factors",
+    "title": "Repeats and factors",
+    "does": "Counts how many gaps between repeats each number from 2 to 20 divides, from gaps you type or repeats it finds.",
+    "guides": [
+      "05-repeats-and-key-length"
+    ],
+    "methods": [
+      "Kasiski examination",
+      "common factors"
+    ],
+    "google_id": null,
+    "view_url": null,
+    "copy_url": null,
+    "xlsx": "sheets/06-repeats-and-factors.xlsx"
+  },
+  {
+    "id": "columnar",
+    "title": "Columnar grid",
+    "does": "Writes a text into a grid of any width and reads it off by columns in the order you type, or undoes that.",
+    "guides": [
+      "07-transposition-detective-work"
+    ],
+    "methods": [
+      "columnar transposition",
+      "widths from factors",
+      "anagramming columns"
+    ],
+    "google_id": null,
+    "view_url": null,
+    "copy_url": null,
+    "xlsx": "sheets/07-columnar.xlsx"
+  },
+  {
+    "id": "digraphs",
+    "title": "Letter pairs (digraphs)",
+    "does": "Counts letter pairs and checks the Playfair and Hill tells: even length, doubled pairs, J.",
+    "guides": [
+      "09-two-letters-at-a-time",
+      "01-reading-the-clues"
+    ],
+    "methods": [
+      "digraph counts",
+      "Playfair tells",
+      "Hill tells"
+    ],
+    "google_id": null,
+    "view_url": null,
+    "copy_url": null,
+    "xlsx": "sheets/08-digraphs.xlsx"
+  },
+  {
+    "id": "hill",
+    "title": "Hill 2x2",
+    "does": "Finds a 2x2 Hill key's determinant and undo matrix mod 26, and encrypts or decrypts a text with it.",
+    "guides": [
+      "09-two-letters-at-a-time"
+    ],
+    "methods": [
+      "matrices mod 26",
+      "determinant",
+      "inverse matrix"
+    ],
+    "google_id": null,
+    "view_url": null,
+    "copy_url": null,
+    "xlsx": "sheets/09-hill.xlsx"
+  }
+]
