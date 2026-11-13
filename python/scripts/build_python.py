@@ -6,8 +6,9 @@ lesson is one TOML file in ``python/lessons/`` in the PRIMM shape (Predict, Run,
 Modify, Make); the practice texts are ``python/texts.toml``. This script is the only thing that
 reads them, and it writes:
 
-- ``python/lessons.json``: every lesson with its texts filled in, which the cryptology app syncs
-  at a pinned commit (its ``scripts/sync-guides.mjs``) and shows as fiddles;
+- ``python/lessons.json``: every lesson with its texts filled in, and the concept explainers of
+  ``python/concepts.toml``, which the cryptology app syncs at a pinned commit (its
+  ``scripts/sync-guides.mjs``) and shows as fiddles;
 - ``python/notebooks/NN-<id>.ipynb``: the same lesson as a notebook, opened in Google Colab from
   the app's "Open in Colab" link.
 
@@ -16,7 +17,8 @@ Before writing anything it checks, by running them:
 - every snippet runs without an error, and the lessons use built-ins only (no ``import``) except
   in a lesson marked ``imports = true``;
 - each Predict's right choice is exactly what its code prints, and no other choice is;
-- each Modify and Make solution passes its check, and each starter does not (so the task is real).
+- each Modify and Make solution passes its check, and each starter does not (so the task is real);
+- each concept explainer names a lesson that exists.
 
 Usage::
 
@@ -314,17 +316,30 @@ def notebook(lesson: dict) -> dict:
     }
 
 
-def app_data(lessons: list[dict], texts: dict[str, dict]) -> dict:
-    """What the app reads: the lessons, each with its Colab link."""
+def load_concepts(path: Path = ROOT / "concepts.toml") -> list[dict]:
+    """The concept explainers, in file order, each as ``{"id", "title", "summary", "lesson"}``."""
+    return [{"id": k, **v} for k, v in tomllib.loads(path.read_text()).items()]
+
+
+def check_concepts(concepts: list[dict], lessons: list[dict]) -> list[str]:
+    ids = {l["id"] for l in lessons}
+    fields = {"title", "summary", "lesson"}
+    problems = [f"concept {c['id']}: needs exactly {sorted(fields)}" for c in concepts if set(c) - {"id"} != fields]
+    return problems + [f"concept {c['id']}: no lesson {c.get('lesson')!r}" for c in concepts if c.get("lesson") not in ids]
+
+
+def app_data(lessons: list[dict], texts: dict[str, dict], concepts: list[dict] = ()) -> dict:
+    """What the app reads: the lessons, each with its Colab link, and the concept explainers."""
     keep = ("id", "number", "title", "job", "learn", "intro", "bonus", *STEPS)
     return {
         "texts": {k: {"title": v["title"], "cipher": v["cipher"]} for k, v in texts.items()},
         "lessons": [{**{k: l[k] for k in keep if k in l}, "colab": COLAB + notebook_name(l)} for l in lessons],
+        "concepts": list(concepts),
     }
 
 
-def outputs(lessons: list[dict], texts: dict[str, dict]) -> dict[Path, str]:
-    files = {ROOT / "lessons.json": json.dumps(app_data(lessons, texts), indent=1, ensure_ascii=False) + "\n"}
+def outputs(lessons: list[dict], texts: dict[str, dict], concepts: list[dict] = ()) -> dict[Path, str]:
+    files = {ROOT / "lessons.json": json.dumps(app_data(lessons, texts, concepts), indent=1, ensure_ascii=False) + "\n"}
     for l in lessons:
         files[ROOT / "notebooks" / notebook_name(l)] = json.dumps(notebook(l), indent=1, ensure_ascii=False) + "\n"
     return files
@@ -340,10 +355,12 @@ def main(argv: list[str] | None = None) -> int:
     problems = [f"duplicate lesson id {i}" for i in set(ids) if ids.count(i) > 1]
     for l in lessons:
         problems += check_lesson(l)
+    concepts = load_concepts()
+    problems += check_concepts(concepts, lessons)
     if problems:
         print("\n".join(problems), file=sys.stderr)
         return 1
-    files = outputs(lessons, texts)
+    files = outputs(lessons, texts, concepts)
     if args.check:
         stale = [str(p.relative_to(ROOT.parent)) for p, s in files.items() if not p.exists() or p.read_text() != s]
         written = set(files)

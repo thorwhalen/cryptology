@@ -31,3 +31,5 @@ print(t[1::3])
 ## How it is built
 
 The lessons are one TOML file each in [`lessons/`](lessons/), and the practice texts (all original) are [`texts.toml`](texts.toml), stored as plaintext plus cipher and key. `python python/scripts/build_python.py` enciphers the texts, fills them into the lessons, runs every snippet under CPython, checks that each Predict's right answer is exactly what its code prints, that each Modify and Make solution passes its check and each starter does not, and that the lessons use no imports outside the bonus. Then it writes [`lessons.json`](lessons.json), which the app reads at a pinned commit, and the notebooks in [`notebooks/`](notebooks/). `--check` checks without writing and fails if those files are out of date. Never edit `lessons.json` or a notebook by hand.
+
+The Python a fiddle uses is explained in [`concepts.toml`](concepts.toml): a title, a few lines, and the lesson that teaches it. The app lists them, collapsed, under the fiddles that use them, each linking to its lesson; the build checks that every lesson named there exists.
