@@ -1,0 +1,108 @@
+# The Python a fiddle uses, explained in a few lines each, with the lesson that teaches it.
+# The app lists them, collapsed, under any fiddle that names them (its round hints, for now), and
+# links each one to its lesson. The build checks that every `lesson` exists.
+#
+# [<id>]
+# title = "what it is called"
+# summary = "a few lines, in markdown (`code` and **bold** only)"
+# lesson = "<lesson id>"
+
+[variables]
+title = "Variables"
+summary = "A name for a value: `t = \"HELLO\"` keeps the text under the name `t`, and every later line can use `t`."
+lesson = "hold"
+
+[len]
+title = "len()"
+summary = "How many items something has: `len(\"HELLO\")` is 5. On a text it counts every character, spaces included."
+lesson = "hold"
+
+[comments]
+title = "Comments: #"
+summary = "Everything after `#` on a line is a note for people. Python skips it."
+lesson = "hold"
+
+[split-join]
+title = "split() and join()"
+summary = "`text.split()` cuts a text into a list of words at the spaces and line breaks. `\"\".join(pieces)` glues pieces back into one text, with the text before `.join` between them: `\"\".join(text.split())` drops every space."
+lesson = "clean"
+
+[for]
+title = "for loops"
+summary = "`for ch in text:` runs the indented lines once for each item, with `ch` set to that item each time."
+lesson = "clean"
+
+[if]
+title = "if"
+summary = "`if test:` runs the indented lines only when the test is true. `==` asks \"equal?\", `!=` asks \"different?\"."
+lesson = "clean"
+
+[slices]
+title = "Slices: t[a:b]"
+summary = "`t[a:b]` is the part of `t` from position `a` up to, but not including, `b`. Positions count from 0."
+lesson = "slice"
+
+[range]
+title = "range()"
+summary = "`range(stop)` counts 0, 1, 2, ... up to just before `stop`; `range(start, stop)` starts elsewhere. A `for` loop over it runs a set number of times."
+lesson = "grid"
+
+[remainder]
+title = "% and //"
+summary = "`a // b` is how many whole times `b` fits in `a`; `a % b` is what is left over. `len(t) % 7 == 0` asks \"do 7 columns fit exactly?\"."
+lesson = "grid"
+
+[nested-loops]
+title = "A loop inside a loop"
+summary = "A `for` inside a `for` runs the inner loop in full for each turn of the outer one: rows, then the letters in each row."
+lesson = "grid"
+
+[lists]
+title = "Lists"
+summary = "`[a, b, c]` keeps several values in order. `xs[0]` is the first one, and `len(xs)` how many there are."
+lesson = "columns"
+
+[list-comprehensions]
+title = "List comprehensions"
+summary = "`[f(x) for x in items]` makes a list in one line, one item for each turn of the loop. Without the square brackets, inside `join()` or `sum()`, it hands the items over one at a time."
+lesson = "columns"
+
+[zip]
+title = "zip()"
+summary = "`zip(a, b)` walks two sequences side by side, giving a pair (one item from each) at every step."
+lesson = "columns"
+
+[list-as-key]
+title = "A list of numbers as a key"
+summary = "`order = [2, 0, 1]` names the columns from left to right; `columns[c] for c in order` takes them in that order."
+lesson = "rearrange"
+
+[in]
+title = "in"
+summary = "`x in things` is True when `x` is one of `things`: a letter in a text, a word in a list, a pair in a set."
+lesson = "cribs"
+
+[dicts]
+title = "Dictionaries"
+summary = "`{}` maps keys to values: `counts[\"E\"] = 12`. `counts.get(key, 0)` reads a value, or 0 when the key is not there yet."
+lesson = "count"
+
+[sorted-key]
+title = "sorted() and max() with key="
+summary = "`sorted(items, key=f)` puts items in the order of `f(item)`; `reverse=True` puts the biggest first. `max(scores, key=scores.get)` is the key with the biggest value."
+lesson = "rank"
+
+[lambda]
+title = "lambda"
+summary = "`lambda i: keyword[i]` is a one-line function without a name, handy as a `key=`: here it sorts positions by the keyword's letter at each one."
+lesson = "rank"
+
+[sets]
+title = "Sets"
+summary = "`{\"TH\", \"HE\"}` is a set: no order, no repeats, and `in` on it is quick."
+lesson = "rank"
+
+[sum]
+title = "sum()"
+summary = "`sum(1 for x in items if test)` counts the items that pass the test: a 1 for each, added up."
+lesson = "ioc"
