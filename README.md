@@ -26,12 +26,17 @@ Each guide is a PDF (in [`pdf/`](pdf/)) built from markdown (in [`guides/`](guid
 
 They also work well as sources for Google's Gemini Notebook (NotebookLM): its Video Overviews draw on the figures in the PDFs.
 
+## Python for codebreakers
+
+Fourteen short lessons in the plain Python a codebreaker needs to write their own tools, from holding a ciphertext in a variable to trying a partial substitution key: [`python/`](python/). Each runs as fiddles in the app ([#/python](https://apps.thorwhalen.com/cryptology/#/python)) and opens as a notebook in Google Colab.
+
 ## Building
 
 ```sh
 python guides/scripts/fig_04_index_of_coincidence.py   # one guide's figures (matplotlib)
 guides/scripts/build_pdfs.sh                          # every guide's PDF (pandoc + xelatex)
 python guides/scripts/build_book.py                   # the book PDF, and html/ for the web edition
+python python/scripts/build_python.py                 # the Python lessons: check every snippet, write lessons.json and the notebooks
 ```
 
 Green "In the app" boxes are blockquotes that start with `**In the app:**`; `guides/scripts/app_links.lua` styles them in the PDFs and the HTML. The book's cover, preface and LaTeX header are in `guides/book/`. The web edition in `html/` is one HTML fragment per guide plus `index.json` (sections and words); the cryptology app reads it at a pinned commit.

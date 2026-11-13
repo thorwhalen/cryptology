@@ -1,0 +1,66 @@
+id = "hold"
+number = 1
+title = "Hold the ciphertext"
+job = "Keep the text in a variable, so every tool after this one can use it."
+learn = ["variables", "strings in triple quotes", "print()", "len()", "comments with #"]
+intro = "Every tool starts the same way: the ciphertext in a variable. Triple quotes let you paste a text that runs over several lines, exactly as it was printed. A `#` starts a comment: Python ignores the rest of the line, so you can leave notes for yourself."
+
+[predict]
+question = "What does this print?"
+code = '''
+ct = """AB
+CD"""
+print(len(ct))
+'''
+choices = ["4", "5", "2"]
+answer = 1
+explain = "The line break between B and C is a character too: A, B, the break, C, D. Spaces, commas and line breaks all count, which is why the next lesson cleans the text."
+
+[run]
+code = '''
+# Tom's letter, pasted between triple quotes
+ct = """{{caesar}}"""
+
+print(ct)
+print(len(ct), "characters, counting spaces, commas and line breaks")
+'''
+
+[investigate]
+prompts = [
+  "Put a `#` in front of `print(ct)`. What happens to that line?",
+  "Change `print(ct)` to `print(ct.lower())`. What changes, and what stays the same?",
+  "A comma in `print` puts a space between the pieces. Add `print(\"Length:\", len(ct))`.",
+]
+
+[modify]
+task = "Make a variable `n` that holds the length of the text, so the last line prints it."
+code = '''
+ct = """{{caesar}}"""
+n = 0  # change this line so n is the length of ct
+print(n)
+'''
+check = '''
+assert n == len(ct), "n should be the length of ct. Which function gives a length?"
+'''
+hint = "`len(ct)` is the length of `ct`."
+solution = '''
+ct = """{{caesar}}"""
+n = len(ct)
+print(n)
+'''
+
+[make]
+task = "Write two lines: put the text `XLI PEQT` in a variable called `msg`, then make `size` its length (spaces count)."
+code = '''
+# your two lines here
+'''
+check = '''
+assert msg == "XLI PEQT", "msg should hold exactly XLI PEQT, in capitals, with one space"
+assert size == len(msg), "size should be the length of msg"
+'''
+hint = "A short text fits in ordinary quotes: `msg = \"XLI PEQT\"`."
+solution = '''
+msg = "XLI PEQT"
+size = len(msg)
+print(msg, size)
+'''

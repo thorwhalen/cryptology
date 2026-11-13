@@ -1,0 +1,57 @@
+id = "bonus"
+number = 14
+bonus = true
+imports = true
+title = "Three imports worth knowing"
+job = "Three one-line helpers from Python's standard library, once the long way is clear."
+learn = ["collections.Counter", "textwrap.wrap()", "itertools.permutations()"]
+intro = "Everything so far used built-ins only, on purpose: you can read every line. Python also comes with a standard library, and three of its tools save real work. `Counter` counts in one line; `textwrap.wrap` cuts a text into rows; `permutations` lists every order of some columns, which turns \"look\" into \"search\": try all 720 orders of 6 columns and print only those that contain a crib. It is still your own code."
+
+[run]
+code = '''
+from collections import Counter
+from itertools import permutations
+import textwrap
+
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+
+print(Counter(t).most_common(5))     # lesson 8 and 9 in one line
+print(textwrap.wrap(t, 6)[:4])       # lesson 4's rows, as a list
+
+# Every order of the 6 columns: keep the ones that make HARBOUR appear
+for order in permutations(range(6)):
+    plain = "".join(t[i + k] for i in range(0, len(t), 6) for k in order)
+    if "HARBOUR" in plain:
+        print(order, plain[:30])
+'''
+
+[investigate]
+prompts = [
+  "How many orders does `permutations(range(6))` try? Add a counter, or `print(len(list(permutations(range(6)))))`.",
+  "Change the crib to THE. Why do far more orders pass?",
+  "`Counter` can add and subtract: try `Counter(\"ABBA\") + Counter(\"AB\")`.",
+]
+
+[make]
+task = "Make `top`, the three commonest letters of `t` as a list of (letter, count) pairs, using `Counter`."
+code = '''
+from collections import Counter
+
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+# your line here
+'''
+check = '''
+from collections import Counter as _C
+assert top == _C(t).most_common(3), "top should be Counter(t).most_common(3)"
+'''
+hint = "`Counter(t).most_common(3)`"
+solution = '''
+from collections import Counter
+
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+top = Counter(t).most_common(3)
+print(top)
+'''

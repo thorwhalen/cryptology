@@ -1,0 +1,76 @@
+id = "partial-key"
+number = 13
+title = "Try a partial key"
+job = "Write your guesses into a substitution ciphertext and see what appears."
+learn = ["str.maketrans()", "str.translate()", "capitals and lower case to tell guesses apart"]
+intro = "Breaking a substitution by hand means guessing a few letters, writing them in, and looking at what the guesses make. `str.maketrans(\"QST\", \"the\")` builds a key from cipher letters to plain ones; `ct.translate(key)` writes it into the whole text. Guessed letters come out in lower case and the rest stay as capitals, so you see at a glance what is still to do."
+
+[predict]
+question = "What does this print?"
+code = '''
+key = str.maketrans("XQ", "th")
+print("XQB".translate(key))
+'''
+choices = ["thB", "THB", "XQB", "th"]
+answer = 0
+explain = "X becomes t and Q becomes h. B is not in the key, so it stays as it was: a capital."
+
+[run]
+code = '''
+ct = """{{substitution}}"""
+
+guess_cipher = "QST"
+guess_plain = "the"
+key = str.maketrans(guess_cipher, guess_plain)
+print(ct.translate(key))
+'''
+note = "Agnes's reply to Tom, in a substitution cipher. The commonest three-letter word in English is THE; here QST is a good bet for it."
+
+[investigate]
+prompts = [
+  "Find a one-letter word in the ciphertext. In English it is A or I. Add a guess for it.",
+  "Look for `tQ`-like patterns: a guessed letter next to an unguessed one often suggests the next guess.",
+  "What happens if two cipher letters are given the same plain letter?",
+]
+
+[modify]
+task = "The letter starts DEAR, like Tom's. Add guesses so the first four letters come out as `dear`."
+code = '''
+ct = """{{substitution}}"""
+
+guess_cipher = "QST"
+guess_plain = "the"
+key = str.maketrans(guess_cipher, guess_plain)
+print(ct.translate(key))
+'''
+check = '''
+assert ct.translate(key)[:4] == "dear", "the first four letters should come out as dear: which cipher letters stand there?"
+'''
+hint = "The text starts HTLN. T is already e from THE; add H, L and N to `guess_cipher` and d, a and r, in the same order, to `guess_plain`."
+solution = '''
+ct = """{{substitution}}"""
+
+guess_cipher = "QSTHLN"
+guess_plain = "thedar"
+key = str.maketrans(guess_cipher, guess_plain)
+print(ct.translate(key))
+'''
+
+[make]
+task = "The keyword was LIGHTHOUSE: the cipher alphabet is `{{substitution_alphabet}}`, standing for A to Z. Make `full`, the whole reply deciphered in lower case, with one `maketrans` from that alphabet to `\"abcdefghijklmnopqrstuvwxyz\"`."
+code = '''
+ct = """{{substitution}}"""
+cipher_alphabet = "{{substitution_alphabet}}"
+# your code here
+'''
+check = '''
+assert full == """{{substitution_plain}}""".lower(), "full should be the whole reply in lower case: maketrans(cipher_alphabet, the lower-case alphabet), then translate ct"
+'''
+hint = "`key = str.maketrans(cipher_alphabet, \"abcdefghijklmnopqrstuvwxyz\")`, then `full = ct.translate(key)`."
+solution = '''
+ct = """{{substitution}}"""
+cipher_alphabet = "{{substitution_alphabet}}"
+key = str.maketrans(cipher_alphabet, "abcdefghijklmnopqrstuvwxyz")
+full = ct.translate(key)
+print(full)
+'''

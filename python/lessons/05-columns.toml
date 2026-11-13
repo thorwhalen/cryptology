@@ -1,0 +1,79 @@
+id = "columns"
+number = 5
+title = "Read a grid by columns"
+job = "Read the columns of a grid, top to bottom, as a columnar transposition does."
+learn = ["lists", "list comprehensions", "columns as step slices: t[c::w]", "zip(*rows) (a bonus)"]
+intro = "A columnar transposition writes the message in rows and reads it off by columns. Column c of a grid of width w is the step slice `t[c::w]`: one letter from every row. A list holds several values in order, and a list comprehension builds one in a single line: `[t[i:i+w] for i in range(0, len(t), w)]` is the list of rows."
+
+[predict]
+question = "What does this print?"
+code = '''
+t = "ABCDEFGHI"
+for c in range(3):
+    print(t[c::3])
+'''
+choices = ["ADG\nBEH\nCFI", "ABC\nDEF\nGHI", "AD\nBE\nCF", "ABC\nBCD\nCDE"]
+answer = 0
+explain = "In rows of three the grid is ABC, DEF, GHI. `t[0::3]` takes positions 0, 3 and 6, which is the first column, ADG; then BEH and CFI."
+
+[run]
+code = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+w = 6
+
+rows = [t[i:i+w] for i in range(0, len(t), w)]
+print(rows[:3])          # the first three rows, as a list
+for c in range(w):
+    print(c, t[c::w])    # each column, top to bottom
+'''
+
+[investigate]
+prompts = [
+  "How many items does `rows` hold? Add `print(len(rows))`.",
+  "What is `rows[1][2]`? Which row and which column is it in?",
+  "A bonus: `cols = list(zip(*rows))` turns the rows into columns, as tuples of letters. Print `cols[0]` and compare it with `t[0::6]`.",
+]
+
+[modify]
+task = "Make `cols`, the list of the 6 columns, with a list comprehension like the one that made `rows`."
+code = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+w = 6
+rows = [t[i:i+w] for i in range(0, len(t), w)]
+cols = []   # change this line
+print(cols)
+'''
+check = '''
+assert cols == [t[c::6] for c in range(6)], "cols should be [t[0::6], t[1::6], ... t[5::6]]"
+'''
+hint = "`[t[c::w] for c in range(w)]`"
+solution = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+w = 6
+rows = [t[i:i+w] for i in range(0, len(t), w)]
+cols = [t[c::w] for c in range(w)]
+print(cols)
+'''
+
+[make]
+task = "Read the grid off by columns, the way a columnar transposition would send it: make `read_off`, every column of `t` at width `w`, joined end to end."
+code = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+w = 6
+# your line here
+'''
+check = '''
+assert read_off == "".join(t[c::w] for c in range(w)), "read_off should be column 0, then column 1, and so on, joined into one text"
+'''
+hint = "`\"\".join(...)` glues a list of texts together; the list is the columns."
+solution = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+w = 6
+read_off = "".join(t[c::w] for c in range(w))
+print(read_off)
+'''
