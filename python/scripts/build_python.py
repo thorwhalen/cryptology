@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Build the Python lessons: check every snippet under CPython, then write the app's data and the notebooks.
 
 The lessons teach the plain Python a student needs to write their own codebreaking tools. Each
@@ -269,7 +270,9 @@ def notebook(lesson: dict) -> dict:
             "",
             lesson["intro"],
             "",
-            f"*The same lesson, with fiddles that run in the page, is in the [cryptology app]({app}). Save a copy of this notebook to your own Drive (File → Save a copy in Drive) to keep your work.*",
+            f"*The same lesson, with code that runs in your browser, is in the [cryptology app]({app}). Save a copy of this notebook to your own Drive (File → Save a copy in Drive) to keep your work.*",
+            "",
+            f"<small>From [{REPO}](https://github.com/{REPO}). Code: MIT. Text: CC BY 4.0.</small>",
         )
     ]
     if "predict" in lesson:

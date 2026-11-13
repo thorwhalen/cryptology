@@ -1,8 +1,15 @@
 # Python for codebreakers
 
-Fourteen short lessons in the plain Python a codebreaker needs to write their own tools: hold the text, clean it, slice it, print grids, read columns, rearrange them, look for cribs, count and rank letters, measure the index of coincidence, turn letters into numbers, keep a tool in a function, and try a partial key. Built-ins only, apart from a bonus lesson with three standard-library helpers.
+For the same readers as the guides, with no Python needed to start: thirteen short lessons and a bonus that teach just enough Python to build your own codebreaking tools, from holding a ciphertext in a variable to trying a partial substitution key. Every exercise works on a ciphertext, and the lessons use only what comes with Python itself, apart from the bonus.
 
-Each lesson follows PRIMM (Predict, Run, Investigate, Modify, Make), the method the UK's National Centre for Computing Education teaches. In the [cryptology app](https://apps.thorwhalen.com/cryptology/#/python) every step is a fiddle that runs real Python in the page; here each lesson is also a notebook you can open in Google Colab and save to your own Drive.
+**[Start lesson 1 in the app](https://apps.thorwhalen.com/cryptology/#/python/hold)**: the code runs in your web browser, with nothing to install and no sign-in, and your work is kept on your device. Each lesson is also a notebook below that opens in Google Colab, where you can save your own copy to Google Drive; Colab needs a Google account (for a young reader, a parent's or the school's).
+
+Each lesson follows PRIMM (Predict, Run, Investigate, Modify, Make), the method the UK's [National Centre for Computing Education teaches](https://static.teachcomputing.org/pedagogy/QR11-PRIMM.pdf). It starts with a question like this one, from lesson 3: what does this print?
+
+```python
+t = "ABCDEFGHIJ"
+print(t[1::3])
+```
 
 | # | Lesson | The job | Notebook |
 |---|---|---|---|

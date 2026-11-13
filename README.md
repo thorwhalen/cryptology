@@ -28,7 +28,7 @@ They also work well as sources for Google's Gemini Notebook (NotebookLM): its Vi
 
 ## Python for codebreakers
 
-Fourteen short lessons in the plain Python a codebreaker needs to write their own tools, from holding a ciphertext in a variable to trying a partial substitution key: [`python/`](python/). Each runs as fiddles in the app ([#/python](https://apps.thorwhalen.com/cryptology/#/python)) and opens as a notebook in Google Colab.
+For the same readers as the guides, with no Python needed to start: thirteen short lessons and a bonus that teach just enough Python to build your own codebreaking tools, and every exercise works on a ciphertext. **[Start lesson 1 in the app](https://apps.thorwhalen.com/cryptology/#/python/hold)**: the code runs in your web browser, with nothing to install and no sign-in. Each lesson is also a notebook in [`python/`](python/) that opens in Google Colab, which needs a Google account (for a young reader, a parent's or the school's).
 
 ## Building
 
@@ -45,4 +45,4 @@ How the guides are written: [`guides/style-guide.md`](guides/style-guide.md). Gu
 
 ## License
 
-Text and figures: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Code: MIT.
+Text and figures: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) ([`LICENSE-content`](LICENSE-content)). Code: MIT ([`LICENSE`](LICENSE)).
