@@ -1,0 +1,89 @@
+id = "count"
+number = 8
+title = "Count letters"
+job = "Count every letter of the text, and draw the counts as bars."
+learn = ["dictionaries", "dict.get(key, 0)", "\"#\" * n for a bar", "counting pairs of letters"]
+intro = "A dictionary keeps a value for each key: here, a count for each letter. `counts.get(ch, 0)` reads the count so far, or 0 for a letter not seen yet, and the loop adds one. Multiplying a text by a number repeats it, so `\"#\" * 5` is a bar five long."
+
+[predict]
+question = "What does this print?"
+code = '''
+counts = {}
+for ch in "ABBA":
+    counts[ch] = counts.get(ch, 0) + 1
+print(counts)
+'''
+choices = ["{'A': 2, 'B': 2}", "{'A': 1, 'B': 1}", "{'A': 4}", "{'ABBA': 1}"]
+answer = 0
+explain = "The loop sees A, B, B, A. Each time it adds one to that letter's count, so both end at 2. A dictionary prints its keys in the order they were first added."
+
+[run]
+code = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+
+counts = {}
+for ch in t:
+    counts[ch] = counts.get(ch, 0) + 1
+
+for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+    n = counts.get(letter, 0)
+    print(letter, n, "#" * n)
+'''
+
+[investigate]
+prompts = [
+  "Which letter has the longest bar? In English the longest is usually E.",
+  "Change `\"#\"` to `\"*\"`, or to `\"#\" * 2` for longer bars.",
+  "What does `counts.get(\"B\", 0)` give for a letter that never appears? And `counts[\"B\"]`?",
+]
+
+[modify]
+task = "Count pairs of letters (bigrams) instead of single letters. Loop over the positions `range(len(t) - 1)` and count `t[i:i+2]`, in a dictionary called `pairs`."
+code = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+
+pairs = {}
+for ch in t:
+    pairs[ch] = pairs.get(ch, 0) + 1
+print(pairs)
+'''
+check = '''
+expected = {}
+for i in range(len(t) - 1):
+    expected[t[i:i+2]] = expected.get(t[i:i+2], 0) + 1
+assert pairs == expected, "pairs should count every two-letter piece t[i:i+2]"
+'''
+hint = "Loop `for i in range(len(t) - 1):` and use `pair = t[i:i+2]` where the code used `ch`."
+solution = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+
+pairs = {}
+for i in range(len(t) - 1):
+    pair = t[i:i+2]
+    pairs[pair] = pairs.get(pair, 0) + 1
+print(pairs)
+'''
+
+[make]
+task = "Make `vowels`, how many letters of `t` are A, E, I, O or U. (`ch in \"AEIOU\"` is True for a vowel.)"
+code = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+# your code here
+'''
+check = '''
+assert vowels == sum(1 for c in t if c in "AEIOU"), "vowels should count the letters of t that are A, E, I, O or U"
+'''
+hint = "Start with `vowels = 0`, loop over `t`, and add one when `ch in \"AEIOU\"`."
+solution = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+vowels = 0
+for ch in t:
+    if ch in "AEIOU":
+        vowels = vowels + 1
+print(vowels, "of", len(t))
+'''

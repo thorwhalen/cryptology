@@ -1,0 +1,85 @@
+id = "clean"
+number = 2
+title = "Clean it"
+job = "Keep only the letters, in capitals, so counting and slicing see the cipher and nothing else."
+learn = ["str.upper()", "str.replace()", "split() and join()", "for loops", "if and str.isalpha()"]
+intro = "Spaces, punctuation and line breaks get in the way of counting letters and of cutting the text into pieces. A `for` loop looks at the text one character at a time; `if ch.isalpha():` keeps a character only when it is a letter. Once that is clear, the same thing fits on one line."
+
+[predict]
+question = "What does this print?"
+code = '''
+s = "Hi, Tom!"
+out = ""
+for ch in s:
+    if ch.isalpha():
+        out = out + ch.upper()
+print(out)
+'''
+choices = ["HITOM", "HI, TOM!", "HI TOM", "Hi,Tom!"]
+answer = 0
+explain = "The loop visits H, i, the comma, the space, T, o, m and the !. Only the five letters pass `isalpha()`, and each is added in capitals."
+
+[run]
+code = '''
+ct = """{{caesar}}"""
+
+# 1. Remove every space and line break: split() cuts the text at them, join() glues the pieces
+print("".join(ct.split()))
+
+# 2. Keep only the letters, in capitals, one character at a time
+t = ""
+for ch in ct:
+    if ch.isalpha():
+        t = t + ch.upper()
+print(t)
+print(len(ct), "characters before,", len(t), "letters after")
+'''
+
+[investigate]
+prompts = [
+  "Compare the first two lines printed. Which characters did `\"\".join(ct.split())` keep that the loop dropped?",
+  "Change `\"\".join` to `\"-\".join`. What does the glue do?",
+  "The whole loop fits on one line: `t = \"\".join(ch for ch in ct if ch.isalpha()).upper()`. Add it after the loop and print `t` again. Same answer?",
+]
+
+[modify]
+task = "Change the loop so it keeps letters **and** spaces, so the word breaks survive. Commas, full stops and line breaks should still go."
+code = '''
+ct = """{{caesar}}"""
+t = ""
+for ch in ct:
+    if ch.isalpha():
+        t = t + ch.upper()
+print(t)
+'''
+check = '''
+assert t == "".join(c for c in ct.upper() if c.isalpha() or c == " "), "t should hold the letters and the spaces, nothing else"
+'''
+hint = "`or` joins two tests: `if ch.isalpha() or ch == \" \":`."
+solution = '''
+ct = """{{caesar}}"""
+t = ""
+for ch in ct:
+    if ch.isalpha() or ch == " ":
+        t = t + ch.upper()
+print(t)
+'''
+
+[make]
+task = "Count the letters in `ct` with a loop: start with `count = 0` and add 1 for every letter."
+code = '''
+ct = """{{caesar}}"""
+# your loop here
+'''
+check = '''
+assert count == sum(1 for c in ct if c.isalpha()), "count should be the number of letters in ct"
+'''
+hint = "`count = count + 1` inside an `if ch.isalpha():`."
+solution = '''
+ct = """{{caesar}}"""
+count = 0
+for ch in ct:
+    if ch.isalpha():
+        count = count + 1
+print(count)
+'''

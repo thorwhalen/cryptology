@@ -1,0 +1,97 @@
+id = "functions"
+number = 12
+title = "Keep a tool"
+job = "Wrap a job in a function, so one line runs it on any text with any key."
+learn = ["def and return", "parameters", "lambda", "map(), and why it needs list() or join()"]
+intro = "A function is a tool with a name. `def shift(text, k):` says what it needs; `return` hands back the answer. Once written, `shift(t, -3)` does the whole job, and a loop can try all 26 keys in two lines. `lambda` makes a small function in place, and `map` applies a function to every letter, but lazily: it does nothing until `list(...)` or `\"\".join(...)` asks for the results."
+
+[predict]
+question = "What does this print?"
+code = '''
+def double(s):
+    return s + s
+
+print(double("AB"), len(double("XYZ")))
+'''
+choices = ["ABAB 6", "AB 3", "ABAB 3", "AABB 6"]
+answer = 0
+explain = "`double(\"AB\")` returns AB + AB, ABAB. `double(\"XYZ\")` is XYZXYZ, six letters long."
+
+[run]
+code = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+
+def shift(text, k):
+    out = ""
+    for ch in text:
+        out = out + chr((ord(ch) - 65 + k) % 26 + 65)
+    return out
+
+for k in range(26):
+    print(k, shift(t[:30], -k))
+'''
+
+[investigate]
+prompts = [
+  "Which line reads as English? Its number is the key.",
+  "`up = lambda ch: chr((ord(ch) - 65 + 1) % 26 + 65)` is a one-letter shift. Add it and try `print(\"\".join(map(up, \"HAL\")))`.",
+  "Now print `map(up, \"HAL\")` on its own. It is a promise of letters, not the letters: `list(map(up, \"HAL\"))` makes it keep the promise.",
+]
+
+[modify]
+task = "Change `shift` so a character that is not a capital letter (a space, a comma, a line break) passes through unchanged. Then make `message`, the whole of `ct` shifted back by the key you found."
+code = '''
+ct = """{{caesar}}"""
+
+def shift(text, k):
+    out = ""
+    for ch in text:
+        out = out + chr((ord(ch) - 65 + k) % 26 + 65)
+    return out
+
+message = ""   # change this line
+print(message)
+'''
+check = '''
+assert message == """{{caesar_plain}}""", "message should be the whole letter, spaces and punctuation kept: shift only the letters, and shift back by the key"
+'''
+hint = "Inside the loop: `if ch.isalpha():` shift it, `else:` add `ch` as it is. Then `message = shift(ct, -k)` with the key from the Run step."
+solution = '''
+ct = """{{caesar}}"""
+
+def shift(text, k):
+    out = ""
+    for ch in text:
+        if ch.isalpha():
+            out = out + chr((ord(ch) - 65 + k) % 26 + 65)
+        else:
+            out = out + ch
+    return out
+
+message = shift(ct, -11)
+print(message)
+'''
+
+[make]
+task = "Write a function `ioc(text)` that returns the index of coincidence of a text of capital letters (lesson 10's formula). Then any text is one line away: `print(ioc(t))`."
+code = '''
+# def ioc(text):
+#     ...
+'''
+check = '''
+assert abs(ioc("AAB") - 1 / 3) < 1e-9, "ioc(\"AAB\") should be 1/3"
+assert abs(ioc("ABCD")) < 1e-9, "ioc(\"ABCD\") should be 0: no letter repeats"
+assert abs(ioc("AAAA") - 1) < 1e-9, "ioc(\"AAAA\") should be 1"
+'''
+hint = "Inside the function: count the letters into a dictionary, `N = len(text)`, and `return sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))`."
+solution = '''
+def ioc(text):
+    counts = {}
+    for ch in text:
+        counts[ch] = counts.get(ch, 0) + 1
+    N = len(text)
+    return sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))
+
+print(ioc("AAB"), ioc("HELLOTHERE"))
+'''

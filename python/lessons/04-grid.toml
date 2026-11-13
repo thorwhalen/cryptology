@@ -1,0 +1,86 @@
+id = "grid"
+number = 4
+title = "Print it in a grid"
+job = "Write the text out in rows of a fixed width, to look for patterns that line up."
+learn = ["range(start, stop, step)", "for loops over numbers", "\" \".join() to space letters out", "% (the remainder)", "a loop inside a loop"]
+intro = "Printing a text in rows of a fixed width is the first look at any transposition: at the right width, the rows line up and the columns show the pattern. `range(0, len(t), w)` counts 0, w, 2w, ... so each row starts where the last one ended. A transposition keeps every letter, so the right width usually divides the length exactly: `len(t) % w` is the remainder, and 0 means it divides."
+
+[predict]
+question = "What does this print?"
+code = '''
+t = "ABCDEFGHIJ"
+for i in range(0, len(t), 4):
+    print(t[i:i+4])
+'''
+choices = ["ABCD\nEFGH\nIJ", "ABCD\nEFGH", "AEI\nBFJ\nCG\nDH", "ABCD\nBCDE\nCDEF"]
+answer = 0
+explain = "`i` takes the values 0, 4 and 8, so the slices are t[0:4], t[4:8] and t[8:12]. The last slice runs off the end, and a slice just stops there: IJ."
+
+[run]
+code = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+
+w = 6
+for i in range(0, len(t), w):
+    print(" ".join(t[i:i+w]))
+print(len(t), "letters; remainder at width", w, "is", len(t) % w)
+'''
+
+[investigate]
+prompts = [
+  "Change `w` to 5, then 7, then 13. Which widths leave a short last row?",
+  "Remove the `\" \".join(` and its closing bracket, so a row prints as `t[i:i+w]`. Which is easier to read?",
+  "At width 6, look down each column. Do the rows look like scrambled words of six letters?",
+]
+
+[modify]
+task = "Count the rows as you print them: start with `rows = 0` before the loop and add 1 each time round. At width 6 the text has 13 rows."
+code = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+w = 6
+for i in range(0, len(t), w):
+    print(" ".join(t[i:i+w]))
+'''
+check = '''
+assert rows == len(range(0, len(t), w)), "rows should be the number of rows printed"
+'''
+hint = "`rows = 0` before the `for`, and `rows = rows + 1` inside it, indented like the `print`."
+solution = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+w = 6
+rows = 0
+for i in range(0, len(t), w):
+    print(" ".join(t[i:i+w]))
+    rows = rows + 1
+print(rows, "rows")
+'''
+
+[make]
+task = "Make `good`, the list of every width from 2 to 12 that divides the length of `t` exactly. Start with `good = []`, loop with `for w in range(2, 13):`, and add a width with `good.append(w)` when `len(t) % w == 0`. Then print the grid at each good width, if you like."
+code = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+good = []
+# your loop here
+print(good)
+'''
+check = '''
+assert good == [x for x in range(2, 13) if len(t) % x == 0], "good should hold the widths from 2 to 12 that divide len(t), smallest first"
+'''
+hint = "Inside the loop: `if len(t) % w == 0:` then, indented once more, `good.append(w)`."
+solution = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+good = []
+for w in range(2, 13):
+    if len(t) % w == 0:
+        good.append(w)
+print(good)
+for w in good:
+    print("width", w)
+    for i in range(0, len(t), w):
+        print(" ".join(t[i:i+w]))
+'''

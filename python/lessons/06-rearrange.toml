@@ -1,0 +1,99 @@
+id = "rearrange"
+number = 6
+title = "Rearrange columns"
+job = "Put the letters of every row back in order with a key: the way to undo a block transposition."
+learn = ["a list of numbers as a key", "indexing with each number in a list", "joining letters in a new order"]
+intro = "A block transposition shuffles every row of the grid the same way. The key to undo it is a list of positions: `order = [2, 0, 1]` means take letter 2 of the row, then letter 0, then letter 1. A columnar transposition, written in rows and read off by columns, is undone by cutting the text into equal columns and reading across them."
+
+[predict]
+question = "What does this print?"
+code = '''
+row = "TAC"
+order = [2, 1, 0]
+print("".join(row[i] for i in order))
+'''
+choices = ["CAT", "TAC", "ACT", "ATC"]
+answer = 0
+explain = "`row[2]` is C, `row[1]` is A, `row[0]` is T. Joined in that order: CAT."
+
+[run]
+code = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+w = 6
+order = [2, 0, 5, 3, 1, 4]
+
+plain = ""
+for i in range(0, len(t), w):
+    row = t[i:i+w]
+    fixed = "".join(row[k] for k in order)
+    print(row, "->", fixed)
+    plain = plain + fixed
+print(plain)
+'''
+
+[investigate]
+prompts = [
+  "Swap two numbers in `order`, say the 3 and the 1. Which letters move in every row?",
+  "What would `order = [0, 1, 2, 3, 4, 5]` do?",
+  "The last row ends in XX. Why might a message end in letters that mean nothing?",
+]
+
+[modify]
+task = "Here two numbers of the key are in the wrong places, so the rows come out nearly right. Look at the printed rows and fix `order` so that `plain` reads as English."
+code = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+w = 6
+order = [2, 0, 5, 1, 3, 4]
+
+plain = ""
+for i in range(0, len(t), w):
+    row = t[i:i+w]
+    fixed = "".join(row[k] for k in order)
+    print(fixed)
+    plain = plain + fixed
+'''
+check = '''
+assert plain == "{{block_plain}}", "plain is not English yet: look at one row and ask which two letters are swapped"
+'''
+hint = "The first row should start THEKEY. Which two letters of it are in each other's places?"
+solution = '''
+ct = """{{block}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+w = 6
+order = [2, 0, 5, 3, 1, 4]
+
+plain = ""
+for i in range(0, len(t), w):
+    row = t[i:i+w]
+    fixed = "".join(row[k] for k in order)
+    print(fixed)
+    plain = plain + fixed
+'''
+
+[make]
+task = "This message was written in rows of 6 letters and read off by columns, left to right, with no key. Undo it: cut `t` into 6 equal columns of `n = len(t) // 6` letters, then read across them, row by row. Make the result `plain`."
+code = '''
+ct = """{{columnar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+n = len(t) // 6        # how many letters in each column
+cols = [t[i*n:(i+1)*n] for i in range(6)]
+print(cols)
+# now read across: row r is cols[0][r], cols[1][r], ... cols[5][r]
+'''
+check = '''
+assert plain == "{{columnar_plain}}", "plain should be the message read row by row: the first letter of every column, then the second letters, and so on"
+'''
+hint = "Two loops: `for r in range(n):` and, inside it, `for c in range(6):`, adding `cols[c][r]` each time. Or in one line: `plain = \"\".join(t[r::n] for r in range(n))`."
+solution = '''
+ct = """{{columnar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+n = len(t) // 6
+cols = [t[i*n:(i+1)*n] for i in range(6)]
+plain = ""
+for r in range(n):
+    for c in range(6):
+        plain = plain + cols[c][r]
+print(plain)
+'''

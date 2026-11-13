@@ -1,0 +1,88 @@
+id = "numbers"
+number = 11
+title = "Letters as numbers"
+job = "Turn letters into numbers and back, so a shift is just adding and wrapping round."
+learn = ["ord() and chr()", "% to wrap round the alphabet", "str.index()"]
+intro = "Every character has a number: `ord(\"A\")` is 65, `ord(\"B\")` is 66, and `chr` goes back. Subtract 65 and the alphabet is 0 to 25. Shifting is then adding, and `% 26` (the remainder after dividing by 26) wraps Z round to A. Caesar, affine and Vigenère all come down to this one line."
+
+[predict]
+question = "What does this print?"
+code = '''
+x = ord("Y") - 65
+print(chr((x + 3) % 26 + 65))
+'''
+choices = ["B", "\\", "AB", "1"]
+answer = 0
+explain = "Y is number 24. Add 3 to get 27, and 27 % 26 is 1, which is B. Without the `% 26`, `chr(27 + 65)` is a backslash: the character after Z in the computer's table."
+
+[run]
+code = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+
+k = 3   # shift back by k
+out = ""
+for ch in t[:40]:
+    x = ord(ch) - ord("A")          # A=0, B=1, ... Z=25
+    out = out + chr((x - k) % 26 + ord("A"))
+print(t[:40])
+print(out)
+'''
+
+[investigate]
+prompts = [
+  "Try other values of `k`. Which one turns the second line into English? (Lesson 9's commonest letter is a clue.)",
+  "What do `ord(\"a\")` and `ord(\" \")` give?",
+  "Take the `% 26` out and shift by 3. What happens to the letters near the start of the alphabet?",
+]
+
+[modify]
+task = "Use positions in an alphabet instead of `ord` and `chr`: with `ALPHABET = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"`, `ALPHABET.index(ch)` is the letter's number and `ALPHABET[x]` is the letter. Make `out`, the first 40 letters of `t` shifted back by 11."
+code = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+k = 3
+out = ""
+for ch in t[:40]:
+    x = ord(ch) - ord("A")
+    out = out + chr((x - k) % 26 + ord("A"))
+print(out)
+'''
+check = '''
+_A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+assert out == "".join(_A[(_A.index(c) - 11) % 26] for c in t[:40]), "out should be the first 40 letters shifted back by 11"
+'''
+hint = "`x = ALPHABET.index(ch)` and `out = out + ALPHABET[(x - k) % 26]`, with `k = 11`."
+solution = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+k = 11
+out = ""
+for ch in t[:40]:
+    x = ALPHABET.index(ch)
+    out = out + ALPHABET[(x - k) % 26]
+print(out)
+'''
+
+[make]
+task = "The Atbash cipher swaps A with Z, B with Y, and so on: letter number x becomes 25 - x. Make `atbash`, the Atbash of the word `word`."
+code = '''
+word = "HELLO"
+# your code here
+'''
+check = '''
+assert atbash == "".join(chr(25 - (ord(c) - 65) + 65) for c in word), "atbash should turn each letter x into 25 - x (HELLO becomes SVOOL)"
+'''
+hint = "For each letter, `x = ord(ch) - 65`, then add `chr(25 - x + 65)`."
+solution = '''
+word = "HELLO"
+atbash = ""
+for ch in word:
+    x = ord(ch) - 65
+    atbash = atbash + chr(25 - x + 65)
+print(atbash)
+'''

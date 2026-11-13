@@ -26,12 +26,17 @@ Each guide is a PDF (in [`pdf/`](pdf/)) built from markdown (in [`guides/`](guid
 
 They also work well as sources for Google's Gemini Notebook (NotebookLM): its Video Overviews draw on the figures in the PDFs.
 
+## Python for codebreakers
+
+For the same readers as the guides, with no Python needed to start: thirteen short lessons and a bonus that teach just enough Python to build your own codebreaking tools, and every exercise works on a ciphertext. **[Start lesson 1 in the app](https://apps.thorwhalen.com/cryptology/#/python/hold)**: the code runs in your web browser, with nothing to install and no sign-in. Each lesson is also a notebook in [`python/`](python/) that opens in Google Colab, which needs a Google account (for a young reader, a parent's or the school's).
+
 ## Building
 
 ```sh
 python guides/scripts/fig_04_index_of_coincidence.py   # one guide's figures (matplotlib)
 guides/scripts/build_pdfs.sh                          # every guide's PDF (pandoc + xelatex)
 python guides/scripts/build_book.py                   # the book PDF, and html/ for the web edition
+python python/scripts/build_python.py                 # the Python lessons: check every snippet, write lessons.json and the notebooks
 ```
 
 Green "In the app" boxes are blockquotes that start with `**In the app:**`; `guides/scripts/app_links.lua` styles them in the PDFs and the HTML. The book's cover, preface and LaTeX header are in `guides/book/`. The web edition in `html/` is one HTML fragment per guide plus `index.json` (sections and words); the cryptology app reads it at a pinned commit.
@@ -40,4 +45,4 @@ How the guides are written: [`guides/style-guide.md`](guides/style-guide.md). Gu
 
 ## License
 
-Text and figures: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Code: MIT.
+Text and figures: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) ([`LICENSE-content`](LICENSE-content)). Code: MIT ([`LICENSE`](LICENSE)).

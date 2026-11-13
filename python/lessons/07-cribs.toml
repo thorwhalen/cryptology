@@ -1,0 +1,77 @@
+id = "cribs"
+number = 7
+title = "Look for a crib or a name"
+job = "Check which expected words appear in a text, how often, and where."
+learn = ["in", "str.count()", "str.find()", "True and False", "lists of words", "str.startswith()"]
+intro = "A crib is a word you expect in the message: a name, DEAR at the start, a sign-off at the end. Once part of a cipher is undone, or to check a guessed decryption, Python can look for every word on a list at once. `in` answers yes or no, `count` says how often, and `find` says where (or -1 when the word is not there)."
+
+[predict]
+question = "What does this print?"
+code = '''
+t = "THEKEYISUNDERTHESTONE"
+print("KEY" in t, t.count("THE"), t.find("STONE"))
+'''
+choices = ["True 2 16", "True 1 16", "False 2 -1", "True 2 15"]
+answer = 0
+explain = "KEY is in the text, so `in` gives True. THE appears twice (at the start and in ...ERTHES...). Counting from 0, STONE starts at position 16."
+
+[run]
+code = '''
+pt = """{{caesar_plain}}"""
+t = "".join(ch for ch in pt if ch.isalpha()).upper()
+
+for word in ["THE", "AND", "DEAR", "LIGHTHOUSE", "TREASURE"]:
+    print(word, word in t, t.count(word), t.find(word))
+'''
+note = "This is the letter from lesson 1, already deciphered, so you can see what a found crib looks like. Run it and read what it prints."
+
+[investigate]
+prompts = [
+  "What does `find` give for a word that is not there?",
+  "Add a guess of your own to the list. Is TOM in the text? Is AGNES?",
+  "`count(\"THE\")` also counts the THE inside THERE. Find another word it might hide in.",
+]
+
+[modify]
+task = "Make `found`, the list of only those words from `cribs` that appear in `t`."
+code = '''
+pt = """{{caesar_plain}}"""
+t = "".join(ch for ch in pt if ch.isalpha()).upper()
+cribs = ["THE", "HARBOUR", "TREASURE", "NOTEBOOK", "PIRATE"]
+found = []
+for word in cribs:
+    found.append(word)   # add it only when it is in t
+print(found)
+'''
+check = '''
+assert found == [w for w in cribs if w in t], "found should keep only the cribs that are in t, in the same order"
+'''
+hint = "Put `if word in t:` in front of the `append`, and indent the `append` once more."
+solution = '''
+pt = """{{caesar_plain}}"""
+t = "".join(ch for ch in pt if ch.isalpha()).upper()
+cribs = ["THE", "HARBOUR", "TREASURE", "NOTEBOOK", "PIRATE"]
+found = []
+for word in cribs:
+    if word in t:
+        found.append(word)
+print(found)
+'''
+
+[make]
+task = "`find` gives only the first place. Make `places`, the list of every position where THE starts in `t`. `t.startswith(\"THE\", i)` is True when THE starts at position `i`."
+code = '''
+pt = """{{caesar_plain}}"""
+t = "".join(ch for ch in pt if ch.isalpha()).upper()
+# your code here
+'''
+check = '''
+assert places == [i for i in range(len(t)) if t.startswith("THE", i)], "places should hold every start of THE, smallest first"
+'''
+hint = "Loop over every position: `for i in range(len(t)):`, and append `i` when THE starts there. As a list comprehension: `[i for i in range(len(t)) if ...]`."
+solution = '''
+pt = """{{caesar_plain}}"""
+t = "".join(ch for ch in pt if ch.isalpha()).upper()
+places = [i for i in range(len(t)) if t.startswith("THE", i)]
+print(places)
+'''

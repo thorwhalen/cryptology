@@ -1,0 +1,84 @@
+id = "rank"
+number = 9
+title = "Rank them"
+job = "Sort the letters from most to least common, to match them with English's commonest letters."
+learn = ["sorted() with key=", "lambda", "tuples, and unpacking them in a loop", "max() with key=", "set()"]
+intro = "`counts.items()` gives the pairs (letter, count). `sorted` puts them in order, and `key=` says what to sort by: `lambda pair: pair[1]` is a small function, written in place, that picks the count out of a pair. `lambda` is needed here, so this is where it comes in. In English the commonest letters are E, T, A, O, I and N, roughly in that order."
+
+[predict]
+question = "What does this print?"
+code = '''
+counts = {"A": 3, "B": 7, "C": 5}
+ranked = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)
+print(ranked[0])
+'''
+choices = ["('B', 7)", "('A', 3)", "('C', 5)", "B"]
+answer = 0
+explain = "The pairs are sorted by their counts, largest first because of `reverse=True`. The first is ('B', 7): a tuple, printed with its brackets."
+
+[run]
+code = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+counts = {}
+for ch in t:
+    counts[ch] = counts.get(ch, 0) + 1
+
+ranked = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)
+for ch, n in ranked[:6]:
+    print(ch, n)
+print("commonest:", max(counts, key=counts.get))
+print("different letters:", len(set(t)))
+'''
+
+[investigate]
+prompts = [
+  "Remove `reverse=True`. Which end of the list comes first now?",
+  "Change `pair[1]` to `pair[0]`. What is it sorted by now?",
+  "If this is a Caesar shift, the commonest cipher letter probably stands for E. How far apart are they in the alphabet?",
+]
+
+[modify]
+task = "Make `top3`, a text of the three commonest letters, most common first (like `\"PEL\"`)."
+code = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+counts = {}
+for ch in t:
+    counts[ch] = counts.get(ch, 0) + 1
+ranked = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)
+top3 = ""   # change this line
+print(top3)
+'''
+check = '''
+assert top3 == "".join(ch for ch, n in sorted(counts.items(), key=lambda p: p[1], reverse=True)[:3]), "top3 should be the letters of the first three pairs of ranked, joined"
+'''
+hint = "`ranked[:3]` is the first three pairs; join their letters: `\"\".join(ch for ch, n in ranked[:3])`."
+solution = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+counts = {}
+for ch in t:
+    counts[ch] = counts.get(ch, 0) + 1
+ranked = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)
+top3 = "".join(ch for ch, n in ranked[:3])
+print(top3)
+'''
+
+[make]
+task = "Make `missing`, the list of letters of the alphabet that never appear in `t`, in alphabetical order."
+code = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+# your code here
+'''
+check = '''
+assert missing == [c for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" if c not in t], "missing should list, A to Z, the letters not in t"
+'''
+hint = "Loop over `\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"` and keep the letters that are `not in t`."
+solution = '''
+ct = """{{caesar}}"""
+t = "".join(ch for ch in ct if ch.isalpha()).upper()
+missing = [c for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" if c not in t]
+print(missing)
+'''

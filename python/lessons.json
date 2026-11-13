@@ -1,0 +1,712 @@
+{
+ "texts": {
+  "caesar": {
+   "title": "Tom's letter (a Caesar shift)",
+   "cipher": "caesar"
+  },
+  "substitution": {
+   "title": "Agnes's reply (a keyword substitution)",
+   "cipher": "substitution"
+  },
+  "vigenere": {
+   "title": "The keeper's logbook (a Vigenère cipher)",
+   "cipher": "vigenere"
+  },
+  "block": {
+   "title": "A note under the door (a block transposition)",
+   "cipher": "block"
+  },
+  "columnar": {
+   "title": "A message in columns (a columnar transposition)",
+   "cipher": "columnar"
+  }
+ },
+ "lessons": [
+  {
+   "id": "hold",
+   "number": 1,
+   "title": "Hold the ciphertext",
+   "job": "Keep the text in a variable, so every tool after this one can use it.",
+   "learn": [
+    "variables",
+    "strings in triple quotes",
+    "print()",
+    "len()",
+    "comments with #"
+   ],
+   "intro": "Every tool starts the same way: the ciphertext in a variable. Triple quotes let you paste a text that runs over several lines, exactly as it was printed. A `#` starts a comment: Python ignores the rest of the line, so you can leave notes for yourself.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "ct = \"\"\"AB\nCD\"\"\"\nprint(len(ct))\n",
+    "choices": [
+     "4",
+     "5",
+     "2"
+    ],
+    "answer": 1,
+    "explain": "The line break between B and C is a character too: A, B, the break, C, D. Spaces, commas and line breaks all count, which is why the next lesson cleans the text."
+   },
+   "run": {
+    "code": "# Tom's letter, pasted between triple quotes\nct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\n\nprint(ct)\nprint(len(ct), \"characters, counting spaces, commas and line breaks\")\n"
+   },
+   "investigate": {
+    "prompts": [
+     "Put a `#` in front of `print(ct)`. What happens to that line?",
+     "Change `print(ct)` to `print(ct.lower())`. What changes, and what stays the same?",
+     "A comma in `print` puts a space between the pieces. Add `print(\"Length:\", len(ct))`."
+    ]
+   },
+   "modify": {
+    "task": "Make a variable `n` that holds the length of the text, so the last line prints it.",
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nn = 0  # change this line so n is the length of ct\nprint(n)\n",
+    "check": "assert n == len(ct), \"n should be the length of ct. Which function gives a length?\"\n",
+    "hint": "`len(ct)` is the length of `ct`.",
+    "solution": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nn = len(ct)\nprint(n)\n"
+   },
+   "make": {
+    "task": "Write two lines: put the text `XLI PEQT` in a variable called `msg`, then make `size` its length (spaces count).",
+    "code": "# your two lines here\n",
+    "check": "assert msg == \"XLI PEQT\", \"msg should hold exactly XLI PEQT, in capitals, with one space\"\nassert size == len(msg), \"size should be the length of msg\"\n",
+    "hint": "A short text fits in ordinary quotes: `msg = \"XLI PEQT\"`.",
+    "solution": "msg = \"XLI PEQT\"\nsize = len(msg)\nprint(msg, size)\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/01-hold.ipynb"
+  },
+  {
+   "id": "clean",
+   "number": 2,
+   "title": "Clean it",
+   "job": "Keep only the letters, in capitals, so counting and slicing see the cipher and nothing else.",
+   "learn": [
+    "str.upper()",
+    "str.replace()",
+    "split() and join()",
+    "for loops",
+    "if and str.isalpha()"
+   ],
+   "intro": "Spaces, punctuation and line breaks get in the way of counting letters and of cutting the text into pieces. A `for` loop looks at the text one character at a time; `if ch.isalpha():` keeps a character only when it is a letter. Once that is clear, the same thing fits on one line.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "s = \"Hi, Tom!\"\nout = \"\"\nfor ch in s:\n    if ch.isalpha():\n        out = out + ch.upper()\nprint(out)\n",
+    "choices": [
+     "HITOM",
+     "HI, TOM!",
+     "HI TOM",
+     "Hi,Tom!"
+    ],
+    "answer": 0,
+    "explain": "The loop visits H, i, the comma, the space, T, o, m and the !. Only the five letters pass `isalpha()`, and each is added in capitals."
+   },
+   "run": {
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\n\n# 1. Remove every space and line break: split() cuts the text at them, join() glues the pieces\nprint(\"\".join(ct.split()))\n\n# 2. Keep only the letters, in capitals, one character at a time\nt = \"\"\nfor ch in ct:\n    if ch.isalpha():\n        t = t + ch.upper()\nprint(t)\nprint(len(ct), \"characters before,\", len(t), \"letters after\")\n"
+   },
+   "investigate": {
+    "prompts": [
+     "Compare the first two lines printed. Which characters did `\"\".join(ct.split())` keep that the loop dropped?",
+     "Change `\"\".join` to `\"-\".join`. What does the glue do?",
+     "The whole loop fits on one line: `t = \"\".join(ch for ch in ct if ch.isalpha()).upper()`. Add it after the loop and print `t` again. Same answer?"
+    ]
+   },
+   "modify": {
+    "task": "Change the loop so it keeps letters **and** spaces, so the word breaks survive. Commas, full stops and line breaks should still go.",
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\"\nfor ch in ct:\n    if ch.isalpha():\n        t = t + ch.upper()\nprint(t)\n",
+    "check": "assert t == \"\".join(c for c in ct.upper() if c.isalpha() or c == \" \"), \"t should hold the letters and the spaces, nothing else\"\n",
+    "hint": "`or` joins two tests: `if ch.isalpha() or ch == \" \":`.",
+    "solution": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\"\nfor ch in ct:\n    if ch.isalpha() or ch == \" \":\n        t = t + ch.upper()\nprint(t)\n"
+   },
+   "make": {
+    "task": "Count the letters in `ct` with a loop: start with `count = 0` and add 1 for every letter.",
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\n# your loop here\n",
+    "check": "assert count == sum(1 for c in ct if c.isalpha()), \"count should be the number of letters in ct\"\n",
+    "hint": "`count = count + 1` inside an `if ch.isalpha():`.",
+    "solution": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\ncount = 0\nfor ch in ct:\n    if ch.isalpha():\n        count = count + 1\nprint(count)\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/02-clean.ipynb"
+  },
+  {
+   "id": "slice",
+   "number": 3,
+   "title": "Look at parts of it",
+   "job": "Take pieces of the text by position: the start, the end, every fifth letter.",
+   "learn": [
+    "indexing: t[0], t[-1]",
+    "slices: t[a:b]",
+    "reversing: t[::-1]",
+    "step slices: t[c::w]"
+   ],
+   "intro": "Positions count from 0, and negative positions count from the end. A slice `t[a:b]` takes positions a up to (not including) b. The step slice `t[c::w]` takes every w-th letter, starting at position c: it is how you pull out the columns of a grid and the slices of a Vigenère text, so it is the most useful line in this whole course.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "t = \"ABCDEFGHIJ\"\nprint(t[1::3])\n",
+    "choices": [
+     "BEH",
+     "ADGJ",
+     "BCD",
+     "CFI"
+    ],
+    "answer": 0,
+    "explain": "Start at position 1 (B), then take every third letter: positions 1, 4 and 7, which are B, E and H."
+   },
+   "run": {
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()   # the cleaning line from lesson 2\n\nprint(t[0], t[-1])     # the first and the last letter\nprint(t[:30])          # the first 30 letters\nprint(t[-10:])         # the last 10\nprint(t[::-1][:30])    # the text read backwards, its first 30 letters\nprint(t[0::5])         # every fifth letter, from the first\n"
+   },
+   "investigate": {
+    "prompts": [
+     "Change `t[0::5]` to `t[1::5]`, then to `t[4::5]`. Between them, what do the five slices `t[0::5]` to `t[4::5]` cover?",
+     "What does `t[5:10]` print? Which positions are those?",
+     "Try `t[::2]` and `t[1::2]`. How are they related to `t`?"
+    ]
+   },
+   "modify": {
+    "task": "Make `last_word` the last three letters of `t`. (The letter is signed: these three letters are the name, in cipher.)",
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nlast_word = t[:3]   # these are the first three; change the slice\nprint(last_word)\n",
+    "check": "assert last_word == t[-3:], \"last_word should be the last three letters of t\"\n",
+    "hint": "Negative positions count from the end: `t[-3:]` starts three from the end and runs to the end.",
+    "solution": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nlast_word = t[-3:]\nprint(last_word)\n"
+   },
+   "make": {
+    "task": "Make `backwards`, the whole of `t` read from the end to the start, and `evens`, every second letter of `t` starting with the first.",
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n# your two lines here\n",
+    "check": "assert backwards == t[::-1], \"backwards should be t reversed\"\nassert evens == t[0::2], \"evens should be every second letter, starting at position 0\"\n",
+    "hint": "A step of -1 walks backwards; a step of 2 skips every other letter.",
+    "solution": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nbackwards = t[::-1]\nevens = t[0::2]\nprint(backwards[:20], evens[:20])\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/03-slice.ipynb"
+  },
+  {
+   "id": "grid",
+   "number": 4,
+   "title": "Print it in a grid",
+   "job": "Write the text out in rows of a fixed width, to look for patterns that line up.",
+   "learn": [
+    "range(start, stop, step)",
+    "for loops over numbers",
+    "\" \".join() to space letters out",
+    "% (the remainder)",
+    "a loop inside a loop"
+   ],
+   "intro": "Printing a text in rows of a fixed width is the first look at any transposition: at the right width, the rows line up and the columns show the pattern. `range(0, len(t), w)` counts 0, w, 2w, ... so each row starts where the last one ended. A transposition keeps every letter, so the right width usually divides the length exactly: `len(t) % w` is the remainder, and 0 means it divides.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "t = \"ABCDEFGHIJ\"\nfor i in range(0, len(t), 4):\n    print(t[i:i+4])\n",
+    "choices": [
+     "ABCD\nEFGH\nIJ",
+     "ABCD\nEFGH",
+     "AEI\nBFJ\nCG\nDH",
+     "ABCD\nBCDE\nCDEF"
+    ],
+    "answer": 0,
+    "explain": "`i` takes the values 0, 4 and 8, so the slices are t[0:4], t[4:8] and t[8:12]. The last slice runs off the end, and a slice just stops there: IJ."
+   },
+   "run": {
+    "code": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n\nw = 6\nfor i in range(0, len(t), w):\n    print(\" \".join(t[i:i+w]))\nprint(len(t), \"letters; remainder at width\", w, \"is\", len(t) % w)\n"
+   },
+   "investigate": {
+    "prompts": [
+     "Change `w` to 5, then 7, then 13. Which widths leave a short last row?",
+     "Remove the `\" \".join(` and its closing bracket, so a row prints as `t[i:i+w]`. Which is easier to read?",
+     "At width 6, look down each column. Do the rows look like scrambled words of six letters?"
+    ]
+   },
+   "modify": {
+    "task": "Count the rows as you print them: start with `rows = 0` before the loop and add 1 each time round. At width 6 the text has 13 rows.",
+    "code": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nw = 6\nfor i in range(0, len(t), w):\n    print(\" \".join(t[i:i+w]))\n",
+    "check": "assert rows == len(range(0, len(t), w)), \"rows should be the number of rows printed\"\n",
+    "hint": "`rows = 0` before the `for`, and `rows = rows + 1` inside it, indented like the `print`.",
+    "solution": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nw = 6\nrows = 0\nfor i in range(0, len(t), w):\n    print(\" \".join(t[i:i+w]))\n    rows = rows + 1\nprint(rows, \"rows\")\n"
+   },
+   "make": {
+    "task": "Make `good`, the list of every width from 2 to 12 that divides the length of `t` exactly. Start with `good = []`, loop with `for w in range(2, 13):`, and add a width with `good.append(w)` when `len(t) % w == 0`. Then print the grid at each good width, if you like.",
+    "code": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\ngood = []\n# your loop here\nprint(good)\n",
+    "check": "assert good == [x for x in range(2, 13) if len(t) % x == 0], \"good should hold the widths from 2 to 12 that divide len(t), smallest first\"\n",
+    "hint": "Inside the loop: `if len(t) % w == 0:` then, indented once more, `good.append(w)`.",
+    "solution": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\ngood = []\nfor w in range(2, 13):\n    if len(t) % w == 0:\n        good.append(w)\nprint(good)\nfor w in good:\n    print(\"width\", w)\n    for i in range(0, len(t), w):\n        print(\" \".join(t[i:i+w]))\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/04-grid.ipynb"
+  },
+  {
+   "id": "columns",
+   "number": 5,
+   "title": "Read a grid by columns",
+   "job": "Read the columns of a grid, top to bottom, as a columnar transposition does.",
+   "learn": [
+    "lists",
+    "list comprehensions",
+    "columns as step slices: t[c::w]",
+    "zip(*rows) (a bonus)"
+   ],
+   "intro": "A columnar transposition writes the message in rows and reads it off by columns. Column c of a grid of width w is the step slice `t[c::w]`: one letter from every row. A list holds several values in order, and a list comprehension builds one in a single line: `[t[i:i+w] for i in range(0, len(t), w)]` is the list of rows.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "t = \"ABCDEFGHI\"\nfor c in range(3):\n    print(t[c::3])\n",
+    "choices": [
+     "ADG\nBEH\nCFI",
+     "ABC\nDEF\nGHI",
+     "AD\nBE\nCF",
+     "ABC\nBCD\nCDE"
+    ],
+    "answer": 0,
+    "explain": "In rows of three the grid is ABC, DEF, GHI. `t[0::3]` takes positions 0, 3 and 6, which is the first column, ADG; then BEH and CFI."
+   },
+   "run": {
+    "code": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nw = 6\n\nrows = [t[i:i+w] for i in range(0, len(t), w)]\nprint(rows[:3])          # the first three rows, as a list\nfor c in range(w):\n    print(c, t[c::w])    # each column, top to bottom\n"
+   },
+   "investigate": {
+    "prompts": [
+     "How many items does `rows` hold? Add `print(len(rows))`.",
+     "What is `rows[1][2]`? Which row and which column is it in?",
+     "A bonus: `cols = list(zip(*rows))` turns the rows into columns, as tuples of letters. Print `cols[0]` and compare it with `t[0::6]`."
+    ]
+   },
+   "modify": {
+    "task": "Make `cols`, the list of the 6 columns, with a list comprehension like the one that made `rows`.",
+    "code": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nw = 6\nrows = [t[i:i+w] for i in range(0, len(t), w)]\ncols = []   # change this line\nprint(cols)\n",
+    "check": "assert cols == [t[c::6] for c in range(6)], \"cols should be [t[0::6], t[1::6], ... t[5::6]]\"\n",
+    "hint": "`[t[c::w] for c in range(w)]`",
+    "solution": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nw = 6\nrows = [t[i:i+w] for i in range(0, len(t), w)]\ncols = [t[c::w] for c in range(w)]\nprint(cols)\n"
+   },
+   "make": {
+    "task": "Read the grid off by columns, the way a columnar transposition would send it: make `read_off`, every column of `t` at width `w`, joined end to end.",
+    "code": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nw = 6\n# your line here\n",
+    "check": "assert read_off == \"\".join(t[c::w] for c in range(w)), \"read_off should be column 0, then column 1, and so on, joined into one text\"\n",
+    "hint": "`\"\".join(...)` glues a list of texts together; the list is the columns.",
+    "solution": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nw = 6\nread_off = \"\".join(t[c::w] for c in range(w))\nprint(read_off)\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/05-columns.ipynb"
+  },
+  {
+   "id": "rearrange",
+   "number": 6,
+   "title": "Rearrange columns",
+   "job": "Put the letters of every row back in order with a key: the way to undo a block transposition.",
+   "learn": [
+    "a list of numbers as a key",
+    "indexing with each number in a list",
+    "joining letters in a new order"
+   ],
+   "intro": "A block transposition shuffles every row of the grid the same way. The key to undo it is a list of positions: `order = [2, 0, 1]` means take letter 2 of the row, then letter 0, then letter 1. A columnar transposition, written in rows and read off by columns, is undone by cutting the text into equal columns and reading across them.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "row = \"TAC\"\norder = [2, 1, 0]\nprint(\"\".join(row[i] for i in order))\n",
+    "choices": [
+     "CAT",
+     "TAC",
+     "ACT",
+     "ATC"
+    ],
+    "answer": 0,
+    "explain": "`row[2]` is C, `row[1]` is A, `row[0]` is T. Joined in that order: CAT."
+   },
+   "run": {
+    "code": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nw = 6\norder = [2, 0, 5, 3, 1, 4]\n\nplain = \"\"\nfor i in range(0, len(t), w):\n    row = t[i:i+w]\n    fixed = \"\".join(row[k] for k in order)\n    print(row, \"->\", fixed)\n    plain = plain + fixed\nprint(plain)\n"
+   },
+   "investigate": {
+    "prompts": [
+     "Swap two numbers in `order`, say the 3 and the 1. Which letters move in every row?",
+     "What would `order = [0, 1, 2, 3, 4, 5]` do?",
+     "The last row ends in XX. Why might a message end in letters that mean nothing?"
+    ]
+   },
+   "modify": {
+    "task": "Here two numbers of the key are in the wrong places, so the rows come out nearly right. Look at the printed rows and fix `order` so that `plain` reads as English.",
+    "code": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nw = 6\norder = [2, 0, 5, 1, 3, 4]\n\nplain = \"\"\nfor i in range(0, len(t), w):\n    row = t[i:i+w]\n    fixed = \"\".join(row[k] for k in order)\n    print(fixed)\n    plain = plain + fixed\n",
+    "check": "assert plain == \"THEKEYISUNDERTHETHIRDSTONEFROMTHELEFTONTHEHARBOURWALLBRINGATORCHANDCOMEALONEXX\", \"plain is not English yet: look at one row and ask which two letters are swapped\"\n",
+    "hint": "The first row should start THEKEY. Which two letters of it are in each other's places?",
+    "solution": "ct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nw = 6\norder = [2, 0, 5, 3, 1, 4]\n\nplain = \"\"\nfor i in range(0, len(t), w):\n    row = t[i:i+w]\n    fixed = \"\".join(row[k] for k in order)\n    print(fixed)\n    plain = plain + fixed\n"
+   },
+   "make": {
+    "task": "This message was written in rows of 6 letters and read off by columns, left to right, with no key. Undo it: cut `t` into 6 equal columns of `n = len(t) // 6` letters, then read across them, row by row. Make the result `plain`.",
+    "code": "ct = \"\"\"MTBUI AEFEN EHOSX TLRTD EEAEA CIOOO TOTAN HGMPW\nALHTD THTWX TDOSW HTHIX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nn = len(t) // 6        # how many letters in each column\ncols = [t[i*n:(i+1)*n] for i in range(6)]\nprint(cols)\n# now read across: row r is cols[0][r], cols[1][r], ... cols[5][r]\n",
+    "check": "assert plain == \"MEETATTHEOLDBOATHOUSEATSIXANDWATCHTHELIGHTFROMTHETOPWINDOWXX\", \"plain should be the message read row by row: the first letter of every column, then the second letters, and so on\"\n",
+    "hint": "Two loops: `for r in range(n):` and, inside it, `for c in range(6):`, adding `cols[c][r]` each time. Or in one line: `plain = \"\".join(t[r::n] for r in range(n))`.",
+    "solution": "ct = \"\"\"MTBUI AEFEN EHOSX TLRTD EEAEA CIOOO TOTAN HGMPW\nALHTD THTWX TDOSW HTHIX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nn = len(t) // 6\ncols = [t[i*n:(i+1)*n] for i in range(6)]\nplain = \"\"\nfor r in range(n):\n    for c in range(6):\n        plain = plain + cols[c][r]\nprint(plain)\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/06-rearrange.ipynb"
+  },
+  {
+   "id": "cribs",
+   "number": 7,
+   "title": "Look for a crib or a name",
+   "job": "Check which expected words appear in a text, how often, and where.",
+   "learn": [
+    "in",
+    "str.count()",
+    "str.find()",
+    "True and False",
+    "lists of words",
+    "str.startswith()"
+   ],
+   "intro": "A crib is a word you expect in the message: a name, DEAR at the start, a sign-off at the end. Once part of a cipher is undone, or to check a guessed decryption, Python can look for every word on a list at once. `in` answers yes or no, `count` says how often, and `find` says where (or -1 when the word is not there).",
+   "predict": {
+    "question": "What does this print?",
+    "code": "t = \"THEKEYISUNDERTHESTONE\"\nprint(\"KEY\" in t, t.count(\"THE\"), t.find(\"STONE\"))\n",
+    "choices": [
+     "True 2 16",
+     "True 1 16",
+     "False 2 -1",
+     "True 2 15"
+    ],
+    "answer": 0,
+    "explain": "KEY is in the text, so `in` gives True. THE appears twice (at the start and in ...ERTHES...). Counting from 0, STONE starts at position 16."
+   },
+   "run": {
+    "code": "pt = \"\"\"DEAR AGNES, THE LAMP IN THE OLD LIGHTHOUSE WAS LIT\nAGAIN LAST NIGHT, THOUGH NOBODY HAS LIVED THERE\nFOR TWENTY YEARS. I ROWED OUT AT DAWN AND FOUND\nFRESH FOOTPRINTS ON THE STAIRS AND A LETTER ON THE\nTABLE, WRITTEN IN A CODE I DO NOT KNOW. MEET ME AT\nTHE HARBOUR ON FRIDAY AND BRING YOUR NOTEBOOK. TOM\"\"\"\nt = \"\".join(ch for ch in pt if ch.isalpha()).upper()\n\nfor word in [\"THE\", \"AND\", \"DEAR\", \"LIGHTHOUSE\", \"TREASURE\"]:\n    print(word, word in t, t.count(word), t.find(word))\n",
+    "note": "This is the letter from lesson 1, already deciphered, so you can see what a found crib looks like. Run it and read what it prints."
+   },
+   "investigate": {
+    "prompts": [
+     "What does `find` give for a word that is not there?",
+     "Add a guess of your own to the list. Is TOM in the text? Is AGNES?",
+     "`count(\"THE\")` also counts the THE inside THERE. Find another word it might hide in."
+    ]
+   },
+   "modify": {
+    "task": "Make `found`, the list of only those words from `cribs` that appear in `t`.",
+    "code": "pt = \"\"\"DEAR AGNES, THE LAMP IN THE OLD LIGHTHOUSE WAS LIT\nAGAIN LAST NIGHT, THOUGH NOBODY HAS LIVED THERE\nFOR TWENTY YEARS. I ROWED OUT AT DAWN AND FOUND\nFRESH FOOTPRINTS ON THE STAIRS AND A LETTER ON THE\nTABLE, WRITTEN IN A CODE I DO NOT KNOW. MEET ME AT\nTHE HARBOUR ON FRIDAY AND BRING YOUR NOTEBOOK. TOM\"\"\"\nt = \"\".join(ch for ch in pt if ch.isalpha()).upper()\ncribs = [\"THE\", \"HARBOUR\", \"TREASURE\", \"NOTEBOOK\", \"PIRATE\"]\nfound = []\nfor word in cribs:\n    found.append(word)   # add it only when it is in t\nprint(found)\n",
+    "check": "assert found == [w for w in cribs if w in t], \"found should keep only the cribs that are in t, in the same order\"\n",
+    "hint": "Put `if word in t:` in front of the `append`, and indent the `append` once more.",
+    "solution": "pt = \"\"\"DEAR AGNES, THE LAMP IN THE OLD LIGHTHOUSE WAS LIT\nAGAIN LAST NIGHT, THOUGH NOBODY HAS LIVED THERE\nFOR TWENTY YEARS. I ROWED OUT AT DAWN AND FOUND\nFRESH FOOTPRINTS ON THE STAIRS AND A LETTER ON THE\nTABLE, WRITTEN IN A CODE I DO NOT KNOW. MEET ME AT\nTHE HARBOUR ON FRIDAY AND BRING YOUR NOTEBOOK. TOM\"\"\"\nt = \"\".join(ch for ch in pt if ch.isalpha()).upper()\ncribs = [\"THE\", \"HARBOUR\", \"TREASURE\", \"NOTEBOOK\", \"PIRATE\"]\nfound = []\nfor word in cribs:\n    if word in t:\n        found.append(word)\nprint(found)\n"
+   },
+   "make": {
+    "task": "`find` gives only the first place. Make `places`, the list of every position where THE starts in `t`. `t.startswith(\"THE\", i)` is True when THE starts at position `i`.",
+    "code": "pt = \"\"\"DEAR AGNES, THE LAMP IN THE OLD LIGHTHOUSE WAS LIT\nAGAIN LAST NIGHT, THOUGH NOBODY HAS LIVED THERE\nFOR TWENTY YEARS. I ROWED OUT AT DAWN AND FOUND\nFRESH FOOTPRINTS ON THE STAIRS AND A LETTER ON THE\nTABLE, WRITTEN IN A CODE I DO NOT KNOW. MEET ME AT\nTHE HARBOUR ON FRIDAY AND BRING YOUR NOTEBOOK. TOM\"\"\"\nt = \"\".join(ch for ch in pt if ch.isalpha()).upper()\n# your code here\n",
+    "check": "assert places == [i for i in range(len(t)) if t.startswith(\"THE\", i)], \"places should hold every start of THE, smallest first\"\n",
+    "hint": "Loop over every position: `for i in range(len(t)):`, and append `i` when THE starts there. As a list comprehension: `[i for i in range(len(t)) if ...]`.",
+    "solution": "pt = \"\"\"DEAR AGNES, THE LAMP IN THE OLD LIGHTHOUSE WAS LIT\nAGAIN LAST NIGHT, THOUGH NOBODY HAS LIVED THERE\nFOR TWENTY YEARS. I ROWED OUT AT DAWN AND FOUND\nFRESH FOOTPRINTS ON THE STAIRS AND A LETTER ON THE\nTABLE, WRITTEN IN A CODE I DO NOT KNOW. MEET ME AT\nTHE HARBOUR ON FRIDAY AND BRING YOUR NOTEBOOK. TOM\"\"\"\nt = \"\".join(ch for ch in pt if ch.isalpha()).upper()\nplaces = [i for i in range(len(t)) if t.startswith(\"THE\", i)]\nprint(places)\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/07-cribs.ipynb"
+  },
+  {
+   "id": "count",
+   "number": 8,
+   "title": "Count letters",
+   "job": "Count every letter of the text, and draw the counts as bars.",
+   "learn": [
+    "dictionaries",
+    "dict.get(key, 0)",
+    "\"#\" * n for a bar",
+    "counting pairs of letters"
+   ],
+   "intro": "A dictionary keeps a value for each key: here, a count for each letter. `counts.get(ch, 0)` reads the count so far, or 0 for a letter not seen yet, and the loop adds one. Multiplying a text by a number repeats it, so `\"#\" * 5` is a bar five long.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "counts = {}\nfor ch in \"ABBA\":\n    counts[ch] = counts.get(ch, 0) + 1\nprint(counts)\n",
+    "choices": [
+     "{'A': 2, 'B': 2}",
+     "{'A': 1, 'B': 1}",
+     "{'A': 4}",
+     "{'ABBA': 1}"
+    ],
+    "answer": 0,
+    "explain": "The loop sees A, B, B, A. Each time it adds one to that letter's count, so both end at 2. A dictionary prints its keys in the order they were first added."
+   },
+   "run": {
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n\ncounts = {}\nfor ch in t:\n    counts[ch] = counts.get(ch, 0) + 1\n\nfor letter in \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\":\n    n = counts.get(letter, 0)\n    print(letter, n, \"#\" * n)\n"
+   },
+   "investigate": {
+    "prompts": [
+     "Which letter has the longest bar? In English the longest is usually E.",
+     "Change `\"#\"` to `\"*\"`, or to `\"#\" * 2` for longer bars.",
+     "What does `counts.get(\"B\", 0)` give for a letter that never appears? And `counts[\"B\"]`?"
+    ]
+   },
+   "modify": {
+    "task": "Count pairs of letters (bigrams) instead of single letters. Loop over the positions `range(len(t) - 1)` and count `t[i:i+2]`, in a dictionary called `pairs`.",
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n\npairs = {}\nfor ch in t:\n    pairs[ch] = pairs.get(ch, 0) + 1\nprint(pairs)\n",
+    "check": "expected = {}\nfor i in range(len(t) - 1):\n    expected[t[i:i+2]] = expected.get(t[i:i+2], 0) + 1\nassert pairs == expected, \"pairs should count every two-letter piece t[i:i+2]\"\n",
+    "hint": "Loop `for i in range(len(t) - 1):` and use `pair = t[i:i+2]` where the code used `ch`.",
+    "solution": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n\npairs = {}\nfor i in range(len(t) - 1):\n    pair = t[i:i+2]\n    pairs[pair] = pairs.get(pair, 0) + 1\nprint(pairs)\n"
+   },
+   "make": {
+    "task": "Make `vowels`, how many letters of `t` are A, E, I, O or U. (`ch in \"AEIOU\"` is True for a vowel.)",
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n# your code here\n",
+    "check": "assert vowels == sum(1 for c in t if c in \"AEIOU\"), \"vowels should count the letters of t that are A, E, I, O or U\"\n",
+    "hint": "Start with `vowels = 0`, loop over `t`, and add one when `ch in \"AEIOU\"`.",
+    "solution": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nvowels = 0\nfor ch in t:\n    if ch in \"AEIOU\":\n        vowels = vowels + 1\nprint(vowels, \"of\", len(t))\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/08-count.ipynb"
+  },
+  {
+   "id": "rank",
+   "number": 9,
+   "title": "Rank them",
+   "job": "Sort the letters from most to least common, to match them with English's commonest letters.",
+   "learn": [
+    "sorted() with key=",
+    "lambda",
+    "tuples, and unpacking them in a loop",
+    "max() with key=",
+    "set()"
+   ],
+   "intro": "`counts.items()` gives the pairs (letter, count). `sorted` puts them in order, and `key=` says what to sort by: `lambda pair: pair[1]` is a small function, written in place, that picks the count out of a pair. `lambda` is needed here, so this is where it comes in. In English the commonest letters are E, T, A, O, I and N, roughly in that order.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "counts = {\"A\": 3, \"B\": 7, \"C\": 5}\nranked = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)\nprint(ranked[0])\n",
+    "choices": [
+     "('B', 7)",
+     "('A', 3)",
+     "('C', 5)",
+     "B"
+    ],
+    "answer": 0,
+    "explain": "The pairs are sorted by their counts, largest first because of `reverse=True`. The first is ('B', 7): a tuple, printed with its brackets."
+   },
+   "run": {
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\ncounts = {}\nfor ch in t:\n    counts[ch] = counts.get(ch, 0) + 1\n\nranked = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)\nfor ch, n in ranked[:6]:\n    print(ch, n)\nprint(\"commonest:\", max(counts, key=counts.get))\nprint(\"different letters:\", len(set(t)))\n"
+   },
+   "investigate": {
+    "prompts": [
+     "Remove `reverse=True`. Which end of the list comes first now?",
+     "Change `pair[1]` to `pair[0]`. What is it sorted by now?",
+     "If this is a Caesar shift, the commonest cipher letter probably stands for E. How far apart are they in the alphabet?"
+    ]
+   },
+   "modify": {
+    "task": "Make `top3`, a text of the three commonest letters, most common first (like `\"PEL\"`).",
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\ncounts = {}\nfor ch in t:\n    counts[ch] = counts.get(ch, 0) + 1\nranked = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)\ntop3 = \"\"   # change this line\nprint(top3)\n",
+    "check": "assert top3 == \"\".join(ch for ch, n in sorted(counts.items(), key=lambda p: p[1], reverse=True)[:3]), \"top3 should be the letters of the first three pairs of ranked, joined\"\n",
+    "hint": "`ranked[:3]` is the first three pairs; join their letters: `\"\".join(ch for ch, n in ranked[:3])`.",
+    "solution": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\ncounts = {}\nfor ch in t:\n    counts[ch] = counts.get(ch, 0) + 1\nranked = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)\ntop3 = \"\".join(ch for ch, n in ranked[:3])\nprint(top3)\n"
+   },
+   "make": {
+    "task": "Make `missing`, the list of letters of the alphabet that never appear in `t`, in alphabetical order.",
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n# your code here\n",
+    "check": "assert missing == [c for c in \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\" if c not in t], \"missing should list, A to Z, the letters not in t\"\n",
+    "hint": "Loop over `\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"` and keep the letters that are `not in t`.",
+    "solution": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nmissing = [c for c in \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\" if c not in t]\nprint(missing)\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/09-rank.ipynb"
+  },
+  {
+   "id": "ioc",
+   "number": 10,
+   "title": "Measure: the index of coincidence",
+   "job": "Work out the index of coincidence, which tells one alphabet from several.",
+   "learn": [
+    "sum() over a loop in brackets",
+    "dict.values()",
+    "division",
+    "round()"
+   ],
+   "intro": "The index of coincidence (IoC) is the chance that two letters picked at random from the text are the same. English, and anything that only relabels or moves its letters (Caesar, substitution, transposition), is about 0.066; letters spread evenly over all 26 give about 0.038. A Vigenère cipher sits in between, and its slices `t[c::w]` look like English again at the right width. The formula is: for each letter, its count n times (n - 1), all added up, divided by N times (N - 1), where N is the length.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "counts = {\"A\": 2, \"B\": 1}\nN = 3\nprint(sum(n * (n - 1) for n in counts.values()) / (N * (N - 1)))\n",
+    "choices": [
+     "0.3333333333333333",
+     "0.5",
+     "2",
+     "0.0"
+    ],
+    "answer": 0,
+    "explain": "A gives 2 × 1 = 2 and B gives 1 × 0 = 0, so the top is 2; the bottom is 3 × 2 = 6. 2 / 6 is a third, which Python prints with all its digits."
+   },
+   "run": {
+    "code": "caesar = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nvigenere = \"\"\"EHQ ZPEBTC'S XDRBADV SFDAS UC EHQ LTNFTC OR ISE\nKTLR FWP LUVST IPD CXDDEP. ISE XPDT BPRE XXDTE ISE\nEWTPE ISAF ELSETO, TTT HEMISED TLCT BZRZXYG, MCO A\nZDEE UC OIRUPRQCE HMCOWDXEIZV EHMI DAKH ZNXN EHUH:\nEHQ ATGTI HIXA DHUCP ASPTN IWPN FWP TTGPE EIZNQH\nLRQ IFRZTO. NAQZDK XY TTT GIXALGQ ZYOIH HHURS\nSFDYEE PCE YTLNF, DC WTD HRAIP TTT YOFT.\"\"\"\n\nfor ct in [caesar, vigenere]:\n    t = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n    counts = {}\n    for ch in t:\n        counts[ch] = counts.get(ch, 0) + 1\n    N = len(t)\n    ioc = sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))\n    print(N, \"letters, IoC\", round(ioc, 3))\n",
+    "note": "Two texts: Tom's letter (one alphabet) and a page of a logbook enciphered with a Vigenère. Run it and compare the two numbers."
+   },
+   "investigate": {
+    "prompts": [
+     "Which text has an English-like IoC, near 0.066?",
+     "Change `round(ioc, 3)` to `round(ioc, 5)`. What does the second number of `round` do?",
+     "Put the logbook's slice `t[0::4]` through the same lines. Is its IoC nearer English?"
+    ]
+   },
+   "modify": {
+    "task": "Make `slice_ioc`, the IoC of the Vigenère text's first slice at width 4, `t[0::4]`.",
+    "code": "vigenere = \"\"\"EHQ ZPEBTC'S XDRBADV SFDAS UC EHQ LTNFTC OR ISE\nKTLR FWP LUVST IPD CXDDEP. ISE XPDT BPRE XXDTE ISE\nEWTPE ISAF ELSETO, TTT HEMISED TLCT BZRZXYG, MCO A\nZDEE UC OIRUPRQCE HMCOWDXEIZV EHMI DAKH ZNXN EHUH:\nEHQ ATGTI HIXA DHUCP ASPTN IWPN FWP TTGPE EIZNQH\nLRQ IFRZTO. NAQZDK XY TTT GIXALGQ ZYOIH HHURS\nSFDYEE PCE YTLNF, DC WTD HRAIP TTT YOFT.\"\"\"\nt = \"\".join(ch for ch in vigenere if ch.isalpha()).upper()\ns = t   # change this to the slice\ncounts = {}\nfor ch in s:\n    counts[ch] = counts.get(ch, 0) + 1\nN = len(s)\nslice_ioc = sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))\nprint(round(slice_ioc, 3))\n",
+    "check": "_s = \"\".join(ch for ch in vigenere if ch.isalpha()).upper()[0::4]\n_c = {}\nfor _ch in _s:\n    _c[_ch] = _c.get(_ch, 0) + 1\n_ioc = sum(n * (n - 1) for n in _c.values()) / (len(_s) * (len(_s) - 1))\nassert abs(slice_ioc - _ioc) < 1e-9, \"slice_ioc should be the IoC of t[0::4], not of the whole text\"\n",
+    "hint": "Only one line needs to change: `s = t[0::4]`.",
+    "solution": "vigenere = \"\"\"EHQ ZPEBTC'S XDRBADV SFDAS UC EHQ LTNFTC OR ISE\nKTLR FWP LUVST IPD CXDDEP. ISE XPDT BPRE XXDTE ISE\nEWTPE ISAF ELSETO, TTT HEMISED TLCT BZRZXYG, MCO A\nZDEE UC OIRUPRQCE HMCOWDXEIZV EHMI DAKH ZNXN EHUH:\nEHQ ATGTI HIXA DHUCP ASPTN IWPN FWP TTGPE EIZNQH\nLRQ IFRZTO. NAQZDK XY TTT GIXALGQ ZYOIH HHURS\nSFDYEE PCE YTLNF, DC WTD HRAIP TTT YOFT.\"\"\"\nt = \"\".join(ch for ch in vigenere if ch.isalpha()).upper()\ns = t[0::4]\ncounts = {}\nfor ch in s:\n    counts[ch] = counts.get(ch, 0) + 1\nN = len(s)\nslice_ioc = sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))\nprint(round(slice_ioc, 3))\n"
+   },
+   "make": {
+    "task": "Make `average`, the average IoC of the four slices `t[0::4]`, `t[1::4]`, `t[2::4]` and `t[3::4]` of the Vigenère text. If it is near 0.066, the key is probably 4 letters long. (A loop over the four starts, adding each IoC to a total, then divide by 4.)",
+    "code": "vigenere = \"\"\"EHQ ZPEBTC'S XDRBADV SFDAS UC EHQ LTNFTC OR ISE\nKTLR FWP LUVST IPD CXDDEP. ISE XPDT BPRE XXDTE ISE\nEWTPE ISAF ELSETO, TTT HEMISED TLCT BZRZXYG, MCO A\nZDEE UC OIRUPRQCE HMCOWDXEIZV EHMI DAKH ZNXN EHUH:\nEHQ ATGTI HIXA DHUCP ASPTN IWPN FWP TTGPE EIZNQH\nLRQ IFRZTO. NAQZDK XY TTT GIXALGQ ZYOIH HHURS\nSFDYEE PCE YTLNF, DC WTD HRAIP TTT YOFT.\"\"\"\nt = \"\".join(ch for ch in vigenere if ch.isalpha()).upper()\n# your code here\n",
+    "check": "_t = \"\".join(ch for ch in vigenere if ch.isalpha()).upper()\n_total = 0\nfor _c0 in range(4):\n    _s = _t[_c0::4]\n    _c = {}\n    for _ch in _s:\n        _c[_ch] = _c.get(_ch, 0) + 1\n    _total = _total + sum(n * (n - 1) for n in _c.values()) / (len(_s) * (len(_s) - 1))\nassert abs(average - _total / 4) < 1e-9, \"average should be the four slices' IoCs added up and divided by 4\"\n",
+    "hint": "`total = 0`, then `for c in range(4):` with `s = t[c::4]`, the counting lines, and `total = total + ioc`. After the loop, `average = total / 4`.",
+    "solution": "vigenere = \"\"\"EHQ ZPEBTC'S XDRBADV SFDAS UC EHQ LTNFTC OR ISE\nKTLR FWP LUVST IPD CXDDEP. ISE XPDT BPRE XXDTE ISE\nEWTPE ISAF ELSETO, TTT HEMISED TLCT BZRZXYG, MCO A\nZDEE UC OIRUPRQCE HMCOWDXEIZV EHMI DAKH ZNXN EHUH:\nEHQ ATGTI HIXA DHUCP ASPTN IWPN FWP TTGPE EIZNQH\nLRQ IFRZTO. NAQZDK XY TTT GIXALGQ ZYOIH HHURS\nSFDYEE PCE YTLNF, DC WTD HRAIP TTT YOFT.\"\"\"\nt = \"\".join(ch for ch in vigenere if ch.isalpha()).upper()\ntotal = 0\nfor c in range(4):\n    s = t[c::4]\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    N = len(s)\n    total = total + sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))\naverage = total / 4\nprint(round(average, 3))\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/10-ioc.ipynb"
+  },
+  {
+   "id": "numbers",
+   "number": 11,
+   "title": "Letters as numbers",
+   "job": "Turn letters into numbers and back, so a shift is just adding and wrapping round.",
+   "learn": [
+    "ord() and chr()",
+    "% to wrap round the alphabet",
+    "str.index()"
+   ],
+   "intro": "Every character has a number: `ord(\"A\")` is 65, `ord(\"B\")` is 66, and `chr` goes back. Subtract 65 and the alphabet is 0 to 25. Shifting is then adding, and `% 26` (the remainder after dividing by 26) wraps Z round to A. Caesar, affine and Vigenère all come down to this one line.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "x = ord(\"Y\") - 65\nprint(chr((x + 3) % 26 + 65))\n",
+    "choices": [
+     "B",
+     "\\",
+     "AB",
+     "1"
+    ],
+    "answer": 0,
+    "explain": "Y is number 24. Add 3 to get 27, and 27 % 26 is 1, which is B. Without the `% 26`, `chr(27 + 65)` is a backslash: the character after Z in the computer's table."
+   },
+   "run": {
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n\nk = 3   # shift back by k\nout = \"\"\nfor ch in t[:40]:\n    x = ord(ch) - ord(\"A\")          # A=0, B=1, ... Z=25\n    out = out + chr((x - k) % 26 + ord(\"A\"))\nprint(t[:40])\nprint(out)\n"
+   },
+   "investigate": {
+    "prompts": [
+     "Try other values of `k`. Which one turns the second line into English? (Lesson 9's commonest letter is a clue.)",
+     "What do `ord(\"a\")` and `ord(\" \")` give?",
+     "Take the `% 26` out and shift by 3. What happens to the letters near the start of the alphabet?"
+    ]
+   },
+   "modify": {
+    "task": "Use positions in an alphabet instead of `ord` and `chr`: with `ALPHABET = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"`, `ALPHABET.index(ch)` is the letter's number and `ALPHABET[x]` is the letter. Make `out`, the first 40 letters of `t` shifted back by 11.",
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nALPHABET = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"\n\nk = 3\nout = \"\"\nfor ch in t[:40]:\n    x = ord(ch) - ord(\"A\")\n    out = out + chr((x - k) % 26 + ord(\"A\"))\nprint(out)\n",
+    "check": "_A = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"\nassert out == \"\".join(_A[(_A.index(c) - 11) % 26] for c in t[:40]), \"out should be the first 40 letters shifted back by 11\"\n",
+    "hint": "`x = ALPHABET.index(ch)` and `out = out + ALPHABET[(x - k) % 26]`, with `k = 11`.",
+    "solution": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\nALPHABET = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"\n\nk = 11\nout = \"\"\nfor ch in t[:40]:\n    x = ALPHABET.index(ch)\n    out = out + ALPHABET[(x - k) % 26]\nprint(out)\n"
+   },
+   "make": {
+    "task": "The Atbash cipher swaps A with Z, B with Y, and so on: letter number x becomes 25 - x. Make `atbash`, the Atbash of the word `word`.",
+    "code": "word = \"HELLO\"\n# your code here\n",
+    "check": "assert atbash == \"\".join(chr(25 - (ord(c) - 65) + 65) for c in word), \"atbash should turn each letter x into 25 - x (HELLO becomes SVOOL)\"\n",
+    "hint": "For each letter, `x = ord(ch) - 65`, then add `chr(25 - x + 65)`.",
+    "solution": "word = \"HELLO\"\natbash = \"\"\nfor ch in word:\n    x = ord(ch) - 65\n    atbash = atbash + chr(25 - x + 65)\nprint(atbash)\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/11-numbers.ipynb"
+  },
+  {
+   "id": "functions",
+   "number": 12,
+   "title": "Keep a tool",
+   "job": "Wrap a job in a function, so one line runs it on any text with any key.",
+   "learn": [
+    "def and return",
+    "parameters",
+    "lambda",
+    "map(), and why it needs list() or join()"
+   ],
+   "intro": "A function is a tool with a name. `def shift(text, k):` says what it needs; `return` hands back the answer. Once written, `shift(t, -3)` does the whole job, and a loop can try all 26 keys in two lines. `lambda` makes a small function in place, and `map` applies a function to every letter, but lazily: it does nothing until `list(...)` or `\"\".join(...)` asks for the results.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "def double(s):\n    return s + s\n\nprint(double(\"AB\"), len(double(\"XYZ\")))\n",
+    "choices": [
+     "ABAB 6",
+     "AB 3",
+     "ABAB 3",
+     "AABB 6"
+    ],
+    "answer": 0,
+    "explain": "`double(\"AB\")` returns AB + AB, ABAB. `double(\"XYZ\")` is XYZXYZ, six letters long."
+   },
+   "run": {
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n\ndef shift(text, k):\n    out = \"\"\n    for ch in text:\n        out = out + chr((ord(ch) - 65 + k) % 26 + 65)\n    return out\n\nfor k in range(26):\n    print(k, shift(t[:30], -k))\n"
+   },
+   "investigate": {
+    "prompts": [
+     "Which line reads as English? Its number is the key.",
+     "`up = lambda ch: chr((ord(ch) - 65 + 1) % 26 + 65)` is a one-letter shift. Add it and try `print(\"\".join(map(up, \"HAL\")))`.",
+     "Now print `map(up, \"HAL\")` on its own. It is a promise of letters, not the letters: `list(map(up, \"HAL\"))` makes it keep the promise."
+    ]
+   },
+   "modify": {
+    "task": "Change `shift` so a character that is not a capital letter (a space, a comma, a line break) passes through unchanged. Then make `message`, the whole of `ct` shifted back by the key you found.",
+    "code": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\n\ndef shift(text, k):\n    out = \"\"\n    for ch in text:\n        out = out + chr((ord(ch) - 65 + k) % 26 + 65)\n    return out\n\nmessage = \"\"   # change this line\nprint(message)\n",
+    "check": "assert message == \"\"\"DEAR AGNES, THE LAMP IN THE OLD LIGHTHOUSE WAS LIT\nAGAIN LAST NIGHT, THOUGH NOBODY HAS LIVED THERE\nFOR TWENTY YEARS. I ROWED OUT AT DAWN AND FOUND\nFRESH FOOTPRINTS ON THE STAIRS AND A LETTER ON THE\nTABLE, WRITTEN IN A CODE I DO NOT KNOW. MEET ME AT\nTHE HARBOUR ON FRIDAY AND BRING YOUR NOTEBOOK. TOM\"\"\", \"message should be the whole letter, spaces and punctuation kept: shift only the letters, and shift back by the key\"\n",
+    "hint": "Inside the loop: `if ch.isalpha():` shift it, `else:` add `ch` as it is. Then `message = shift(ct, -k)` with the key from the Run step.",
+    "solution": "ct = \"\"\"OPLC LRYPD, ESP WLXA TY ESP ZWO WTRSESZFDP HLD WTE\nLRLTY WLDE YTRSE, ESZFRS YZMZOJ SLD WTGPO ESPCP\nQZC EHPYEJ JPLCD. T CZHPO ZFE LE OLHY LYO QZFYO\nQCPDS QZZEACTYED ZY ESP DELTCD LYO L WPEEPC ZY ESP\nELMWP, HCTEEPY TY L NZOP T OZ YZE VYZH. XPPE XP LE\nESP SLCMZFC ZY QCTOLJ LYO MCTYR JZFC YZEPMZZV. EZX\"\"\"\n\ndef shift(text, k):\n    out = \"\"\n    for ch in text:\n        if ch.isalpha():\n            out = out + chr((ord(ch) - 65 + k) % 26 + 65)\n        else:\n            out = out + ch\n    return out\n\nmessage = shift(ct, -11)\nprint(message)\n"
+   },
+   "make": {
+    "task": "Write a function `ioc(text)` that returns the index of coincidence of a text of capital letters (lesson 10's formula). Then any text is one line away: `print(ioc(t))`.",
+    "code": "# def ioc(text):\n#     ...\n",
+    "check": "assert abs(ioc(\"AAB\") - 1 / 3) < 1e-9, \"ioc(\\\"AAB\\\") should be 1/3\"\nassert abs(ioc(\"ABCD\")) < 1e-9, \"ioc(\\\"ABCD\\\") should be 0: no letter repeats\"\nassert abs(ioc(\"AAAA\") - 1) < 1e-9, \"ioc(\\\"AAAA\\\") should be 1\"\n",
+    "hint": "Inside the function: count the letters into a dictionary, `N = len(text)`, and `return sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))`.",
+    "solution": "def ioc(text):\n    counts = {}\n    for ch in text:\n        counts[ch] = counts.get(ch, 0) + 1\n    N = len(text)\n    return sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))\n\nprint(ioc(\"AAB\"), ioc(\"HELLOTHERE\"))\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/12-functions.ipynb"
+  },
+  {
+   "id": "partial-key",
+   "number": 13,
+   "title": "Try a partial key",
+   "job": "Write your guesses into a substitution ciphertext and see what appears.",
+   "learn": [
+    "str.maketrans()",
+    "str.translate()",
+    "capitals and lower case to tell guesses apart"
+   ],
+   "intro": "Breaking a substitution by hand means guessing a few letters, writing them in, and looking at what the guesses make. `str.maketrans(\"QST\", \"the\")` builds a key from cipher letters to plain ones; `ct.translate(key)` writes it into the whole text. Guessed letters come out in lower case and the rest stay as capitals, so you see at a glance what is still to do.",
+   "predict": {
+    "question": "What does this print?",
+    "code": "key = str.maketrans(\"XQ\", \"th\")\nprint(\"XQB\".translate(key))\n",
+    "choices": [
+     "thB",
+     "THB",
+     "XQB",
+     "th"
+    ],
+    "answer": 0,
+    "explain": "X becomes t and Q becomes h. B is not in the key, so it stays as it was: a capital."
+   },
+   "run": {
+    "code": "ct = \"\"\"HTLN QJD, E SLVT NTLH QST CTQQTN YJR OJRFH. QST\nGJHT EP LF JCH JFT: TLGS CTQQTN PQLFHP OJN\nLFJQSTN, LCWLYP QST PLDT JFT. GJRFQ QST CTQQTNP\nLFH QST GJDDJFTPQ WECC IT T JN Q. WSJTVTN CEQ QST\nCLDK BFTW QSEP QJJ. E WECC IT LQ QST SLNIJRN JF\nONEHLY LQ PEX. LUFTP\"\"\"\n\nguess_cipher = \"QST\"\nguess_plain = \"the\"\nkey = str.maketrans(guess_cipher, guess_plain)\nprint(ct.translate(key))\n",
+    "note": "Agnes's reply to Tom, in a substitution cipher. The commonest three-letter word in English is THE; here QST is a good bet for it."
+   },
+   "investigate": {
+    "prompts": [
+     "Find a one-letter word in the ciphertext. In English it is A or I. Add a guess for it.",
+     "Look for `tQ`-like patterns: a guessed letter next to an unguessed one often suggests the next guess.",
+     "What happens if two cipher letters are given the same plain letter?"
+    ]
+   },
+   "modify": {
+    "task": "The letter starts DEAR, like Tom's. Add guesses so the first four letters come out as `dear`.",
+    "code": "ct = \"\"\"HTLN QJD, E SLVT NTLH QST CTQQTN YJR OJRFH. QST\nGJHT EP LF JCH JFT: TLGS CTQQTN PQLFHP OJN\nLFJQSTN, LCWLYP QST PLDT JFT. GJRFQ QST CTQQTNP\nLFH QST GJDDJFTPQ WECC IT T JN Q. WSJTVTN CEQ QST\nCLDK BFTW QSEP QJJ. E WECC IT LQ QST SLNIJRN JF\nONEHLY LQ PEX. LUFTP\"\"\"\n\nguess_cipher = \"QST\"\nguess_plain = \"the\"\nkey = str.maketrans(guess_cipher, guess_plain)\nprint(ct.translate(key))\n",
+    "check": "assert ct.translate(key)[:4] == \"dear\", \"the first four letters should come out as dear: which cipher letters stand there?\"\n",
+    "hint": "The text starts HTLN. T is already e from THE; add H, L and N to `guess_cipher` and d, a and r, in the same order, to `guess_plain`.",
+    "solution": "ct = \"\"\"HTLN QJD, E SLVT NTLH QST CTQQTN YJR OJRFH. QST\nGJHT EP LF JCH JFT: TLGS CTQQTN PQLFHP OJN\nLFJQSTN, LCWLYP QST PLDT JFT. GJRFQ QST CTQQTNP\nLFH QST GJDDJFTPQ WECC IT T JN Q. WSJTVTN CEQ QST\nCLDK BFTW QSEP QJJ. E WECC IT LQ QST SLNIJRN JF\nONEHLY LQ PEX. LUFTP\"\"\"\n\nguess_cipher = \"QSTHLN\"\nguess_plain = \"thedar\"\nkey = str.maketrans(guess_cipher, guess_plain)\nprint(ct.translate(key))\n"
+   },
+   "make": {
+    "task": "The keyword was LIGHTHOUSE: the cipher alphabet is `LIGHTOUSEABCDFJKMNPQRVWXYZ`, standing for A to Z. Make `full`, the whole reply deciphered in lower case, with one `maketrans` from that alphabet to `\"abcdefghijklmnopqrstuvwxyz\"`.",
+    "code": "ct = \"\"\"HTLN QJD, E SLVT NTLH QST CTQQTN YJR OJRFH. QST\nGJHT EP LF JCH JFT: TLGS CTQQTN PQLFHP OJN\nLFJQSTN, LCWLYP QST PLDT JFT. GJRFQ QST CTQQTNP\nLFH QST GJDDJFTPQ WECC IT T JN Q. WSJTVTN CEQ QST\nCLDK BFTW QSEP QJJ. E WECC IT LQ QST SLNIJRN JF\nONEHLY LQ PEX. LUFTP\"\"\"\ncipher_alphabet = \"LIGHTOUSEABCDFJKMNPQRVWXYZ\"\n# your code here\n",
+    "check": "assert full == \"\"\"DEAR TOM, I HAVE READ THE LETTER YOU FOUND. THE\nCODE IS AN OLD ONE: EACH LETTER STANDS FOR\nANOTHER, ALWAYS THE SAME ONE. COUNT THE LETTERS\nAND THE COMMONEST WILL BE E OR T. WHOEVER LIT THE\nLAMP KNEW THIS TOO. I WILL BE AT THE HARBOUR ON\nFRIDAY AT SIX. AGNES\"\"\".lower(), \"full should be the whole reply in lower case: maketrans(cipher_alphabet, the lower-case alphabet), then translate ct\"\n",
+    "hint": "`key = str.maketrans(cipher_alphabet, \"abcdefghijklmnopqrstuvwxyz\")`, then `full = ct.translate(key)`.",
+    "solution": "ct = \"\"\"HTLN QJD, E SLVT NTLH QST CTQQTN YJR OJRFH. QST\nGJHT EP LF JCH JFT: TLGS CTQQTN PQLFHP OJN\nLFJQSTN, LCWLYP QST PLDT JFT. GJRFQ QST CTQQTNP\nLFH QST GJDDJFTPQ WECC IT T JN Q. WSJTVTN CEQ QST\nCLDK BFTW QSEP QJJ. E WECC IT LQ QST SLNIJRN JF\nONEHLY LQ PEX. LUFTP\"\"\"\ncipher_alphabet = \"LIGHTOUSEABCDFJKMNPQRVWXYZ\"\nkey = str.maketrans(cipher_alphabet, \"abcdefghijklmnopqrstuvwxyz\")\nfull = ct.translate(key)\nprint(full)\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/13-partial-key.ipynb"
+  },
+  {
+   "id": "bonus",
+   "number": 14,
+   "title": "Three imports worth knowing",
+   "job": "Three one-line helpers from Python's standard library, once the long way is clear.",
+   "learn": [
+    "collections.Counter",
+    "textwrap.wrap()",
+    "itertools.permutations()"
+   ],
+   "intro": "Everything so far used built-ins only, on purpose: you can read every line. Python also comes with a standard library, and three of its tools save real work. `Counter` counts in one line; `textwrap.wrap` cuts a text into rows; `permutations` lists every order of some columns, which turns \"look\" into \"search\": try all 720 orders of 6 columns and print only those that contain a crib. It is still your own code.",
+   "bonus": true,
+   "run": {
+    "code": "from collections import Counter\nfrom itertools import permutations\nimport textwrap\n\nct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n\nprint(Counter(t).most_common(5))     # lesson 8 and 9 in one line\nprint(textwrap.wrap(t, 6)[:4])       # lesson 4's rows, as a list\n\n# Every order of the 6 columns: keep the ones that make HARBOUR appear\nfor order in permutations(range(6)):\n    plain = \"\".join(t[i + k] for i in range(0, len(t), 6) for k in order)\n    if \"HARBOUR\" in plain:\n        print(order, plain[:30])\n"
+   },
+   "investigate": {
+    "prompts": [
+     "How many orders does `permutations(range(6))` try? Add a counter, or `print(len(list(permutations(range(6)))))`.",
+     "Change the crib to THE. Why do far more orders pass?",
+     "`Counter` can add and subtract: try `Counter(\"ABBA\") + Counter(\"AB\")`."
+    ]
+   },
+   "make": {
+    "task": "Make `top`, the three commonest letters of `t` as a list of (letter, count) pairs, using `Counter`.",
+    "code": "from collections import Counter\n\nct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\n# your line here\n",
+    "check": "from collections import Counter as _C\nassert top == _C(t).most_common(3), \"top should be Counter(t).most_common(3)\"\n",
+    "hint": "`Counter(t).most_common(3)`",
+    "solution": "from collections import Counter\n\nct = \"\"\"HETKY ESDIN EUTTR EHHRT ISODE ONRMF HETLF EOHTT\nENAOH BURWL RLBAI ARGTN RAOHN CCEDM AOOXL EXN\"\"\"\nt = \"\".join(ch for ch in ct if ch.isalpha()).upper()\ntop = Counter(t).most_common(3)\nprint(top)\n"
+   },
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/14-bonus.ipynb"
+  }
+ ]
+}

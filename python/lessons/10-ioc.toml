@@ -1,0 +1,108 @@
+id = "ioc"
+number = 10
+title = "Measure: the index of coincidence"
+job = "Work out the index of coincidence, which tells one alphabet from several."
+learn = ["sum() over a loop in brackets", "dict.values()", "division", "round()"]
+intro = "The index of coincidence (IoC) is the chance that two letters picked at random from the text are the same. English, and anything that only relabels or moves its letters (Caesar, substitution, transposition), is about 0.066; letters spread evenly over all 26 give about 0.038. A Vigenère cipher sits in between, and its slices `t[c::w]` look like English again at the right width. The formula is: for each letter, its count n times (n - 1), all added up, divided by N times (N - 1), where N is the length."
+
+[predict]
+question = "What does this print?"
+code = '''
+counts = {"A": 2, "B": 1}
+N = 3
+print(sum(n * (n - 1) for n in counts.values()) / (N * (N - 1)))
+'''
+choices = ["0.3333333333333333", "0.5", "2", "0.0"]
+answer = 0
+explain = "A gives 2 × 1 = 2 and B gives 1 × 0 = 0, so the top is 2; the bottom is 3 × 2 = 6. 2 / 6 is a third, which Python prints with all its digits."
+
+[run]
+code = '''
+caesar = """{{caesar}}"""
+vigenere = """{{vigenere}}"""
+
+for ct in [caesar, vigenere]:
+    t = "".join(ch for ch in ct if ch.isalpha()).upper()
+    counts = {}
+    for ch in t:
+        counts[ch] = counts.get(ch, 0) + 1
+    N = len(t)
+    ioc = sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))
+    print(N, "letters, IoC", round(ioc, 3))
+'''
+note = "Two texts: Tom's letter (one alphabet) and a page of a logbook enciphered with a Vigenère. Run it and compare the two numbers."
+
+[investigate]
+prompts = [
+  "Which text has an English-like IoC, near 0.066?",
+  "Change `round(ioc, 3)` to `round(ioc, 5)`. What does the second number of `round` do?",
+  "Put the logbook's slice `t[0::4]` through the same lines. Is its IoC nearer English?",
+]
+
+[modify]
+task = "Make `slice_ioc`, the IoC of the Vigenère text's first slice at width 4, `t[0::4]`."
+code = '''
+vigenere = """{{vigenere}}"""
+t = "".join(ch for ch in vigenere if ch.isalpha()).upper()
+s = t   # change this to the slice
+counts = {}
+for ch in s:
+    counts[ch] = counts.get(ch, 0) + 1
+N = len(s)
+slice_ioc = sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))
+print(round(slice_ioc, 3))
+'''
+check = '''
+_s = "".join(ch for ch in vigenere if ch.isalpha()).upper()[0::4]
+_c = {}
+for _ch in _s:
+    _c[_ch] = _c.get(_ch, 0) + 1
+_ioc = sum(n * (n - 1) for n in _c.values()) / (len(_s) * (len(_s) - 1))
+assert abs(slice_ioc - _ioc) < 1e-9, "slice_ioc should be the IoC of t[0::4], not of the whole text"
+'''
+hint = "Only one line needs to change: `s = t[0::4]`."
+solution = '''
+vigenere = """{{vigenere}}"""
+t = "".join(ch for ch in vigenere if ch.isalpha()).upper()
+s = t[0::4]
+counts = {}
+for ch in s:
+    counts[ch] = counts.get(ch, 0) + 1
+N = len(s)
+slice_ioc = sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))
+print(round(slice_ioc, 3))
+'''
+
+[make]
+task = "Make `average`, the average IoC of the four slices `t[0::4]`, `t[1::4]`, `t[2::4]` and `t[3::4]` of the Vigenère text. If it is near 0.066, the key is probably 4 letters long. (A loop over the four starts, adding each IoC to a total, then divide by 4.)"
+code = '''
+vigenere = """{{vigenere}}"""
+t = "".join(ch for ch in vigenere if ch.isalpha()).upper()
+# your code here
+'''
+check = '''
+_t = "".join(ch for ch in vigenere if ch.isalpha()).upper()
+_total = 0
+for _c0 in range(4):
+    _s = _t[_c0::4]
+    _c = {}
+    for _ch in _s:
+        _c[_ch] = _c.get(_ch, 0) + 1
+    _total = _total + sum(n * (n - 1) for n in _c.values()) / (len(_s) * (len(_s) - 1))
+assert abs(average - _total / 4) < 1e-9, "average should be the four slices' IoCs added up and divided by 4"
+'''
+hint = "`total = 0`, then `for c in range(4):` with `s = t[c::4]`, the counting lines, and `total = total + ioc`. After the loop, `average = total / 4`."
+solution = '''
+vigenere = """{{vigenere}}"""
+t = "".join(ch for ch in vigenere if ch.isalpha()).upper()
+total = 0
+for c in range(4):
+    s = t[c::4]
+    counts = {}
+    for ch in s:
+        counts[ch] = counts.get(ch, 0) + 1
+    N = len(s)
+    total = total + sum(n * (n - 1) for n in counts.values()) / (N * (N - 1))
+average = total / 4
+print(round(average, 3))
+'''

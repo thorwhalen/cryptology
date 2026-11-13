@@ -1,0 +1,37 @@
+# The practice texts the lessons use, as plaintext plus cipher and key. The build script
+# (scripts/build_python.py) enciphers them, so a ciphertext and its plaintext can never disagree.
+# All are original, written for these lessons. A lesson names one as {{name}} (the ciphertext,
+# wrapped in lines as if pasted) or {{name_plain}} (the plaintext, wrapped the same way when the
+# cipher keeps spaces and punctuation, letters only when it does not).
+
+[caesar]
+title = "Tom's letter (a Caesar shift)"
+cipher = "caesar"
+key = 11
+plaintext = """DEAR AGNES, THE LAMP IN THE OLD LIGHTHOUSE WAS LIT AGAIN LAST NIGHT, THOUGH NOBODY HAS LIVED THERE FOR TWENTY YEARS. I ROWED OUT AT DAWN AND FOUND FRESH FOOTPRINTS ON THE STAIRS AND A LETTER ON THE TABLE, WRITTEN IN A CODE I DO NOT KNOW. MEET ME AT THE HARBOUR ON FRIDAY AND BRING YOUR NOTEBOOK. TOM"""
+
+[substitution]
+title = "Agnes's reply (a keyword substitution)"
+cipher = "substitution"
+key = "LIGHTHOUSE"
+plaintext = """DEAR TOM, I HAVE READ THE LETTER YOU FOUND. THE CODE IS AN OLD ONE: EACH LETTER STANDS FOR ANOTHER, ALWAYS THE SAME ONE. COUNT THE LETTERS AND THE COMMONEST WILL BE E OR T. WHOEVER LIT THE LAMP KNEW THIS TOO. I WILL BE AT THE HARBOUR ON FRIDAY AT SIX. AGNES"""
+
+[vigenere]
+title = "The keeper's logbook (a Vigenère cipher)"
+cipher = "vigenere"
+key = "LAMP"
+plaintext = """THE KEEPER'S LOGBOOK STOPS IN THE WINTER OF THE YEAR THE LIGHT WAS CLOSED. THE LAST PAGE LISTS THE SHIPS THAT PASSED, THE WEATHER EACH MORNING, AND A NOTE IN DIFFERENT HANDWRITING THAT SAYS ONLY THIS: THE LIGHT WILL SHINE AGAIN WHEN THE THREE STONES ARE TURNED. NOBODY IN THE VILLAGE KNOWS WHICH STONES ARE MEANT, OR WHO WROTE THE NOTE."""
+
+[block]
+title = "A note under the door (a block transposition)"
+cipher = "block"
+# The key to undo it: each row of the plaintext is row[2], row[0], row[5], row[3], row[1], row[4] of the ciphertext's row.
+key = [2, 0, 5, 3, 1, 4]
+plaintext = """THE KEY IS UNDER THE THIRD STONE FROM THE LEFT ON THE HARBOUR WALL. BRING A TORCH AND COME ALONE. XX"""
+
+[columnar]
+title = "A message in columns (a columnar transposition)"
+cipher = "columnar"
+# Written in rows of 6 letters, read off column by column, left to right.
+key = 6
+plaintext = """MEET AT THE OLD BOATHOUSE AT SIX AND WATCH THE LIGHT FROM THE TOP WINDOW. XX"""
