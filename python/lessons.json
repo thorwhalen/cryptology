@@ -830,5 +830,22 @@
    "summary": "`sum(1 for x in items if test)` counts the items that pass the test: a 1 for each, added up.",
    "lesson": "ioc"
   }
+ ],
+ "workbooks": [
+  {
+   "id": "counter",
+   "title": "Counting from scratch: build your own Counter",
+   "summary": "Python's Counter counts things in one line. Build the same thing yourself, with a dictionary and a few small functions, then meet the real one.",
+   "learn": [
+    "dict",
+    "dict.get",
+    "for loops",
+    "zip",
+    "sorted with key=",
+    "lambda",
+    "collections.Counter"
+   ],
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/counter.ipynb"
+  }
  ]
 }

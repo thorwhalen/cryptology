@@ -10,7 +10,11 @@ reads them, and it writes:
   ``python/concepts.toml``, which the cryptology app syncs at a pinned commit (its
   ``scripts/sync-guides.mjs``) and shows as fiddles;
 - ``python/notebooks/NN-<id>.ipynb``: the same lesson as a notebook, opened in Google Colab from
-  the app's "Open in Colab" link.
+  the app's "Open in Colab" link;
+- ``python/notebooks/<id>.ipynb``: each workbook of ``python/workbooks/``, a longer notebook in
+  short, foldable chapters, each with a few examples and a playground cell, whose functions build
+  on each other up to a whole tool (counting, cracking a cipher). Workbooks may import from the
+  standard library.
 
 Before writing anything it checks, by running them:
 
@@ -18,12 +22,16 @@ Before writing anything it checks, by running them:
   in a lesson marked ``imports = true``;
 - each Predict's right choice is exactly what its code prints, and no other choice is;
 - each Modify and Make solution passes its check, and each starter does not (so the task is real);
-- each concept explainer names a lesson that exists.
+- each concept explainer names a lesson that exists;
+- every cell of every workbook runs, in order, in one namespace (a cell's ``stand_in`` runs in
+  its place: the cell that fetches a live challenge text, say), the workbook imports nothing
+  outside the standard library, and its hidden ``check`` passes after the last cell.
 
 Usage::
 
     python python/scripts/build_python.py           # check, then write
     python python/scripts/build_python.py --check   # check, and fail if the written files are stale
+    python python/scripts/build_python.py --workbooks DIR --out DIR   # check and build workbooks kept elsewhere
 """
 
 from __future__ import annotations
@@ -46,6 +54,7 @@ COLAB = f"https://colab.research.google.com/github/{REPO}/blob/{BRANCH}/python/n
 ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 WRAP = 50
 RUN_TIMEOUT_S = 20
+WORKBOOK_TIMEOUT_S = 600
 PLACEHOLDER = re.compile(r"\{\{(\w+)\}\}")
 STEPS = ("predict", "run", "investigate", "modify", "make")
 
@@ -111,13 +120,19 @@ def _wrap(text: str, *, groups: int = 0) -> str:
     return "\n".join(textwrap.wrap(text, WRAP))
 
 
-def load_texts(path: Path = ROOT / "texts.toml") -> dict[str, dict]:
-    """Every text's ciphertext and plaintext, ready to be put into a lesson."""
+def load_texts(path: Path = ROOT / "texts.toml", *, specs: dict | None = None) -> dict[str, dict]:
+    """Every text's ciphertext and plaintext, ready to be put into a lesson.
+
+    A text is a plaintext with a ``cipher`` and ``key``, enciphered here, or (for a cipher this
+    script does not know) a plaintext with its ``ciphertext`` already made, and ``cipher`` naming it.
+    ``specs`` gives the texts directly instead of reading ``path`` (a workbook's own texts).
+    """
     out = {}
-    for name, spec in tomllib.loads(path.read_text()).items():
-        cipher, key, plain = spec["cipher"], spec["key"], spec["plaintext"]
-        ct = encipher(plain, cipher, key)
-        transposition = cipher in ("block", "columnar")
+    for name, spec in (specs if specs is not None else tomllib.loads(path.read_text())).items():
+        cipher, plain = spec["cipher"], spec["plaintext"]
+        key = spec.get("key")
+        ct = spec["ciphertext"].upper() if "ciphertext" in spec else encipher(plain, cipher, key)
+        transposition = cipher in ("block", "columnar") or spec.get("transposition", False)
         out[name] = {
             "title": spec["title"],
             "cipher": cipher,
@@ -238,6 +253,135 @@ def check_lesson(lesson: dict) -> list[str]:
     return problems
 
 
+# --- the workbooks ------------------------------------------------------------------------------
+
+CELL_KINDS = ("md", "code", "play")
+PLAY_HEADER = "# Playground: change anything here and run it again. Nothing you do here can break the notebook.\n"
+FOLD_TIP = (
+    "**How to use it.** Run a cell with the ▶ button beside it, or Shift+Enter. Run the cells in order the "
+    "first time: later chapters use the functions earlier ones made. Each chapter is a section: fold one "
+    "you already know with the arrow beside its heading, or jump with the table of contents (the ☰ icon on the left). "
+    "The cells marked *Playground* are yours: change them, break them, run them again."
+)
+
+# Runs a workbook's cells in order in one namespace, and names the cell that failed.
+_RUNNER = """
+import json, sys, traceback
+cells = json.loads(sys.stdin.read())
+ns = {"__name__": "__main__"}
+for label, code in cells:
+    try:
+        exec(compile(code, label, "exec"), ns)
+    except BaseException:
+        print(f"{label} raised:", file=sys.stderr)
+        traceback.print_exc()
+        sys.exit(1)
+"""
+
+
+def load_workbooks(folder: Path = ROOT / "workbooks", *, texts: dict[str, dict] | None = None) -> list[dict]:
+    """Every workbook in ``folder``, with the texts filled in: the shared ones and its own ``[texts]``."""
+    texts = load_texts() if texts is None else texts
+    books = []
+    for path in sorted(folder.glob("*.toml")):
+        raw = tomllib.loads(path.read_text())
+        own = load_texts(specs=raw.pop("texts", {}))
+        book = _fill(raw, _placeholders({**texts, **own}))
+        book["source"] = path.name
+        books.append(book)
+    books.sort(key=lambda b: (b.get("order", 0), b.get("id", "")))
+    return books
+
+
+def _cells(book: dict):
+    """Each cell as (chapter number, chapter title, cell)."""
+    for n, chapter in enumerate(book.get("chapter", []), 1):
+        for cell in chapter.get("cell", []):
+            yield n, chapter["title"], cell
+
+
+def check_workbook(book: dict) -> list[str]:
+    """Every problem with one workbook, as readable lines (empty when it is right)."""
+    where = book["source"]
+    problems = [f"{where}: missing {f}" for f in ("id", "title", "summary", "intro", "chapter") if f not in book]
+    problems += [f"{where}: chapter {c.get('title')!r} has unknown keys {sorted(set(c) - {'title', 'cell'})}" for c in book.get("chapter", []) if set(c) - {"title", "cell"}]
+    if not re.fullmatch(r"[a-z0-9-]+", book.get("id", "")):
+        problems.append(f"{where}: id must be lower-case words joined by hyphens")
+    if problems:
+        return problems
+    run = []
+    for i, (n, title, cell) in enumerate(_cells(book)):
+        kinds = [k for k in CELL_KINDS if k in cell]
+        unknown = set(cell) - set(CELL_KINDS) - {"stand_in"}
+        if unknown:  # a key written after a [[chapter.cell]] header lands in that cell: a misplaced `check`, say
+            problems.append(f"{where}: chapter {n} ({title}), cell {i}: unknown keys {sorted(unknown)} (top-level keys go before the first table)")
+        if len(kinds) != 1:
+            problems.append(f"{where}: chapter {n} ({title}), cell {i}: needs exactly one of {CELL_KINDS}")
+            continue
+        if kinds[0] == "md":
+            continue
+        code = cell.get("stand_in", cell[kinds[0]])
+        try:
+            imported = _imported(code) | _imported(cell[kinds[0]])
+        except SyntaxError as e:
+            problems.append(f"{where}: chapter {n} ({title}), cell {i}: {e}")
+            continue
+        for name in imported:
+            if name not in sys.stdlib_module_names:
+                problems.append(f"{where}: chapter {n} imports {name}, which is not in the standard library")
+        run.append((f"{where}, chapter {n} ({title}), cell {i}", code))
+    if book.get("check"):
+        run.append((f"{where}: the hidden check", book["check"]))
+    if problems:
+        return problems
+    r = subprocess.run([sys.executable, "-I", "-c", _RUNNER], input=json.dumps(run), capture_output=True, text=True, timeout=WORKBOOK_TIMEOUT_S)
+    if r.returncode:
+        problems.append(r.stderr.strip())
+    return problems
+
+
+def _imported(code: str) -> set[str]:
+    names = set()
+    for node in ast.walk(ast.parse(code)):
+        if isinstance(node, ast.Import):
+            names |= {a.name.split(".")[0] for a in node.names}
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            names.add(node.module.split(".")[0])
+    return names
+
+
+def workbook_name(book: dict) -> str:
+    return f"{book['id']}.ipynb"
+
+
+def workbook_notebook(book: dict) -> dict:
+    """The workbook as a notebook: a title, then one foldable section per chapter."""
+    footer = book.get("footer", f"<small>From [{REPO}](https://github.com/{REPO}). Code: MIT. Text: CC BY 4.0.</small>")
+    cells = [_md(f"# {book['title']}", "", f"*{book['summary']}*", "", book["intro"].strip(), "", FOLD_TIP, "",
+                 "*Save a copy to your own Drive (File → Save a copy in Drive) to keep your work.*", "", footer)]
+    for n, chapter in enumerate(book["chapter"], 1):
+        cells.append(_md(f"## {n}. {chapter['title']}"))
+        for cell in chapter.get("cell", []):
+            if "md" in cell:
+                cells.append(_md(cell["md"].strip()))
+            elif "play" in cell:
+                cells.append(_code(PLAY_HEADER + cell["play"]))
+            else:
+                cells.append(_code(cell["code"]))
+    for i, cell in enumerate(cells):
+        cell["id"] = f"{book['id']}-{i}"
+    return {
+        "cells": cells,
+        "metadata": {
+            "colab": {"name": workbook_name(book), "provenance": [], "toc_visible": True},
+            "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+            "language_info": {"name": "python"},
+        },
+        "nbformat": 4,
+        "nbformat_minor": 5,
+    }
+
+
 # --- the outputs --------------------------------------------------------------------------------
 
 
@@ -328,27 +472,54 @@ def check_concepts(concepts: list[dict], lessons: list[dict]) -> list[str]:
     return problems + [f"concept {c['id']}: no lesson {c.get('lesson')!r}" for c in concepts if c.get("lesson") not in ids]
 
 
-def app_data(lessons: list[dict], texts: dict[str, dict], concepts: list[dict] = ()) -> dict:
-    """What the app reads: the lessons, each with its Colab link, and the concept explainers."""
+def app_data(lessons: list[dict], texts: dict[str, dict], concepts: list[dict] = (), workbooks: list[dict] = ()) -> dict:
+    """What the app reads: the lessons, each with its Colab link, the concept explainers, and the workbooks."""
     keep = ("id", "number", "title", "job", "learn", "intro", "bonus", *STEPS)
     return {
         "texts": {k: {"title": v["title"], "cipher": v["cipher"]} for k, v in texts.items()},
         "lessons": [{**{k: l[k] for k in keep if k in l}, "colab": COLAB + notebook_name(l)} for l in lessons],
         "concepts": list(concepts),
+        "workbooks": [{**{k: b[k] for k in ("id", "title", "summary", "learn") if k in b}, "colab": COLAB + workbook_name(b)} for b in workbooks],
     }
 
 
-def outputs(lessons: list[dict], texts: dict[str, dict], concepts: list[dict] = ()) -> dict[Path, str]:
-    files = {ROOT / "lessons.json": json.dumps(app_data(lessons, texts, concepts), indent=1, ensure_ascii=False) + "\n"}
+def _json(obj) -> str:
+    return json.dumps(obj, indent=1, ensure_ascii=False) + "\n"
+
+
+def outputs(lessons: list[dict], texts: dict[str, dict], concepts: list[dict] = (), workbooks: list[dict] = ()) -> dict[Path, str]:
+    files = {ROOT / "lessons.json": _json(app_data(lessons, texts, concepts, workbooks))}
     for l in lessons:
-        files[ROOT / "notebooks" / notebook_name(l)] = json.dumps(notebook(l), indent=1, ensure_ascii=False) + "\n"
+        files[ROOT / "notebooks" / notebook_name(l)] = _json(notebook(l))
+    for b in workbooks:
+        files[ROOT / "notebooks" / workbook_name(b)] = _json(workbook_notebook(b))
     return files
+
+
+def build_elsewhere(folder: Path, out: Path) -> int:
+    """Check the workbooks in ``folder`` (kept outside this repo) and write their notebooks to ``out``."""
+    books = load_workbooks(folder)
+    problems = [p for b in books for p in check_workbook(b)]
+    if problems:
+        print("\n".join(problems), file=sys.stderr)
+        return 1
+    out.mkdir(parents=True, exist_ok=True)
+    for b in books:
+        (out / workbook_name(b)).write_text(_json(workbook_notebook(b)))
+    print(f"{len(books)} workbooks checked; wrote {', '.join(workbook_name(b) for b in books)} to {out}.")
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--check", action="store_true", help="check only, and fail if the written files are out of date")
+    ap.add_argument("--workbooks", type=Path, help="build only the workbooks in this folder (kept outside the repo), to --out")
+    ap.add_argument("--out", type=Path, help="where --workbooks writes its notebooks")
     args = ap.parse_args(argv)
+    if args.workbooks:
+        if not args.out:
+            ap.error("--workbooks needs --out")
+        return build_elsewhere(args.workbooks, args.out)
     texts = load_texts()
     lessons = load_lessons(texts)
     ids = [l["id"] for l in lessons]
@@ -357,10 +528,15 @@ def main(argv: list[str] | None = None) -> int:
         problems += check_lesson(l)
     concepts = load_concepts()
     problems += check_concepts(concepts, lessons)
+    workbooks = load_workbooks(texts=texts)
+    wids = [b.get("id") for b in workbooks] + ids
+    problems += [f"duplicate id {i} (lessons and workbooks share the notebooks folder)" for i in set(wids) if wids.count(i) > 1]
+    for b in workbooks:
+        problems += check_workbook(b)
     if problems:
         print("\n".join(problems), file=sys.stderr)
         return 1
-    files = outputs(lessons, texts, concepts)
+    files = outputs(lessons, texts, concepts, workbooks)
     if args.check:
         stale = [str(p.relative_to(ROOT.parent)) for p, s in files.items() if not p.exists() or p.read_text() != s]
         written = set(files)
@@ -368,7 +544,7 @@ def main(argv: list[str] | None = None) -> int:
         if stale or extra:
             print("Out of date (run build_python.py): " + ", ".join(stale + extra), file=sys.stderr)
             return 1
-        print(f"{len(lessons)} lessons checked; files up to date.")
+        print(f"{len(lessons)} lessons and {len(workbooks)} workbooks checked; files up to date.")
         return 0
     (ROOT / "notebooks").mkdir(exist_ok=True)
     for p in (ROOT / "notebooks").glob("*.ipynb"):
@@ -376,7 +552,7 @@ def main(argv: list[str] | None = None) -> int:
             p.unlink()
     for p, s in files.items():
         p.write_text(s)
-    print(f"{len(lessons)} lessons checked; wrote lessons.json and {len(lessons)} notebooks.")
+    print(f"{len(lessons)} lessons and {len(workbooks)} workbooks checked; wrote lessons.json and {len(lessons) + len(workbooks)} notebooks.")
     return 0
 
 
