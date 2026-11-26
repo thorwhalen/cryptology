@@ -1,0 +1,364 @@
+# A workbook: short chapters, each a few examples and a playground, whose functions build on each other.
+# build_python.py runs every cell in order, then the hidden check, before writing python/notebooks/counter.ipynb.
+
+id = "counter"
+order = 1
+title = "Counting from scratch: build your own Counter"
+summary = "Python's Counter counts things in one line. Build the same thing yourself, with a dictionary and a few small functions, then meet the real one."
+learn = ["dict", "dict.get", "for loops", "zip", "sorted with key=", "lambda", "collections.Counter"]
+intro = '''
+Codebreakers count all the time: letters, pairs of letters, words, repeats. Python's standard library has a tool for it, `collections.Counter`, and you will use it in every cracking notebook. Here you build your own version first, out of a dictionary and a handful of functions, so that the real one holds no mystery.
+
+No classes, only functions: where `Counter` has a method `c.most_common(3)`, you will write a function `most_common(counts, 3)` that works on any dictionary of counts.
+'''
+
+# Run after the last cell, in the same namespace; never shown in the notebook.
+check = '''
+assert count("") == {}
+assert most_common({"A": 1, "B": 3, "C": 3}) == [("B", 3), ("C", 3), ("A", 1)]
+assert shares(count("AAB")) == {"A": 2 / 3, "B": 1 / 3}
+assert subtract_counts({"A": 1}, {"A": 2}) == {}
+'''
+
+[[chapter]]
+title = "A dictionary: names and values"
+
+[[chapter.cell]]
+md = '''
+A **dictionary** stores pairs: a *key* and its *value*. Write it with curly brackets, `key: value`, and look a value up with square brackets.
+'''
+
+[[chapter.cell]]
+code = '''
+ages = {"Ada": 12, "Ben": 14}
+print(ages["Ada"])
+ages["Cleo"] = 11        # add a new pair
+ages["Ben"] = 15         # change a value
+print(ages)
+print(len(ages), "people")
+print("Dan" in ages)     # is this key there?
+'''
+
+[[chapter.cell]]
+md = '''
+A `for` loop over `.items()` gives you each key with its value.
+'''
+
+[[chapter.cell]]
+code = '''
+for name, age in ages.items():
+    print(name, "is", age)
+'''
+
+[[chapter.cell]]
+play = '''
+# Make a dictionary of your own: favourite letters, or the number of legs of some animals.
+legs = {"spider": 8, "cat": 4}
+legs["bird"] = 2
+print(legs)
+'''
+
+[[chapter]]
+title = "Counting by hand"
+
+[[chapter.cell]]
+md = '''
+To count, start with an empty dictionary and walk through the things one at a time. The first time you see a thing, its count is 1; after that, add 1.
+'''
+
+[[chapter.cell]]
+code = '''
+counts = {}
+for letter in "BANANA":
+    if letter in counts:
+        counts[letter] = counts[letter] + 1
+    else:
+        counts[letter] = 1
+print(counts)
+'''
+
+[[chapter.cell]]
+md = '''
+`counts.get(letter, 0)` means "the count of `letter`, or 0 if it is not there yet". It does the `if` for you, so the loop shrinks to one line.
+'''
+
+[[chapter.cell]]
+code = '''
+counts = {}
+for letter in "BANANA":
+    counts[letter] = counts.get(letter, 0) + 1
+print(counts)
+print(counts.get("Z", 0))   # never seen: 0
+'''
+
+[[chapter.cell]]
+play = '''
+# Count the letters of your own name, or of a sentence. What happens to spaces?
+counts = {}
+for letter in "MISSISSIPPI":
+    counts[letter] = counts.get(letter, 0) + 1
+print(counts)
+'''
+
+[[chapter]]
+title = "A counting function"
+
+[[chapter.cell]]
+md = '''
+Wrap the loop in a **function**, so one line counts anything. It works on any sequence: the letters of a string, the words in a list, even numbers.
+'''
+
+[[chapter.cell]]
+code = '''
+def count(things):
+    """A dictionary: each thing, and how many times it appears."""
+    counts = {}
+    for thing in things:
+        counts[thing] = counts.get(thing, 0) + 1
+    return counts
+
+print(count("BANANA"))
+print(count(["the", "cat", "and", "the", "hat"]))
+print(count([3, 1, 3, 3]))
+'''
+
+[[chapter.cell]]
+play = '''
+sentence = "the quick brown fox jumps over the lazy dog and the cat"
+print(count(sentence.split()))    # .split() cuts a string into its words
+'''
+
+[[chapter]]
+title = "Counting pairs"
+
+[[chapter.cell]]
+md = '''
+Codebreakers count pairs of letters too (TH, HE, IN are the commonest in English). `zip(text, text[1:])` walks two copies of the text side by side, one letter apart, so it gives every neighbouring pair.
+'''
+
+[[chapter.cell]]
+code = '''
+text = "THEN"
+print(list(zip(text, text[1:])))
+
+def pairs(text):
+    """Every two neighbouring letters, as two-letter strings."""
+    return [a + b for a, b in zip(text, text[1:])]
+
+print(pairs("THERE"))
+print(count(pairs("THE THEATRE THEN")))
+'''
+
+[[chapter.cell]]
+play = '''
+# Change pairs into triples: zip three copies of the text, each one letter further on.
+def triples(text):
+    return [a + b + c for a, b, c in zip(text, text[1:], text[2:])]
+
+print(count(triples("THE THEATRE THEN")))
+'''
+
+[[chapter]]
+title = "The most common"
+
+[[chapter.cell]]
+md = '''
+`sorted` puts things in order. Give it the dictionary's `.items()` (the pairs) and a **key**: a function that says what to sort by. Here, the count, which is the second thing in each pair, `pair[1]`. `reverse=True` puts the biggest first.
+'''
+
+[[chapter.cell]]
+code = '''
+counts = count("MISSISSIPPI")
+
+def by_count(pair):
+    return pair[1]
+
+print(sorted(counts.items(), key=by_count, reverse=True))
+'''
+
+[[chapter.cell]]
+md = '''
+A function used only once can be written in place, as a `lambda`: `lambda pair: pair[1]` is the same as `by_count`. Now the function you will use again and again: the `n` most common things, or all of them in order.
+'''
+
+[[chapter.cell]]
+code = '''
+def most_common(counts, n=None):
+    """The (thing, count) pairs, most common first; only the first n if n is given."""
+    ranked = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)
+    if n is None:
+        return ranked
+    return ranked[:n]
+
+print(most_common(count("MISSISSIPPI")))
+print(most_common(count("MISSISSIPPI"), 2))
+'''
+
+[[chapter.cell]]
+md = '''
+When two things have the same count, which comes first? `sorted` is *stable*: things that tie stay in the order they were in, which is the order they were first seen. Remember this: the real `Counter` does exactly the same.
+'''
+
+[[chapter.cell]]
+play = '''
+# Which are the least common? Try reverse=False, or take the end of the list with [-2:].
+print(most_common(count("ABRACADABRA")))
+'''
+
+[[chapter]]
+title = "Totals and shares"
+
+[[chapter.cell]]
+md = '''
+`sum` adds numbers up, and `.values()` gives just the counts. Dividing each count by the total gives its share: the numbers codebreakers compare with English, where E is about 12% of the letters.
+'''
+
+[[chapter.cell]]
+code = '''
+def total(counts):
+    """How many things were counted."""
+    return sum(counts.values())
+
+def shares(counts):
+    """Each thing's count as a fraction of the total (they add up to 1)."""
+    t = total(counts)
+    return {thing: c / t for thing, c in counts.items()}
+
+c = count("BANANA")
+print(total(c))
+print(shares(c))
+for letter, share in shares(c).items():
+    print(letter, round(100 * share), "%")
+'''
+
+[[chapter.cell]]
+md = '''
+That `{thing: c / t for ...}` is a **dictionary comprehension**: a loop that builds a dictionary in one line.
+'''
+
+[[chapter.cell]]
+play = '''
+# Draw the counts as bars: "#" * 3 is "###".
+for letter, n in most_common(count("ABRACADABRA")):
+    print(letter, "#" * n)
+'''
+
+[[chapter]]
+title = "Adding and taking away counts"
+
+[[chapter.cell]]
+md = '''
+Two counts can be added: count two texts separately, then put the counts together. Taking away keeps only what is left above zero. And `elements` turns counts back into the things themselves.
+'''
+
+[[chapter.cell]]
+code = '''
+def add_counts(a, b):
+    """The counts of a and b together."""
+    out = dict(a)                       # a copy, so a is not changed
+    for thing, n in b.items():
+        out[thing] = out.get(thing, 0) + n
+    return out
+
+def subtract_counts(a, b):
+    """What is left of a once b is taken away, keeping only counts above zero."""
+    out = {}
+    for thing, n in a.items():
+        left = n - b.get(thing, 0)
+        if left > 0:
+            out[thing] = left
+    return out
+
+def elements(counts):
+    """Each thing, repeated as many times as its count."""
+    return [thing for thing, n in counts.items() for _ in range(n)]
+
+print(add_counts(count("BANANA"), count("APPLE")))
+print(subtract_counts(count("BANANA"), count("NAN")))
+print(elements(count("BANANA")))
+'''
+
+[[chapter.cell]]
+play = '''
+# Is one word an anagram of another? Then their counts are equal.
+print(count("LISTEN") == count("SILENT"))
+# Can you spell "TEA" with the letters of "ELEPHANT"? Then nothing is left when you take it away.
+print(subtract_counts(count("TEA"), count("ELEPHANT")) == {})
+'''
+
+[[chapter]]
+title = "Meet the real Counter"
+
+[[chapter.cell]]
+md = '''
+Everything you just built is in the standard library as `collections.Counter`. It is a dictionary that counts, and your functions have methods that match them. The cell below checks they agree: `assert` stays silent when something is true, and stops with an error when it is not.
+'''
+
+[[chapter.cell]]
+code = '''
+from collections import Counter
+
+text = "MISSISSIPPI"
+c = Counter(text)
+print(c)
+
+assert c == count(text)
+assert c.most_common() == most_common(count(text))
+assert c.most_common(2) == most_common(count(text), 2)
+assert c.total() == total(count(text))
+assert c + Counter("RIVER") == add_counts(count(text), count("RIVER"))
+assert c - Counter("SIP") == subtract_counts(count(text), count("SIP"))
+assert list(c.elements()) == elements(count(text))
+print("Your functions and Counter agree.")
+'''
+
+[[chapter.cell]]
+md = '''
+| Yours | Counter's |
+|---|---|
+| `count(things)` | `Counter(things)` |
+| `most_common(counts, n)` | `c.most_common(n)` |
+| `total(counts)` | `c.total()` |
+| `add_counts(a, b)` | `a + b` |
+| `subtract_counts(a, b)` | `a - b` |
+| `elements(counts)` | `c.elements()` |
+| `counts.get(x, 0)` | `c[x]` (a missing thing counts 0, with no error) |
+
+`Counter` is a dictionary underneath, so everything from the first chapter works on it too. From now on, use the real one: it is faster and everyone knows it. You know what it does.
+'''
+
+[[chapter.cell]]
+play = '''
+from collections import Counter
+c = Counter("ABRACADABRA")
+print(c["A"], c["Z"])        # no error for a letter that is not there
+c.update("CAB")              # count some more
+print(c.most_common(3))
+'''
+
+[[chapter]]
+title = "Count a ciphertext"
+
+[[chapter.cell]]
+md = '''
+A message written in a substitution cipher (every letter swapped for another, always the same one). Count its letters: the commonest are probably E and T in disguise.
+'''
+
+[[chapter.cell]]
+code = '''
+from collections import Counter
+
+ciphertext = """
+{{substitution}}
+"""
+letters = [ch for ch in ciphertext.upper() if ch.isalpha()]
+for letter, n in Counter(letters).most_common():
+    print(letter, "#" * n)
+'''
+
+[[chapter.cell]]
+play = '''
+# Which two-letter pairs are commonest in the ciphertext? (Use pairs() from before, on the letters joined up.)
+joined = "".join(letters)
+print(Counter(pairs(joined)).most_common(5))
+'''
