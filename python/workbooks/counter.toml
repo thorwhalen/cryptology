@@ -3,6 +3,8 @@
 
 id = "counter"
 order = 3
+# What it is about, for its picture in the app (one word: functions, strings, counting, ...).
+topic = "counting"
 title = "Counting from scratch: build your own Counter"
 summary = "Python's Counter counts things in one line. Build the same thing yourself, with a dictionary and a few small functions, then meet the real one."
 learn = ["dict", "dict.get", "for loops", "zip", "sorted with key=", "lambda", "collections.Counter"]

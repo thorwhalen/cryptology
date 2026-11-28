@@ -3,6 +3,8 @@
 
 id = "strings"
 order = 2
+# What it is about, for its picture in the app (one word: functions, strings, counting, ...).
+topic = "strings"
 title = "Strings: split, join, and views of a text"
 summary = "Cut a text up and put it back together in new shapes: slices, split and join, chunks, rows, columns, every n-th letter, turning a grid with zip, weaving columns back, and swapping letters with translate. These are the views that make a Vigenère or a transposition show its pattern."
 learn = ["indexing and slices", "step slices: t[i::n]", "str.split and str.join", "upper, replace, isalpha", "chunks and textwrap", "rows and columns", "zip(*rows)", "itertools.zip_longest", "str.maketrans and translate"]
