@@ -1,0 +1,367 @@
+# A workbook: short chapters, each a few examples and a playground, whose functions build on each other.
+# build_python.py runs every cell in order, then the hidden check, before writing python/notebooks/def-and-lambda.ipynb.
+
+id = "def-and-lambda"
+order = 1
+title = "Functions: def, lambda, and tools that build tools"
+summary = "Name a few steps once, then reuse them: def and return, defaults, functions passed around like values, lambda, sorted and max with key=, and functions that make functions. It ends with a Caesar toolkit that cracks itself."
+learn = ["def and return", "default and keyword arguments", "functions as values", "lambda", "sorted, min and max with key=", "map, filter and comprehensions", "functions that make functions", "functools.partial"]
+intro = '''
+A **function** is a few steps with a name. You write the steps once, and then one short line runs them on any text, with any key. Every codebreaking notebook is a pile of small functions, each one built from the ones before.
+
+Each chapter below is a few examples and a playground. Change the examples, break them, and fold the chapters you already know.
+'''
+
+# Run after the last cell, in the same namespace; never shown in the notebook.
+check = '''
+assert shift("Z", 1) == "A" and shift("A", -1) == "Z"
+assert caesar("HELLO, WORLD", 3) == "KHOOR, ZRUOG"
+assert caesar(caesar("ATTACK AT DAWN", 7), -7) == "ATTACK AT DAWN"
+assert make_shifter(2)("ABC") == "CDE"
+assert crack_caesar(caesar("THE SECRET MEETING IS AT THE OLD TREE", 11)) == 11
+'''
+
+[[chapter]]
+title = "A function: a name for some steps"
+
+[[chapter.cell]]
+md = '''
+`def` starts a function: its name, then in brackets what it needs (its **parameters**). The indented lines are its steps. `return` hands back the answer.
+'''
+
+[[chapter.cell]]
+code = '''
+def double(word):
+    return word + word
+
+print(double("TOM"))
+print(double("ha") + "!")
+print(len(double("CIPHER")))
+'''
+
+[[chapter.cell]]
+md = '''
+`print` only shows a value; `return` gives it back, so it can be kept, joined to something, or passed to another function. A function with no `return` gives back `None`.
+'''
+
+[[chapter.cell]]
+code = '''
+def shout(word):
+    print(word.upper())        # shows it, gives nothing back
+
+def louder(word):
+    return word.upper()        # gives it back
+
+a = shout("hello")
+b = louder("hello")
+print(a, b)
+'''
+
+[[chapter.cell]]
+play = '''
+# Write a function that puts a word between stars: stars("SPY") gives "*SPY*".
+def stars(word):
+    return "*" + word + "*"
+
+print(stars("SPY"))
+'''
+
+[[chapter]]
+title = "Arguments: defaults and names"
+
+[[chapter.cell]]
+md = '''
+A parameter can have a **default**, used when the call leaves it out. Calls can also name their arguments, which makes them easier to read and lets you give them in any order.
+'''
+
+[[chapter.cell]]
+code = '''
+def repeat(word, times=2, between=""):
+    return between.join([word] * times)
+
+print(repeat("NO"))                       # times=2, between=""
+print(repeat("NO", 4))
+print(repeat("NO", 3, between="-"))
+print(repeat(between=" ", word="KNOCK", times=3))
+'''
+
+[[chapter.cell]]
+play = '''
+# Give repeat a new default: what if `between` were " " unless told otherwise?
+print(repeat("TICK", 5, between=" "))
+'''
+
+[[chapter]]
+title = "Letters as numbers: the first tools"
+
+[[chapter.cell]]
+md = '''
+Codebreakers turn letters into numbers (A is 0, B is 1, ... Z is 25), do sums, and turn them back. `string.ascii_uppercase` is the alphabet, `.index` finds a letter's place, and `%` (the remainder) wraps round: 27 % 26 is 1, so one past Z is back to A.
+'''
+
+[[chapter.cell]]
+code = '''
+from string import ascii_uppercase as ALPHABET
+
+def to_number(letter):
+    return ALPHABET.index(letter)
+
+def to_letter(number):
+    return ALPHABET[number % 26]
+
+print(to_number("A"), to_number("Z"))
+print(to_letter(0), to_letter(25), to_letter(26), to_letter(-1))
+'''
+
+[[chapter.cell]]
+md = '''
+Now a function built from those two: move one letter `k` places along the alphabet. Anything that is not a capital letter stays as it is.
+'''
+
+[[chapter.cell]]
+code = '''
+def shift(letter, k):
+    if letter not in ALPHABET:
+        return letter
+    return to_letter(to_number(letter) + k)
+
+print(shift("A", 3), shift("Y", 3), shift("D", -3), shift("!", 3))
+'''
+
+[[chapter.cell]]
+play = '''
+# What does a shift of 13 do twice? And a shift of 26?
+print(shift(shift("H", 13), 13), shift("H", 26))
+'''
+
+[[chapter]]
+title = "Functions built from functions"
+
+[[chapter.cell]]
+md = '''
+One more step up: shift every letter of a text. `"".join(...)` glues the shifted letters back into one string (the strings workbook has a whole chapter on it).
+'''
+
+[[chapter.cell]]
+code = '''
+def caesar(text, k):
+    """Shift every letter of text k places (letters only; spaces and punctuation stay)."""
+    return "".join(shift(ch, k) for ch in text.upper())
+
+secret = caesar("Meet me by the river", 3)
+print(secret)
+print(caesar(secret, -3))
+'''
+
+[[chapter.cell]]
+md = '''
+The text in triple quotes just under `def` is a **docstring**: it says what the function does. `help(caesar)` shows it.
+'''
+
+[[chapter.cell]]
+play = '''
+help(caesar)
+# Make a message of your own, shift it, and shift it back.
+'''
+
+[[chapter]]
+title = "A function is a value"
+
+[[chapter.cell]]
+md = '''
+Without brackets, `caesar` is the function itself, not a call to it. You can give it another name, put it in a list, or hand it to another function, which calls it when it wants.
+'''
+
+[[chapter.cell]]
+code = '''
+also_caesar = caesar
+print(also_caesar("ABC", 1))
+
+def twice(f, x):
+    """Call f on x, then f again on the answer."""
+    return f(f(x))
+
+print(twice(double, "AB"))
+print(twice(str.upper, "quiet"))
+'''
+
+[[chapter.cell]]
+code = '''
+def each(f, things):
+    """f on every thing, as a list."""
+    return [f(thing) for thing in things]
+
+print(each(len, ["A", "BEE", "SEA"]))
+print(each(to_number, "HELLO"))
+print(each(str.lower, ["ONE", "TWO"]))
+'''
+
+[[chapter.cell]]
+play = '''
+# A list of functions, each one tried in turn on the same word.
+for f in [str.upper, str.lower, double, len]:
+    print(f.__name__, f("Spy"))
+'''
+
+[[chapter]]
+title = "lambda: a function in one line"
+
+[[chapter.cell]]
+md = '''
+For a small function you need only once, `lambda` writes it in place, without a name: `lambda x: x + x` is the same as `double`. After the colon comes the value it returns.
+'''
+
+[[chapter.cell]]
+code = '''
+print((lambda x: x + x)("AB"))
+print(each(lambda w: w[0], ["ALPHA", "BRAVO", "CHARLIE"]))     # first letters
+print(each(lambda ch: shift(ch, 1), "HAL"))
+'''
+
+[[chapter.cell]]
+play = '''
+# Last letters, then each word backwards (w[::-1]).
+words = ["ALPHA", "BRAVO", "CHARLIE"]
+print(each(lambda w: w[-1], words))
+'''
+
+[[chapter]]
+title = "sorted, min and max, with key="
+
+[[chapter.cell]]
+md = '''
+`sorted`, `min` and `max` take a **key**: a function that says what to compare. The things themselves come back, ordered by what the key says. This is where `lambda` earns its keep.
+'''
+
+[[chapter.cell]]
+code = '''
+words = ["SPY", "CIPHER", "KEY", "ALPHABET", "CODE"]
+print(sorted(words))                              # A to Z
+print(sorted(words, key=len))                     # shortest first
+print(sorted(words, key=len, reverse=True))       # longest first
+print(sorted(words, key=lambda w: w[-1]))         # by last letter
+print(max(words, key=len), min(words, key=len))
+'''
+
+[[chapter.cell]]
+md = '''
+The key can be any function, even one of yours. Which shift makes `"KHOOR"` contain the most vowels?
+'''
+
+[[chapter.cell]]
+code = '''
+def vowels(text):
+    return sum(text.count(v) for v in "AEIOU")
+
+print(max(range(26), key=lambda k: vowels(caesar("KHOOR", -k))))
+'''
+
+[[chapter.cell]]
+play = '''
+# Sort these by how many vowels they have, then by their second letter.
+print(sorted(words, key=vowels))
+'''
+
+[[chapter]]
+title = "map, filter, and comprehensions"
+
+[[chapter.cell]]
+md = '''
+`map(f, things)` calls `f` on each thing, and `filter(test, things)` keeps the things that pass. Both give a *promise* of the results, so wrap them in `list(...)` or `"".join(...)` to see them. A **comprehension**, `[f(x) for x in things if test(x)]`, does both in one line and is what most Python code uses.
+'''
+
+[[chapter.cell]]
+code = '''
+text = "Hello, World!"
+print(list(map(str.upper, text)))
+print("".join(filter(str.isalpha, text)))
+print([ch.upper() for ch in text if ch.isalpha()])
+print("".join(ch.upper() for ch in text if ch.isalpha()))
+'''
+
+[[chapter.cell]]
+play = '''
+# Keep only the words longer than 3 letters, in capitals.
+sentence = "the spy met the old man at the bridge"
+print([w.upper() for w in sentence.split() if len(w) > 3])
+'''
+
+[[chapter]]
+title = "Functions that make functions"
+
+[[chapter.cell]]
+md = '''
+A function can build a new function and return it. The inner one remembers the values it was made with. Here, `make_shifter(3)` gives a function that always shifts by 3.
+'''
+
+[[chapter.cell]]
+code = '''
+def make_shifter(k):
+    def shifter(text):
+        return caesar(text, k)
+    return shifter
+
+forward3 = make_shifter(3)
+back3 = make_shifter(-3)
+print(forward3("ABC"), back3(forward3("ABC")))
+shifters = [make_shifter(k) for k in range(5)]
+print([f("A") for f in shifters])
+'''
+
+[[chapter.cell]]
+md = '''
+The standard library does this for you: `functools.partial(f, ...)` is `f` with some arguments already filled in.
+'''
+
+[[chapter.cell]]
+code = '''
+from functools import partial
+
+rot13 = partial(caesar, k=13)
+print(rot13("HELLO"), rot13(rot13("HELLO")))
+'''
+
+[[chapter.cell]]
+play = '''
+# Make a function that repeats any word three times with spaces, using partial and repeat.
+say_three = partial(repeat, times=3, between=" ")
+print(say_three("HIP"))
+'''
+
+[[chapter]]
+title = "Put it together: a Caesar that cracks itself"
+
+[[chapter.cell]]
+md = '''
+Every piece is here. Try all 26 shifts, score each one by how English it looks, and keep the best. The score is a function, passed in as an argument, so you can swap in a better one later without touching the rest.
+'''
+
+[[chapter.cell]]
+code = '''
+COMMON = "ETAOINSHR"           # the commonest letters of English, most common first
+
+def common_letters(text):
+    """A rough score: how many of the text's letters are common English ones."""
+    return sum(ch in COMMON for ch in text)
+
+def crack_caesar(ciphertext, score=common_letters):
+    """The shift that undoes the cipher: the one whose result scores best."""
+    return max(range(26), key=lambda k: score(caesar(ciphertext, -k)))
+
+secret = caesar("THE SECRET MEETING IS AT THE OLD TREE", 11)
+k = crack_caesar(secret)
+print(secret)
+print(k, caesar(secret, -k))
+'''
+
+[[chapter.cell]]
+md = '''
+Look at the chain: `to_number` and `to_letter` make `shift`, `shift` makes `caesar`, `caesar` and a score make `crack_caesar`. The cracking notebooks build their tools the same way, a little at a time.
+'''
+
+[[chapter.cell]]
+play = '''
+# Write your own score (count the E's? the vowels?) and hand it to crack_caesar.
+# Does it still find the key? Try a short message, where scores are easily fooled.
+print(crack_caesar(caesar("SEE YOU THERE", 5), score=vowels))
+'''

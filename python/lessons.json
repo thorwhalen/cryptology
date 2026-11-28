@@ -833,6 +833,39 @@
  ],
  "workbooks": [
   {
+   "id": "def-and-lambda",
+   "title": "Functions: def, lambda, and tools that build tools",
+   "summary": "Name a few steps once, then reuse them: def and return, defaults, functions passed around like values, lambda, sorted and max with key=, and functions that make functions. It ends with a Caesar toolkit that cracks itself.",
+   "learn": [
+    "def and return",
+    "default and keyword arguments",
+    "functions as values",
+    "lambda",
+    "sorted, min and max with key=",
+    "map, filter and comprehensions",
+    "functions that make functions",
+    "functools.partial"
+   ],
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/def-and-lambda.ipynb"
+  },
+  {
+   "id": "strings",
+   "title": "Strings: split, join, and views of a text",
+   "summary": "Cut a text up and put it back together in new shapes: slices, split and join, chunks, rows, columns, every n-th letter, turning a grid with zip, weaving columns back, and swapping letters with translate. These are the views that make a Vigenère or a transposition show its pattern.",
+   "learn": [
+    "indexing and slices",
+    "step slices: t[i::n]",
+    "str.split and str.join",
+    "upper, replace, isalpha",
+    "chunks and textwrap",
+    "rows and columns",
+    "zip(*rows)",
+    "itertools.zip_longest",
+    "str.maketrans and translate"
+   ],
+   "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/strings.ipynb"
+  },
+  {
    "id": "counter",
    "title": "Counting from scratch: build your own Counter",
    "summary": "Python's Counter counts things in one line. Build the same thing yourself, with a dictionary and a few small functions, then meet the real one.",

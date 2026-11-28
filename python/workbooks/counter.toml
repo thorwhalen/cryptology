@@ -2,7 +2,7 @@
 # build_python.py runs every cell in order, then the hidden check, before writing python/notebooks/counter.ipynb.
 
 id = "counter"
-order = 1
+order = 3
 title = "Counting from scratch: build your own Counter"
 summary = "Python's Counter counts things in one line. Build the same thing yourself, with a dictionary and a few small functions, then meet the real one."
 learn = ["dict", "dict.get", "for loops", "zip", "sorted with key=", "lambda", "collections.Counter"]
