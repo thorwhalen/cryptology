@@ -1,0 +1,403 @@
+# A workbook: short chapters, each a few examples and a playground, whose functions build on each other.
+# build_python.py runs every cell in order, then the hidden check, before writing python/notebooks/strings.ipynb.
+
+id = "strings"
+order = 2
+title = "Strings: split, join, and views of a text"
+summary = "Cut a text up and put it back together in new shapes: slices, split and join, chunks, rows, columns, every n-th letter, turning a grid with zip, weaving columns back, and swapping letters with translate. These are the views that make a Vigenère or a transposition show its pattern."
+learn = ["indexing and slices", "step slices: t[i::n]", "str.split and str.join", "upper, replace, isalpha", "chunks and textwrap", "rows and columns", "zip(*rows)", "itertools.zip_longest", "str.maketrans and translate"]
+intro = '''
+A ciphertext is one long line of letters, but the pattern that breaks it often shows only when you look at it another way: in blocks of five, as rows of a grid, as columns, or as every fifth letter. This workbook builds a small set of functions that reshape a text into those **views** and back again, without losing a letter.
+
+Each chapter is a few examples and a playground. Fold the ones you know.
+'''
+
+# Run after the last cell, in the same namespace; never shown in the notebook.
+check = '''
+assert clean("Hello, World!") == "HELLOWORLD"
+assert chunks("ABCDEFG", 3) == ["ABC", "DEF", "G"]
+assert columns("ABCDEFG", 3) == ["ADG", "BE", "CF"]
+assert weave(columns("ABCDEFGHIJ", 4)) == "ABCDEFGHIJ"
+assert turn(["ABC", "DEF"]) == ["AD", "BE", "CF"]
+assert grouped("ABCDEFG") == "ABCDE FG"
+assert substitute("HELLO", "HEL", "abc") == "abccO"
+'''
+
+[[chapter]]
+title = "A string is a row of letters"
+
+[[chapter.cell]]
+md = '''
+Every letter of a string has a place, counted from 0. Square brackets pick one out; negative places count from the end.
+'''
+
+[[chapter.cell]]
+code = '''
+word = "CIPHER"
+print(word[0], word[1], word[-1], word[-2])
+print(len(word))
+print("H" in word, "Z" in word)
+for i, letter in enumerate(word):
+    print(i, letter)
+'''
+
+[[chapter.cell]]
+play = '''
+word = "ENIGMA"
+# Print the middle two letters. Then the first and the last, glued together.
+print(word[2], word[3])
+'''
+
+[[chapter]]
+title = "Slices: a piece of a string"
+
+[[chapter.cell]]
+md = '''
+`text[a:b]` is the piece from place `a` up to (not including) `b`. Leave out `a` to start at the beginning, `b` to go to the end. A third number is the **step**: `text[::2]` is every second letter, and `text[::-1]` reads it backwards.
+'''
+
+[[chapter.cell]]
+code = '''
+text = "ABCDEFGHIJKL"
+print(text[2:5])      # CDE
+print(text[:3])       # the first 3
+print(text[-3:])      # the last 3
+print(text[::2])      # every 2nd, from 0
+print(text[1::2])     # every 2nd, from 1
+print(text[::-1])     # backwards
+print(text[2::4])     # every 4th, from 2
+'''
+
+[[chapter.cell]]
+play = '''
+# Is "LEVEL" a palindrome (the same backwards)? And "RADAR"? And your name?
+for w in ["LEVEL", "RADAR", "CIPHER"]:
+    print(w, w == w[::-1])
+'''
+
+[[chapter]]
+title = "Cleaning: only the letters, in capitals"
+
+[[chapter.cell]]
+md = '''
+String **methods** are functions that belong to strings: `.upper()`, `.lower()`, `.replace(old, new)`, `.isalpha()` (is it a letter?), `.strip()` (cut spaces off the ends). They never change the string; they return a new one.
+'''
+
+[[chapter.cell]]
+code = '''
+messy = "  Meet me at noon, by the old bridge!  "
+print(messy.upper())
+print(messy.strip())
+print(messy.replace(" ", ""))
+print([ch.isalpha() for ch in "A1 b!"])
+'''
+
+[[chapter.cell]]
+md = '''
+The first tool of every cracking notebook: keep only the letters, in capitals.
+'''
+
+[[chapter.cell]]
+code = '''
+def clean(text):
+    """Only the letters of text, in capitals."""
+    return "".join(ch for ch in text.upper() if ch.isalpha())
+
+print(clean(messy))
+'''
+
+[[chapter.cell]]
+play = '''
+# Change clean so it keeps the spaces too (hint: `or ch == " "`).
+print(clean("It's 4 o'clock!"))
+'''
+
+[[chapter]]
+title = "split: one string into many"
+
+[[chapter.cell]]
+md = '''
+`.split()` cuts a string at the spaces and gives a list of the words. `.split(",")` cuts at commas instead, or at anything you name. `.splitlines()` cuts it into lines.
+'''
+
+[[chapter.cell]]
+code = '''
+sentence = "the spy met the courier at dawn"
+words = sentence.split()
+print(words)
+print(len(words), "words; the longest is", max(words, key=len))
+print("RED,GREEN,BLUE".split(","))
+print("KXJ-QQP-ZZA".split("-"))
+'''
+
+[[chapter.cell]]
+play = '''
+poem = """Roses are red
+Violets are blue
+Codes can be cracked
+And so can you"""
+lines = poem.splitlines()
+print(lines)
+print([line.split()[0] for line in lines])    # the first word of each line
+'''
+
+[[chapter]]
+title = "join: many strings into one"
+
+[[chapter.cell]]
+md = '''
+`join` is split backwards: `glue.join(pieces)` puts the pieces together with `glue` between them. The glue comes first, which looks odd at first. `"".join` glues with nothing at all.
+'''
+
+[[chapter.cell]]
+code = '''
+pieces = ["ATTACK", "AT", "DAWN"]
+print(" ".join(pieces))
+print("".join(pieces))
+print("-".join(pieces))
+print(" ".join("SPY"))           # a string is a list of letters too
+print("".join(reversed(pieces)))
+'''
+
+[[chapter.cell]]
+md = '''
+Together they reshape a sentence: split it, change the pieces, join them back.
+'''
+
+[[chapter.cell]]
+code = '''
+s = "the spy met the courier at dawn"
+print(" ".join(w[::-1] for w in s.split()))       # each word backwards
+print(" ".join(s.split()[::-1]))                  # the words in reverse order
+print("".join(w[0] for w in s.split()).upper())   # first letters
+'''
+
+[[chapter.cell]]
+play = '''
+# Capitalise each word: "the spy" becomes "The Spy" (try w[0].upper() + w[1:]).
+s = "the spy met the courier at dawn"
+print(" ".join(w.capitalize() for w in s.split()))
+'''
+
+[[chapter]]
+title = "Chunks: blocks of the same size"
+
+[[chapter.cell]]
+md = '''
+Ciphertexts are often printed in blocks of five, and many ciphers work on blocks. `range(0, len(text), n)` counts 0, n, 2n, ..., the start of each block.
+'''
+
+[[chapter.cell]]
+code = '''
+def chunks(text, n):
+    """text cut into pieces of n letters (the last one may be shorter)."""
+    return [text[i:i + n] for i in range(0, len(text), n)]
+
+def grouped(text, n=5):
+    """text written in blocks of n, with spaces between, as ciphertexts are printed."""
+    return " ".join(chunks(text, n))
+
+text = clean("Meet me at noon, by the old bridge")
+print(chunks(text, 4))
+print(grouped(text))
+print(clean(grouped(text)) == text)     # nothing lost
+'''
+
+[[chapter.cell]]
+md = '''
+The standard library has a cousin: `textwrap.wrap(text, n)` cuts a text into lines of at most `n` characters, breaking at spaces when it can.
+'''
+
+[[chapter.cell]]
+code = '''
+import textwrap
+print(textwrap.wrap(text, 6))
+print(textwrap.wrap("the spy met the courier at dawn", 12))
+'''
+
+[[chapter.cell]]
+play = '''
+# Blocks of 3, then 7. Which block sizes leave no short piece at the end? (len(text) % n == 0)
+print(grouped(text, 3))
+print([n for n in range(2, 13) if len(text) % n == 0])
+'''
+
+[[chapter]]
+title = "Rows: a text as a grid"
+
+[[chapter.cell]]
+md = '''
+Print the chunks one under another and the text becomes a **grid**, written along the rows. Change the width and the same letters line up differently.
+'''
+
+[[chapter.cell]]
+code = '''
+def show_rows(text, width):
+    for row in chunks(text, width):
+        print(" ".join(row))
+
+show_rows(text, 5)
+print()
+show_rows(text, 7)
+'''
+
+[[chapter.cell]]
+play = '''
+# Try widths 3, 4, 6. Is there a width where one letter makes a straight column down the grid?
+show_rows(text, 4)
+'''
+
+[[chapter]]
+title = "Columns: every n-th letter"
+
+[[chapter.cell]]
+md = '''
+The columns of that grid are the letters at places 0, n, 2n, ... (the first column), 1, n+1, 2n+1, ... (the second), and so on. That is a step slice: `text[i::n]`. This view is the key to a Vigenère cipher: with the right `n`, each column was shifted by the same letter of the key.
+'''
+
+[[chapter.cell]]
+code = '''
+def columns(text, n):
+    """text split into n columns: every n-th letter, starting at 0, 1, ..., n-1."""
+    return [text[i::n] for i in range(n)]
+
+show_rows(text, 5)
+for i, col in enumerate(columns(text, 5)):
+    print("column", i, col)
+'''
+
+[[chapter.cell]]
+play = '''
+# Each column is a text of its own: count its letters, or shift it on its own.
+for col in columns(text, 3):
+    print(col, len(col), max(col, key=col.count))     # its commonest letter
+'''
+
+[[chapter]]
+title = "Turning a grid with zip"
+
+[[chapter.cell]]
+md = '''
+`zip(a, b, c)` walks several sequences side by side and gives their first letters together, then their second, and so on. Give it the rows of a grid with `*` (which spreads a list out into separate arguments) and it hands back the columns: the grid turned on its side.
+'''
+
+[[chapter.cell]]
+code = '''
+print(list(zip("ABC", "DEF")))
+rows = ["ABC", "DEF", "GHI"]
+print(list(zip(*rows)))
+
+def turn(rows):
+    """The columns of a grid of rows (as strings). zip stops at the shortest row."""
+    return ["".join(col) for col in zip(*rows)]
+
+print(turn(rows))
+print(turn(turn(rows)))       # turned twice: back where it started
+'''
+
+[[chapter.cell]]
+play = '''
+# Read a grid down the columns, as a columnar transposition does.
+grid = chunks(clean("WE ARE DISCOVERED FLEE AT ONCE"), 5)
+print(grid)
+print("".join(turn(grid)))
+'''
+
+[[chapter]]
+title = "Weaving columns back into a text"
+
+[[chapter.cell]]
+md = '''
+After changing each column (decrypting it, say), weave them back: the first letter of each column, then the second of each, and so on. The last columns can be one letter shorter, so `zip` would drop letters; `itertools.zip_longest` keeps going and fills the gaps with `""`.
+'''
+
+[[chapter.cell]]
+code = '''
+from itertools import zip_longest
+
+def weave(cols):
+    """The text whose columns are cols: the inverse of columns(text, len(cols))."""
+    return "".join("".join(letters) for letters in zip_longest(*cols, fillvalue=""))
+
+cols = columns(text, 5)
+print(cols)
+print(weave(cols))
+print(weave(cols) == text)
+'''
+
+[[chapter.cell]]
+md = '''
+Now the view a Vigenère crack uses: split into columns, change each column with its own function, weave back. Here each column is just reversed, to show the plumbing.
+'''
+
+[[chapter.cell]]
+code = '''
+def per_column(text, n, change):
+    """Apply change to each of the n columns of text, then weave them back."""
+    return weave([change(col) for col in columns(text, n)])
+
+print(per_column(text, 5, lambda col: col))          # change nothing: the same text
+print(per_column(text, 5, lambda col: col.lower()))
+'''
+
+[[chapter.cell]]
+play = '''
+# Give each column a different change: make a list of functions, one per column.
+changes = [str.lower, str.upper, str.lower, str.upper, str.lower]
+print(weave([f(col) for f, col in zip(changes, columns(text, 5))]))
+'''
+
+[[chapter]]
+title = "Swapping letters: maketrans and translate"
+
+[[chapter.cell]]
+md = '''
+`str.maketrans(from, to)` makes a table: the first letter of `from` becomes the first of `to`, and so on. `text.translate(table)` swaps every letter at once. It is a whole substitution cipher in two lines. Guesses in lower case stand out from letters not yet solved.
+'''
+
+[[chapter.cell]]
+code = '''
+def substitute(text, old, new):
+    """text with each letter of old swapped for the matching letter of new."""
+    return text.translate(str.maketrans(old, new))
+
+from string import ascii_uppercase as ALPHABET
+backwards = ALPHABET[::-1]              # A<->Z, B<->Y, ... (the Atbash cipher)
+secret = substitute(text, ALPHABET, backwards)
+print(secret)
+print(substitute(secret, ALPHABET, backwards))
+print(substitute(secret, "NVG", "met"))          # a partial guess, in lower case
+'''
+
+[[chapter.cell]]
+play = '''
+# A Caesar shift as a translation: the alphabet, against the alphabet moved along by k.
+k = 3
+shifted = ALPHABET[k:] + ALPHABET[:k]
+print(substitute(text, ALPHABET, shifted))
+'''
+
+[[chapter]]
+title = "Put it together: views of one ciphertext"
+
+[[chapter.cell]]
+md = '''
+A message made by shifting its letters with a repeating key (a Vigenère cipher, with a key you do not know yet). Look at it through every view in this workbook. With the right width, the rows line up so that each column was shifted by the same key letter; the cracking notebook takes it from there.
+'''
+
+[[chapter.cell]]
+code = '''
+practice = "EHQDWDXXRHFWZUETVEQEPRETYTMBPSEPREFDEHQWLRNDFRQKPRKCTGTIHIFWSIEALMBPYDACWYFWPFUHSEDBPNWCPWTDHTAGPAPXE"
+print(grouped(practice))
+print()
+show_rows(practice, 4)
+'''
+
+[[chapter.cell]]
+play = '''
+# Try other widths with show_rows, then look at each column with columns(practice, n).
+# In which width does each column's commonest letter stand out the most?
+# (Each number is the share of its column that the commonest letter takes up.)
+for n in range(2, 8):
+    print(n, [round(col.count(max(col, key=col.count)) / len(col), 2) for col in columns(practice, n)])
+'''

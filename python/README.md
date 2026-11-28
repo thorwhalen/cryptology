@@ -34,6 +34,8 @@ Longer notebooks, for after the lessons: short chapters, each a few examples and
 
 | Workbook | What you build | Notebook |
 |---|---|---|
+| Functions | Small tools that build bigger ones: `def` and `return`, defaults, functions passed around as values, `lambda`, `sorted`/`max` with `key=`, functions that make functions; it ends with a Caesar cipher that cracks itself. | [Open in Colab](https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/def-and-lambda.ipynb) |
+| Strings and views of a text | Functions that reshape a text and put it back: slices, `split` and `join`, chunks, rows, columns (`t[i::n]`), `zip(*rows)`, weaving columns back, `translate`. | [Open in Colab](https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/strings.ipynb) |
 | Counting from scratch | Your own `Counter`, from a dictionary and a few functions (`count`, `most_common`, `total`, ...), then the real one from `collections`. | [Open in Colab](https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/counter.ipynb) |
 
 ## How it is built
