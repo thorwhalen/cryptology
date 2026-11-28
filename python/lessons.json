@@ -846,6 +846,8 @@
     "functions that make functions",
     "functools.partial"
    ],
+   "topic": "functions",
+   "chapters": 10,
    "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/def-and-lambda.ipynb"
   },
   {
@@ -863,6 +865,8 @@
     "itertools.zip_longest",
     "str.maketrans and translate"
    ],
+   "topic": "strings",
+   "chapters": 12,
    "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/strings.ipynb"
   },
   {
@@ -878,6 +882,8 @@
     "lambda",
     "collections.Counter"
    ],
+   "topic": "counting",
+   "chapters": 9,
    "colab": "https://colab.research.google.com/github/thorwhalen/cryptology/blob/main/python/notebooks/counter.ipynb"
   }
  ]

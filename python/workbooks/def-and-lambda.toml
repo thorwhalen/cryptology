@@ -3,6 +3,8 @@
 
 id = "def-and-lambda"
 order = 1
+# What it is about, for its picture in the app (one word: functions, strings, counting, ...).
+topic = "functions"
 title = "Functions: def, lambda, and tools that build tools"
 summary = "Name a few steps once, then reuse them: def and return, defaults, functions passed around like values, lambda, sorted and max with key=, and functions that make functions. It ends with a Caesar toolkit that cracks itself."
 learn = ["def and return", "default and keyword arguments", "functions as values", "lambda", "sorted, min and max with key=", "map, filter and comprehensions", "functions that make functions", "functools.partial"]

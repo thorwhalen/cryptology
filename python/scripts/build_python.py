@@ -479,7 +479,8 @@ def app_data(lessons: list[dict], texts: dict[str, dict], concepts: list[dict] =
         "texts": {k: {"title": v["title"], "cipher": v["cipher"]} for k, v in texts.items()},
         "lessons": [{**{k: l[k] for k in keep if k in l}, "colab": COLAB + notebook_name(l)} for l in lessons],
         "concepts": list(concepts),
-        "workbooks": [{**{k: b[k] for k in ("id", "title", "summary", "learn") if k in b}, "colab": COLAB + workbook_name(b)} for b in workbooks],
+        "workbooks": [{**{k: b[k] for k in ("id", "title", "summary", "learn", "topic") if k in b}, "chapters": len(b["chapter"]),
+                       "colab": COLAB + workbook_name(b)} for b in workbooks],
     }
 
 
